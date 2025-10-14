@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: football-club-simulator
+  datasource:
+    url: "jdbc:mysql://localhost:3306/football_simulator?createDatabaseIfNotExist=true"
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#  flyway:
+#    enabled: true
+#    locations: classpath:db/migration
