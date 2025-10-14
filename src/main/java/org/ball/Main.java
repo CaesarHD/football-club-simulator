@@ -28,6 +28,7 @@ public class Main {
     @Bean
     CommandLineRunner run(PlayerRepository playerRepository, PlayerService playerService) {
         return args -> {
+            playerRepository.save(new Player("Cezar"));
             System.out.println(playerRepository.findAll());
         };
     }
