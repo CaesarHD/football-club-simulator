@@ -1,4 +1,4 @@
-package org.ball;
+package org.ball.entity;
 
 import jakarta.persistence.*;
 
@@ -10,10 +10,6 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getId() {
         return id;
