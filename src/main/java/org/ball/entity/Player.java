@@ -11,14 +11,22 @@ public class Player {
     private Long id;
     private String name;
 
-    public Long getId() {
-        return id;
-    }
-
     public Player() {}
 
     public Player(String name) {
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
