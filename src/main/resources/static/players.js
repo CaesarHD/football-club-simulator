@@ -7,7 +7,6 @@ fetch('/players')
     })
     .then(players => {
         const tableBody = document.getElementById('players-table');
-        console.log(players);
         players.forEach(player => {
             const row = document.createElement('tr');
             row.innerHTML = `
