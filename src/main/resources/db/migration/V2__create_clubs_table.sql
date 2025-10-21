@@ -2,7 +2,7 @@ use football_club_simulator;
 
 
 CREATE TABLE clubs (
-     id INT AUTO_INCREMENT PRIMARY KEY,
+     id BIGINT AUTO_INCREMENT PRIMARY KEY,
      name VARCHAR(100) NOT NULL,
      budget DECIMAL(10, 2)
 );
