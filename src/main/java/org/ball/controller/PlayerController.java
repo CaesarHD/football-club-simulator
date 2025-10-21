@@ -19,7 +19,6 @@ public class PlayerController {
 
     @GetMapping("")
     public List<Player> getPlayers() {
-        System.out.println("aaaaaaaaa");
         return playerService.getAllPlayers();
     }
 }
