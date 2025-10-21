@@ -18,5 +18,5 @@ fetch('/players')
     })
     .catch(error => {
 
-        console.error('Eroare:', error);
+        console.error('Error:', error);
     });
