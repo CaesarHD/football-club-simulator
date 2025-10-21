@@ -25,6 +25,7 @@ public class Main {
 
     @PostConstruct
     public void init() {
-
+        Player player = new Player("Cezar");
+        playerRepository.save(player);
     }
 }
