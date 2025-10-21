@@ -25,7 +25,6 @@ public class Main {
 
     @PostConstruct
     public void init() {
-//        playerRepository.save(new Player("Cezar"));
-//        System.out.println(playerRepository.findAll());
+
     }
 }

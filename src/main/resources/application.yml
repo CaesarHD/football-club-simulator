@@ -2,7 +2,7 @@ spring:
   application:
     name: football-club-simulator
   datasource:
-    url: "jdbc:mysql://localhost:3306/football_simulator?createDatabaseIfNotExist=true"
+    url: "jdbc:mysql://localhost:3306/football_club_simulator?createDatabaseIfNotExist=true"
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
