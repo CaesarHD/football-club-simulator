@@ -1,7 +1,10 @@
 package org.ball.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
+
+import java.util.List;
 
 @Entity
 @Table(name = "clubs")
@@ -11,6 +14,9 @@ public class Club {
     private Long id;
     private String name;
     private int budget;
+    @OneToMany(mappedBy = "club")
+    @JsonIgnore
+    private List<Player> players;
 
     public Club() {
     }
@@ -47,4 +53,9 @@ public class Club {
     public void setBudget(int budget) {
         this.budget = budget;
     }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
 }

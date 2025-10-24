@@ -20,6 +20,8 @@ public class PlayerService {
     }
 
     public List<Player> getAllPlayers() {
-        return playerRepository.findAll();
+        return playerRepository.findAllWithClub();
     }
+
+
 }
