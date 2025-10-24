@@ -14,6 +14,7 @@ fetch('/players')
                 <td>${player.name}</td>
                 <td>${player.age}</td>
                 <td>${player.position}</td>
+                <td>${player.club ? player.club.name : 'No club'}</td>
                 <td>${player.pace}</td>
                 <td>${player.stamina}</td>
                 <td>${player.defending}</td>

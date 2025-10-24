@@ -18,7 +18,7 @@ public class ClubController {
     }
 
     @GetMapping("")
-    public List<Club> getPlayers() {
+    public List<Club> getClubs() {
         return clubService.getAllClubs();
     }
 

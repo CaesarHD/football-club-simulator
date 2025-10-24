@@ -1,7 +1,6 @@
 package org.ball.controller;
 
-import
-org.ball.entity.Player;
+import org.ball.entity.Player;
 import org.ball.service.PlayerService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,4 +20,6 @@ public class PlayerController {
     public List<Player> getPlayers() {
         return playerService.getAllPlayers();
     }
+
+
 }
