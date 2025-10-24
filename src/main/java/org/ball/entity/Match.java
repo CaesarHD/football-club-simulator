@@ -1,12 +1,13 @@
 package org.ball.entity;
 
 import jakarta.persistence.*;
+import org.ball.Utils.Constants;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "games")
+@Table(name = "matches")
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,20 @@ public class Match {
     @JoinColumn(name = "away_club_id")
     private Club awayClub;
 
+    @Transient
+    private Integer season;
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    private void calculateSeason() {
+        if (this.date == null) {
+            this.season = null;
+            return;
+        }
+        this.season = this.date.getYear();
+    }
+
 //    private List<Goal> homeGoals;
 //    private List<Goal> awayGoals;
 
@@ -28,14 +43,15 @@ public class Match {
 
     private LocalDateTime date;
 
-    public Match(Club homeClub, Club awayClub, List<Goal> homeGoals, List<Goal> awayGoals, LocalDateTime date) {
+    public Match(Club homeClub, Club awayClub, List<Goal> homeGoals, List<Goal> awayGoals, int season, LocalDateTime date) {
         this.homeClub = homeClub;
         this.awayClub = awayClub;
+        this.date = date;
+        this.season = this.date.getYear() - Constants.FIRST_SEASON_YEAR + 1;
 //        this.homeGoals = homeGoals;
 //        this.awayGoals = awayGoals;
 //        this.homeTeamScore = homeGoals.size();
 //        this.awayTeamScore = awayGoals.size();
-        this.date = date;
     }
 
     public Match() {
@@ -111,5 +127,13 @@ public class Match {
                 ", awayTeamScore=" + awayTeamScore +
                 ", date=" + date +
                 '}';
+    }
+
+    public int getSeason() {
+        return season;
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
     }
 }

@@ -1,5 +1,6 @@
 package org.ball.service;
 
+import org.ball.Utils.Constants;
 import org.ball.entity.Match;
 import org.ball.repository.MatchRepository;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,13 @@ public class MatchService {
 
     public List<Match> getMatchesByClubName(String clubName) {
         return matchRepository.findAllMatchesByClub(clubName);
+    }
+
+    public List<Match> getMatchesBySeason(int year) {
+        return matchRepository.findAllMatchesByYear(year);
+    }
+
+    public List<Match> getMatchesBySeasonAndClubName(int year, String clubName) {
+        return matchRepository.findAllMatchesByYearAndClubName(year, clubName);
     }
 }

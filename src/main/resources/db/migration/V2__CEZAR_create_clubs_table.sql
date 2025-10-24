@@ -9,7 +9,7 @@ CREATE TABLE clubs (
 
 INSERT INTO clubs (name, budget) VALUES ('Liverpool', 250.00);
 INSERT INTO clubs (name, budget) VALUES ('Barcelona', 200.00);
-INSERT INTO clubs (name, budget) VALUES ('Real Madrid', 300.00);
+INSERT INTO clubs (name, budget) VALUES ('RealMadrid', 300.00);
 INSERT INTO clubs (name, budget) VALUES ('PSG', 350.00);
-INSERT INTO clubs (name, budget) VALUES ('Manchester City', 320.00);
+INSERT INTO clubs (name, budget) VALUES ('ManchesterCity', 320.00);
 INSERT INTO clubs (name, budget) VALUES ('Arsenal', 180.00);

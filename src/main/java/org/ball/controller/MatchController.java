@@ -4,15 +4,12 @@ import org.ball.entity.Match;
 import org.ball.repository.MatchRepository;
 import org.ball.service.MatchService;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/managers")
+@RequestMapping("/matches")
 public class MatchController {
 
     private final MatchService matchService;
@@ -21,9 +18,10 @@ public class MatchController {
         this.matchService = matchService;
     }
 
-    @GetMapping("")
-    public List<Match> getMatchesByClub(@RequestParam("clubName") String clubName) {
-        return matchService.getMatchesByClubName(clubName);
+    @GetMapping("/{clubName}/{year}")
+    public List<Match> getMatchesBySeason(@PathVariable("clubName") String clubName,
+                                          @PathVariable("year") int year) {
+        return matchService.getMatchesBySeasonAndClubName(year, clubName);
     }
 
 }

@@ -9,15 +9,23 @@ import java.util.List;
 
 public interface MatchRepository extends JpaRepository<Match, Integer> {
 
-    @Query(
-            value = """
-                    SELECT m.* 
-                    FROM matches m
-                    JOIN clubs c ON m.home_club_id = c.id
-                    WHERE c.name = :homeClubName
-                    """,
-            nativeQuery = true
-    )
-    List<Match> findAllMatchesByClub(@Param("homeClub") String homeClub);
+    @Query("SELECT m FROM Match m " +
+            "JOIN FETCH m.homeClub hc " +
+            "JOIN FETCH m.awayClub ac " +
+            "WHERE hc.name = :clubName OR ac.name = :clubName " +
+            "ORDER BY m.date ASC")
+    List<Match> findAllMatchesByClub(@Param("clubName") String clubName);
 
+    @Query("SELECT m FROM Match m " +
+            "WHERE FUNCTION('YEAR', m.date) = :year " +
+            "ORDER BY m.date ASC")
+    List<Match> findAllMatchesByYear(@Param("year") int year);
+
+    @Query("SELECT m FROM Match m " +
+            "JOIN FETCH m.homeClub hc " +
+            "JOIN FETCH m.awayClub ac " +
+            "WHERE FUNCTION('YEAR', m.date) = :year " +
+            "AND (hc.name = :clubName OR ac.name = :clubName)" +
+            "ORDER BY m.date ASC")
+    List<Match> findAllMatchesByYearAndClubName(int year, String clubName);
 }
