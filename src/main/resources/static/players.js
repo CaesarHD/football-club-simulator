@@ -12,6 +12,17 @@ fetch('/players')
             row.innerHTML = `
                 <td>${player.id}</td>
                 <td>${player.name}</td>
+                <td>${player.age}</td>
+                <td>${player.position}</td>
+                <td>${player.pace}</td>
+                <td>${player.stamina}</td>
+                <td>${player.defending}</td>
+                <td>${player.physical}</td>
+                <td>${player.dribbling}</td>
+                <td>${player.shooting}</td>
+                <td>${player.passing}</td>
+                <td>${player.position === 'GOALKEEPER' ? player.reflexes : '-'}</td>
+                <td>${player.position === 'GOALKEEPER' ? player.diving : '-'}</td>
             `;
             tableBody.appendChild(row);
         });
