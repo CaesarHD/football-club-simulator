@@ -10,7 +10,7 @@ fetch('/clubs')
         clubs.forEach(club => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${club.name}</td>
+                <td><a href="/clubs/${club.name}">${club.name}</a></td>
                 <td>${club.budget} mil</td>
             `;
             tableBody.appendChild(row);

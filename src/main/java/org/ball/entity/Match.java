@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "games")
-public class Game {
+public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +28,7 @@ public class Game {
 
     private LocalDateTime date;
 
-    public Game(Club homeClub, Club awayClub, List<Goal> homeGoals, List<Goal> awayGoals, LocalDateTime date) {
+    public Match(Club homeClub, Club awayClub, List<Goal> homeGoals, List<Goal> awayGoals, LocalDateTime date) {
         this.homeClub = homeClub;
         this.awayClub = awayClub;
 //        this.homeGoals = homeGoals;
@@ -38,7 +38,7 @@ public class Game {
         this.date = date;
     }
 
-    public Game() {
+    public Match() {
 
     }
 
@@ -100,5 +100,16 @@ public class Game {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "homeClub=" + homeClub +
+                ", awayClub=" + awayClub +
+                ", homeTeamScore=" + homeTeamScore +
+                ", awayTeamScore=" + awayTeamScore +
+                ", date=" + date +
+                '}';
     }
 }
