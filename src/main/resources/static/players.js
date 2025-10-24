@@ -10,7 +10,7 @@ fetch('/players')
         players.forEach(player => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                 <td>${player.id}</td>
+                <td>${player.id}</td>
                 <td>${player.name}</td>
                 <td>${player.age}</td>
                 <td>${player.position}</td>
@@ -21,6 +21,8 @@ fetch('/players')
                 <td>${player.dribbling}</td>
                 <td>${player.shooting}</td>
                 <td>${player.passing}</td>
+                <td>${player.position === 'GOALKEEPER' ? player.reflexes : '-'}</td>
+                <td>${player.position === 'GOALKEEPER' ? player.diving : '-'}</td>
             `;
             tableBody.appendChild(row);
         });

@@ -11,14 +11,19 @@ public class Player {
     private Long id;
     private String name;
     private int age;
-    private String position;
-    private Integer pace;
-    private Integer stamina;
-    private Integer defending;
-    private Integer physical;
-    private Integer dribbling;
-    private Integer shooting;
-    private Integer passing;
+
+    @Enumerated(EnumType.STRING)
+    private Position position;
+    private Integer pace = 0 ;
+    private Integer defending = 0;
+    private Integer dribbling = 0;
+    private Integer shooting = 0;
+    private Integer physical = 0;
+    private Integer passing = 0;
+    private Integer stamina = 0;
+    private Integer reflexes = 0;
+    private Integer diving = 0;
+
 
     public Player() {}
 
@@ -66,7 +71,7 @@ public class Player {
         this.physical = physical;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(Position position) {
         this.position = position;
     }
 
@@ -76,6 +81,22 @@ public class Player {
 
     public void setStamina(Integer stamina) {
         this.stamina = stamina;
+    }
+
+    public void setDiving(Integer diving) {
+        this.diving = diving;
+    }
+
+    public void setReflexes(Integer reflexes) {
+        this.reflexes = reflexes;
+    }
+
+    public Integer getDiving() {
+        return diving;
+    }
+
+    public Integer getReflexes() {
+        return reflexes;
     }
 
     public int getAge() {
@@ -102,7 +123,7 @@ public class Player {
         return physical;
     }
 
-    public String getPosition() {
+    public Position getPosition() {
         return position;
     }
 
