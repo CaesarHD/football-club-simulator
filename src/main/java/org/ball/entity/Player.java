@@ -12,6 +12,10 @@ public class Player {
     private String name;
     private int age;
 
+    @ManyToOne
+    @JoinColumn(name = "current_club_id")
+    private Club club;
+
     @Enumerated(EnumType.STRING)
     private Position position;
     private Integer pace = 0 ;
@@ -24,15 +28,10 @@ public class Player {
     private Integer reflexes = 0;
     private Integer diving = 0;
 
-
     public Player() {}
 
     public Player(String name) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public void setName(String name) {
@@ -89,6 +88,18 @@ public class Player {
 
     public void setReflexes(Integer reflexes) {
         this.reflexes = reflexes;
+    }
+
+    public void setClub(Club club) {
+        this.club = club;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Club getClub() {
+        return club;
     }
 
     public Integer getDiving() {
