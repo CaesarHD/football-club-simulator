@@ -11,7 +11,11 @@ fetch('/players')
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${player.id}</td>
-                <td>${player.name}</td>
+                <td>
+                     <a href="javascript:void(0)" onclick="openPlayerHistory(${player.id})">
+                        ${player.name}
+                     </a>
+                </td>
                 <td>${player.age}</td>
                 <td>${player.position}</td>
                 <td>${player.club ? player.club.name : 'No club'}</td>
@@ -32,3 +36,8 @@ fetch('/players')
 
         console.error('Error:', error);
     });
+
+function openPlayerHistory(playerId) {
+    sessionStorage.setItem('selectedPlayerId', playerId);
+    window.location.href = 'players_history.html';
+}

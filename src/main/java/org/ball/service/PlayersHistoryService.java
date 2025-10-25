@@ -5,23 +5,21 @@ import org.ball.entity.PlayersHistory;
 import org.ball.repository.ManagerRepository;
 import org.ball.repository.PlayerRepository;
 import org.ball.repository.PlayersHistoryRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class PlayersHistoryService {
 
-    private final PlayersHistoryRepository playersHistoryRepository;
 
+    private final PlayersHistoryRepository playersHistoryRepository;
 
     public PlayersHistoryService(PlayersHistoryRepository playersHistoryRepository) {
         this.playersHistoryRepository = playersHistoryRepository;
     }
 
-    public PlayersHistory savePlayersHistory(PlayersHistory playersHistory) {
-        return playersHistoryRepository.save(playersHistory);
-    }
-
-    public List<PlayersHistory> getAllPlayersHistory() {
-        return playersHistoryRepository.findAll();
+    public List<PlayersHistory> getHistoryByPlayerId(Long playerId) {
+        return playersHistoryRepository.findByPlayerId(playerId);
     }
 }

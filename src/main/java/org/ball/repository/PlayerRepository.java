@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface PlayerRepository extends JpaRepository<Player, Integer> {
 
+
     List<Player> findByClubId(Long currentClubId);
 
     @Query("SELECT p FROM Player p LEFT JOIN FETCH p.club")

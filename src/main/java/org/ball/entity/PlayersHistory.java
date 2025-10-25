@@ -13,7 +13,7 @@ public class PlayersHistory {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "player_id", nullable = false)
+    @JoinColumn(name = "player_id")
     private Player player;
 
     @ManyToOne
@@ -37,5 +37,61 @@ public class PlayersHistory {
 
     public Long getId() {
         return id;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public LocalDate getJoinedDate() {
+        return joinedDate;
+    }
+
+    public LocalDate getLeftDate() {
+        return leftDate;
+    }
+
+    public int getNoAssists() {
+        return noAssists;
+    }
+
+    public int getNoGoals() {
+        return noGoals;
+    }
+
+    public int getNoMatches() {
+        return noMatches;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setClub(Club club) {
+        this.club = club;
+    }
+
+    public void setJoinedDate(LocalDate joinedDate) {
+        this.joinedDate = joinedDate;
+    }
+
+    public void setLeftDate(LocalDate leftDate) {
+        this.leftDate = leftDate;
+    }
+
+    public void setNoAssists(int noAssists) {
+        this.noAssists = noAssists;
+    }
+
+    public void setNoGoals(int noGoals) {
+        this.noGoals = noGoals;
+    }
+
+    public void setNoMatches(int noMatches) {
+        this.noMatches = noMatches;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }
