@@ -1,9 +1,9 @@
 USE football_club_simulator;
 
 CREATE TABLE PLAYERS_HISTORY (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     player_id INT NOT NULL,
-     club_id   INT NOT NULL,
+     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+     player_id BIGINT NOT NULL,
+     club_id   BIGINT NOT NULL,
      no_matches   INT DEFAULT 0,
      no_goals     INT DEFAULT 0,
      no_assists   INT DEFAULT 0,

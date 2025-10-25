@@ -1,7 +1,7 @@
 Use football_club_simulator;
 
 CREATE TABLE players (
-     id INT AUTO_INCREMENT PRIMARY KEY,
+     id BIGINT AUTO_INCREMENT PRIMARY KEY,
      name VARCHAR(100) NOT NULL,
      age INT NULL,
      position VARCHAR(30) NOT NULL,
