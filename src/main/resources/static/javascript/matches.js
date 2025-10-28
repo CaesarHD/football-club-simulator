@@ -33,7 +33,7 @@ fetch('/api/seasons')
     .catch(err => console.error('Failed to load seasons:', err));
 
 function loadMatches(season) {
-    fetch(`/matches/${clubName}/${season}`)
+    fetch(`/api/matches/${clubName}/${season}`)
         .then(res => {
             if (!res.ok) throw new Error(`Error fetching matches: ${res.status}`);
             return res.json();
