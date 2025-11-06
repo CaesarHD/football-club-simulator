@@ -1,5 +1,6 @@
 package org.ball.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,10 +9,20 @@ public class Goal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_match", foreignKey = @ForeignKey(name = "fk_goal_match"))
+    @JsonBackReference
+    private Match match;
+
+    @Column(name = "minute")
     private int minute;
     @ManyToOne
     @JoinColumn(name = "player_id")
     private Player player;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "goal_type")
     private GoalType goalType;
 
 
@@ -55,5 +66,23 @@ public class Goal {
 
     public void setGoalType(GoalType goalType) {
         this.goalType = goalType;
+    }
+
+    public Match getMatch() {
+        return match;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
+    }
+
+    @Override
+    public String toString() {
+        return "Goal{" +
+                "id=" + id +
+                ", minute=" + minute +
+                ", player=" + player +
+                ", goalType=" + goalType +
+                '}';
     }
 }

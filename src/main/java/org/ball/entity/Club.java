@@ -14,9 +14,12 @@ public class Club {
     private Long id;
     private String name;
     private int budget;
+
     @OneToMany(mappedBy = "club")
     @JsonIgnore
     private List<Player> players;
+
+
 
     public Club() {
     }
@@ -24,6 +27,14 @@ public class Club {
     public Club(String name) {
         this.name = name;
     }
+
+    public Player getPlayer(String name) {
+        return players.stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
 
     public void setId(Long id) {
         this.id = id;

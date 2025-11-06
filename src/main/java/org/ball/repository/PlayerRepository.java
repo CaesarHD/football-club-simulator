@@ -1,5 +1,6 @@
 package org.ball.repository;
 
+import org.ball.entity.Club;
 import org.ball.entity.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,8 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
 
     @Query("SELECT p FROM Player p LEFT JOIN FETCH p.club")
     List<Player> findAllWithClub();
+
+    Player findPlayerByName(String name);
+
+    Player findPlayerByClubAndName(Club club, String name);
 }

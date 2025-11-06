@@ -28,4 +28,6 @@ public interface MatchRepository extends JpaRepository<Match, Integer> {
             "AND (hc.name = :clubName OR ac.name = :clubName)" +
             "ORDER BY m.date ASC")
     List<Match> findAllMatchesByYearAndClubName(int year, String clubName);
+
+    Match findMatchById(Long id);
 }

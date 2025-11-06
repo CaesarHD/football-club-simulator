@@ -1,4 +1,4 @@
-fetch('/clubs')
+fetch('/api/clubs')
     .then(response => {
         if (!response.ok) {
             throw new Error('Error fetching clubs: ' + response.status);
