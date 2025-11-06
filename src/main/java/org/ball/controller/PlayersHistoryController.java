@@ -12,6 +12,8 @@ import java.util.List;
 
 
 @RestController
+
+//TODO: maybe merge this with PlayerController
 @RequestMapping("/players-history")
 public class PlayersHistoryController {
 

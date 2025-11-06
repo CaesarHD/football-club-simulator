@@ -1,6 +1,7 @@
 package org.ball.entity;
 
 import jakarta.persistence.*;
+import org.springframework.validation.annotation.Validated;
 
 @Entity
 @Table(name = "coaches")

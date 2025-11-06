@@ -1,10 +1,13 @@
 package org.ball.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.ball.Utils.Constants;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "matches")
@@ -21,41 +24,62 @@ public class Match {
     @JoinColumn(name = "away_club_id")
     private Club awayClub;
 
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Goal> goals;
+
+    @Column(name = "home_team_score")
+    private int homeTeamScore;
+    @Column(name = "away_team_score")
+    private int awayTeamScore;
+
+    private LocalDateTime date;
+
     @Transient
     private Integer season;
 
     @PostLoad
     @PostPersist
     @PostUpdate
-    private void calculateSeason() {
+    private void postLoadOrPersist() {
         if (this.date == null) {
             this.season = null;
-            return;
+        } else {
+            this.season = this.date.getYear();
         }
-        this.season = this.date.getYear();
+
     }
 
-//    private List<Goal> homeGoals;
-//    private List<Goal> awayGoals;
-
-    private int homeTeamScore;
-    private int awayTeamScore;
-
-    private LocalDateTime date;
-
-    public Match(Club homeClub, Club awayClub, List<Goal> homeGoals, List<Goal> awayGoals, int season, LocalDateTime date) {
-        this.homeClub = homeClub;
-        this.awayClub = awayClub;
-        this.date = date;
-        this.season = this.date.getYear() - Constants.FIRST_SEASON_YEAR + 1;
-//        this.homeGoals = homeGoals;
-//        this.awayGoals = awayGoals;
-//        this.homeTeamScore = homeGoals.size();
-//        this.awayTeamScore = awayGoals.size();
+    private void calculateGoals() {
+        homeTeamScore = getHomeGoals().size();
+        awayTeamScore = getAwayGoals().size();
     }
 
-    public Match() {
+    public Match(Builder builder) {
+        this.homeClub = builder.homeClub;
+        this.awayClub = builder.awayClub;
+        this.date = builder.date;
+        this.goals = builder.goals;
 
+        for (Goal goal : builder.goals) {
+            goal.setMatch(this);
+        }
+
+        calculateGoals();
+    }
+
+    public Match() {}
+
+    private List<Goal> getHomeGoals() {
+        return goals.stream()
+                .filter(goal -> goal.getPlayer().getClub().getId().equals(homeClub.getId()))
+                .collect(Collectors.toList());
+    }
+
+    private List<Goal> getAwayGoals() {
+        return goals.stream()
+                .filter(goal -> goal.getPlayer().getClub().getId().equals(awayClub.getId()))
+                .collect(Collectors.toList());
     }
 
     public Club getAwayClub() {
@@ -78,21 +102,9 @@ public class Match {
         return id;
     }
 
-//    public List<Goal> getHomeGoals() {
-//        return homeGoals;
-//    }
-//
-//    public void setHomeGoals(List<Goal> homeGoals) {
-//        this.homeGoals = homeGoals;
-//    }
-//
-//    public List<Goal> getAwayGoals() {
-//        return awayGoals;
-//    }
-//
-//    public void setAwayGoals(List<Goal> awayGoals) {
-//        this.awayGoals = awayGoals;
-//    }
+    public List<Goal> getGoals() {
+        return goals;
+    }
 
     public int getHomeTeamScore() {
         return homeTeamScore;
@@ -126,6 +138,7 @@ public class Match {
                 ", homeTeamScore=" + homeTeamScore +
                 ", awayTeamScore=" + awayTeamScore +
                 ", date=" + date +
+                ", goals=" + goals +
                 '}';
     }
 
@@ -136,4 +149,37 @@ public class Match {
     public void setSeason(int season) {
         this.season = season;
     }
+
+    public static class Builder {
+        private Club homeClub;
+        private Club awayClub;
+        private List<Goal> goals = new ArrayList<>();
+        private LocalDateTime date;
+
+        public Builder homeClub(Club homeClub) {
+            this.homeClub = homeClub;
+            return this;
+        }
+
+        public Builder awayClub(Club awayClub) {
+            this.awayClub = awayClub;
+            return this;
+        }
+
+        public Builder addGoal(int minute, Player scorer, GoalType goalType) {
+            Goal goal = new Goal(minute, scorer, goalType);
+            goals.add(goal);
+            return this;
+        }
+
+        public Builder date(LocalDateTime date) {
+            this.date = date;
+            return this;
+        }
+
+        public Match build() {
+            return new Match(this);
+        }
+    }
+
 }

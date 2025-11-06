@@ -14,9 +14,12 @@ public class Club {
     private Long id;
     private String name;
     private int budget;
+
     @OneToMany(mappedBy = "club")
     @JsonIgnore
     private List<Player> players;
+
+
 
     public Club() {
     }

@@ -12,7 +12,7 @@ function formatDate(isoString) {
     return new Date(isoString).toLocaleString(undefined, options);
 }
 
-fetch('/api/seasons')
+fetch('/api/matches/seasons')
     .then(res => res.json())
     .then(data => {
         const firstSeason = data.firstSeason;
@@ -33,7 +33,7 @@ fetch('/api/seasons')
     .catch(err => console.error('Failed to load seasons:', err));
 
 function loadMatches(season) {
-    fetch(`/api/matches/${clubName}/${season}`)
+    fetch(`/api/matches/club/${clubName}/${season}`)
         .then(res => {
             if (!res.ok) throw new Error(`Error fetching matches: ${res.status}`);
             return res.json();
@@ -59,7 +59,7 @@ function renderMatches(matches) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${match.homeClub?.name ?? '-'}</td>
-            <td>${match.homeTeamScore ?? '-'} - ${match.awayTeamScore ?? '-'}</td>
+            <td><a href= "../html/goals.html?matchId=${match.id}">${match.homeTeamScore ?? '-'} - ${match.awayTeamScore ?? '-'} </a></td>
             <td>${match.awayClub?.name ?? '-'}</td>
             <td>${formatDate(match.date)}</td>
         `;
