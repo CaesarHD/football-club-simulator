@@ -2,7 +2,9 @@ package org.ball.service;
 
 import org.ball.entity.Club;
 import org.ball.entity.Player;
+import org.ball.entity.PlayersHistory;
 import org.ball.repository.PlayerRepository;
+import org.ball.repository.PlayersHistoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,11 @@ public class PlayerService {
 
     public static final Logger log = LoggerFactory.getLogger(PlayerService.class);
     private final PlayerRepository playerRepository;
+    private final PlayersHistoryRepository playersHistoryRepository;
 
-
-    public PlayerService(PlayerRepository playerRepository) {
+    public PlayerService(PlayerRepository playerRepository, PlayersHistoryRepository playersHistoryRepository) {
         this.playerRepository = playerRepository;
+        this.playersHistoryRepository = playersHistoryRepository;
     }
 
     public Player savePlayer(Player player) {
@@ -27,7 +30,6 @@ public class PlayerService {
     public List<Player> getAllPlayers() {
         return playerRepository.findAllWithClub();
     }
-
 
     public Player getPlayerByClubAndName(Club club, String playerName) {
 
@@ -40,5 +42,9 @@ public class PlayerService {
             throw new NullPointerException("Could not find player by club and name " + playerName);
         }
         return player;
+    }
+
+    public List<PlayersHistory> getHistoryByPlayerId(Long playerId) {
+        return playersHistoryRepository.findByPlayerId(playerId);
     }
 }
