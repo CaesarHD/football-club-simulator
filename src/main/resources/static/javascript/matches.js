@@ -58,11 +58,21 @@ function renderMatches(matches) {
     matches.forEach(match => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${match.homeClub?.name ?? '-'}</td>
-            <td><a href= "../html/goals.html?matchId=${match.id}">${match.homeTeamScore ?? '-'} - ${match.awayTeamScore ?? '-'} </a></td>
-            <td>${match.awayClub?.name ?? '-'}</td>
-            <td>${formatDate(match.date)}</td>
-        `;
+                          <td>
+                            <a href="javascript:void(0)" 
+                               onclick="openMatchStats(${match.id}, ${match.homeClub?.id}, '${match.homeClub?.name}')">
+                               ${match.homeClub?.name ?? '-'}
+                            </a>
+                          </td>
+                          <td><a href= "../html/goals.html?matchId=${match.id}">${match.homeTeamScore ?? '-'} - ${match.awayTeamScore ?? '-'} </a></td>
+                          <td>
+                            <a href="javascript:void(0)" 
+                               onclick="openMatchStats(${match.id}, ${match.awayClub?.id}, '${match.awayClub?.name}')">
+                               ${match.awayClub?.name ?? '-'}
+                            </a>
+                          </td>
+                          <td>${formatDate(match.date)}</td>
+                        `;
         tableBody.appendChild(row);
     });
 }
@@ -79,3 +89,15 @@ seasonSelect.addEventListener('change', () => {
     season = seasonSelect.value;
     loadMatches(season);
 });
+
+function openMatchStats(matchId, clubId, clubName) {
+    sessionStorage.removeItem('selectedMatchId');
+    sessionStorage.removeItem('selectedClubId');
+    sessionStorage.removeItem('selectedClubName');
+
+
+    sessionStorage.setItem('selectedMatchId', matchId);
+    sessionStorage.setItem('selectedClubId', clubId);
+    sessionStorage.setItem('selectedClubName', clubName);
+    window.location.href = 'match_stats.html';
+}

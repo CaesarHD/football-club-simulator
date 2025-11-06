@@ -1,8 +1,10 @@
 package org.ball.controller;
 
 import org.ball.entity.Player;
+import org.ball.entity.PlayersHistory;
 import org.ball.service.PlayerService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -21,6 +23,9 @@ public class PlayerController {
         return playerService.getAllPlayers();
     }
 
-
+    @GetMapping("/history/{playerId}")
+    public List<PlayersHistory> getPlayerHistory(@PathVariable Long playerId) {
+        return playerService.getHistoryByPlayerId(playerId);
+    }
 
 }

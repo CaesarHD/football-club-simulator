@@ -41,14 +41,15 @@ public class Main {
 
         Club liverpool = clubService.getClubByName("Liverpool");
         Club psg = clubService.getClubByName("PSG");
+
         Match match = new Match.Builder()
                 .homeClub(liverpool)
                 .awayClub(psg)
-                .addGoal(12, playerService.getPlayerByClubAndName(liverpool, "Mohamed Salah"), GoalType.PENALTY)
-                .addGoal(54, playerService.getPlayerByClubAndName(liverpool, "Virgil van Dijk"), GoalType.FREE_KICK)
+                .addGoal(12, playerService.getPlayerByClubAndName(liverpool, "Salah"), GoalType.PENALTY)
+                .addGoal(54, playerService.getPlayerByClubAndName(liverpool, "Van Dijk"), GoalType.FREE_KICK)
                 .date(LocalDateTime.of(2025, 7, 24, 19, 0))
                 .build();
 
-//        matchService.saveMatch(match);
+        //matchService.saveMatch(match);
     }
 }

@@ -2,6 +2,7 @@ package org.ball.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.ball.Utils.Constants;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,14 +42,15 @@ public class Match {
     @PostLoad
     @PostPersist
     @PostUpdate
-    private void postLoadOrPersist() {
+    private void calculateSeason() {
         if (this.date == null) {
             this.season = null;
-        } else {
-            this.season = this.date.getYear();
+            return;
         }
-
+        this.season = this.date.getYear();
     }
+
+
 
     private void calculateGoals() {
         homeTeamScore = getHomeGoals().size();
@@ -68,8 +70,13 @@ public class Match {
         calculateGoals();
     }
 
-    public Match() {}
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<PlayerMatchStats> homeTeam;
 
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<PlayerMatchStats> awayTeam;
+
+    public Match() {}
     private List<Goal> getHomeGoals() {
         return goals.stream()
                 .filter(goal -> goal.getPlayer().getClub().getId().equals(homeClub.getId()))
@@ -101,7 +108,6 @@ public class Match {
     public Long getId() {
         return id;
     }
-
     public List<Goal> getGoals() {
         return goals;
     }
@@ -149,6 +155,24 @@ public class Match {
     public void setSeason(int season) {
         this.season = season;
     }
+
+    public void setAwayTeam(List<PlayerMatchStats> awayTeam) {
+        this.awayTeam = awayTeam;
+    }
+
+    public void setHomeTeam(List<PlayerMatchStats> homeTeam) {
+        this.homeTeam = homeTeam;
+    }
+
+    public List<PlayerMatchStats> getAwayTeam() {
+        return awayTeam;
+    }
+
+    public List<PlayerMatchStats> getHomeTeam() {
+        return homeTeam;
+    }
+
+
 
     public static class Builder {
         private Club homeClub;

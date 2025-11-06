@@ -1,6 +1,6 @@
 # use football_club_simulator;
-#
-# /* ================================
+
+/* ================================
 #    🏆 SEASON 1 (2024)
 #    ================================ */
 #
@@ -85,11 +85,11 @@
 # /* ================================
 #    🏆 SEASON 2(2025)
 #    ================================ */
-# INSERT INTO matches (home_club_id, away_club_id, home_team_score, away_team_score, date)
-# VALUES ((SELECT id FROM clubs WHERE name = 'Liverpool'), (SELECT id FROM clubs WHERE name = 'Barcelona'), 2, 1,
-#         '2025-01-11 18:00:00'),
-#        ((SELECT id FROM clubs WHERE name = 'Barcelona'), (SELECT id FROM clubs WHERE name = 'Liverpool'), 1, 2,
-#         '2025-03-08 20:00:00'),
+INSERT INTO matches (home_club_id, away_club_id, home_team_score, away_team_score, date)
+VALUES ((SELECT id FROM clubs WHERE name = 'Liverpool'), (SELECT id FROM clubs WHERE name = 'Barcelona'), 2, 1,
+        '2025-01-11 18:00:00'),
+       ((SELECT id FROM clubs WHERE name = 'Barcelona'), (SELECT id FROM clubs WHERE name = 'Liverpool'), 1, 2,
+        '2025-03-08 20:00:00');
 #
 #        ((SELECT id FROM clubs WHERE name = 'Liverpool'), (SELECT id FROM clubs WHERE name = 'RealMadrid'), 3, 2,
 #         '2025-02-01 19:00:00'),
