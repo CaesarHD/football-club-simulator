@@ -2,7 +2,7 @@ const playerId = sessionStorage.getItem('selectedPlayerId');
 console.log("Loaded player ID:", playerId);
 
 if (playerId) {
-    fetch(`/players/history/${playerId}`)
+    fetch(`/api/players/history/${playerId}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Error fetching player history: ' + response.status);
