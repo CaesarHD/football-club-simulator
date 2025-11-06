@@ -28,14 +28,6 @@ public class Club {
         this.name = name;
     }
 
-    public Player getPlayer(String name) {
-        return players.stream()
-                .filter(p -> p.getName().equals(name))
-                .findFirst()
-                .orElse(null);
-    }
-
-
     public void setId(Long id) {
         this.id = id;
     }

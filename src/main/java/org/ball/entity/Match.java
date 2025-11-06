@@ -36,11 +36,6 @@ public class Match {
     private LocalDateTime date;
 
     @Transient
-    private List<Goal> homeGoals;
-    @Transient
-    private List<Goal> awayGoals;
-
-    @Transient
     private Integer season;
 
     @PostLoad
@@ -56,8 +51,8 @@ public class Match {
     }
 
     private void calculateGoals() {
-        homeTeamScore = homeGoals.size();
-        awayTeamScore = awayGoals.size();
+        homeTeamScore = getHomeGoals().size();
+        awayTeamScore = getAwayGoals().size();
     }
 
     public Match(Builder builder) {
@@ -70,22 +65,21 @@ public class Match {
             goal.setMatch(this);
         }
 
-        homeGoals = extractGoalsOf(homeClub);
-        awayGoals = extractGoalsOf(awayClub);
-
         calculateGoals();
     }
 
-
-
     public Match() {}
 
-    private List<Goal> extractGoalsOf(Club club) {
-        List<Goal> filteredGoals = goals.stream()
-                .filter(goal -> goal.getPlayer().getClub().getId().equals(club.getId()))
+    private List<Goal> getHomeGoals() {
+        return goals.stream()
+                .filter(goal -> goal.getPlayer().getClub().getId().equals(homeClub.getId()))
                 .collect(Collectors.toList());
+    }
 
-        return filteredGoals.isEmpty() ? Collections.emptyList() : filteredGoals;
+    private List<Goal> getAwayGoals() {
+        return goals.stream()
+                .filter(goal -> goal.getPlayer().getClub().getId().equals(awayClub.getId()))
+                .collect(Collectors.toList());
     }
 
     public Club getAwayClub() {
@@ -110,14 +104,6 @@ public class Match {
 
     public List<Goal> getGoals() {
         return goals;
-    }
-
-    public List<Goal> getHomeGoals() {
-        return homeGoals;
-    }
-
-    public List<Goal> getAwayGoals() {
-        return awayGoals;
     }
 
     public int getHomeTeamScore() {
