@@ -7,32 +7,35 @@ alter table players
     add constraint current_club_id
         foreign key (current_club_id) references clubs (id);
 
-INSERT INTO players (name, age, position, reflexes, diving, physical, passing, current_club_id)
-VALUES
-    ('Víctor Valdés', 43, 'GOALKEEPER', 88, 85, 70, 65, 2),
-    ('Alisson Becker', 32, 'GOALKEEPER', 91, 89, 78, 80, 1);
+INSERT INTO players (id, name, age, position) VALUES
+-- Liverpool Players (IDs 1-14)
+(1, 'Alisson', 32, 'GOALKEEPER'),
+(2, 'Van Dijk', 33, 'DEFENDER'),
+(3, 'Konate', 25, 'DEFENDER'),
+(4, 'Robertson', 30, 'DEFENDER'),
+(5, 'Alexander-Arnold', 26, 'DEFENDER'),
+(6, 'Mac Allister', 25, 'MIDFIELDER'),
+(7, 'Szoboszlai', 24, 'MIDFIELDER'),
+(8, 'Endo', 31, 'MIDFIELDER'),
+(9, 'Salah', 32, 'FORWARD'),
+(10, 'Nunez', 25, 'FORWARD'),
+(11, 'Diaz', 27, 'FORWARD'),
+(12, 'Kelleher', 26, 'GOALKEEPER'), -- Sub
+(13, 'Gomez', 27, 'DEFENDER'),     -- Sub
+(14, 'Jones', 23, 'MIDFIELDER'),   -- Sub
 
-INSERT INTO players (name, age, position, defending, physical, pace, passing, stamina, current_club_id)
-VALUES
-    ('Carles Puyol', 47, 'DEFENDER', 94, 90, 70, 75, 85, 2),
-    ('Gerard Piqué', 38, 'DEFENDER', 90, 85, 68, 80, 78, 2),
-    ('Virgil van Dijk', 34, 'DEFENDER', 94, 92, 78, 83, 84, 1),
-    ('Jamie Carragher', 47, 'DEFENDER', 88, 86, 65, 75, 80, 1);
-
-INSERT INTO players (name, age, position, passing, stamina, dribbling, defending, current_club_id)
-VALUES
-    ('Xavi Hernández', 45, 'MIDFIELDER', 96, 92, 88, 70, 2),
-    ('Andrés Iniesta', 41, 'MIDFIELDER', 94, 90, 95, 68, 2),
-    ('Steven Gerrard', 45, 'MIDFIELDER', 90, 88, 86, 78, 1),
-    ('Xabi Alonso', 43, 'MIDFIELDER', 92, 86, 82, 80, 1);
-
-INSERT INTO players (name, age, position, pace, dribbling, shooting, passing, stamina, current_club_id)
-VALUES
-    ('Lionel Messi', 38, 'FORWARD', 87, 99, 95, 93, 82, 2),
-    ('Luis Suárez', 38, 'FORWARD', 80, 86, 92, 85, 78, 2),
-    ('Mohamed Salah', 33, 'FORWARD', 96, 90, 91, 83, 85, 1),
-    ('Sadio Mané', 33, 'FORWARD', 94, 88, 89, 80, 88, 1);
-
-INSERT INTO players (name, age, position, pace, dribbling, shooting, passing, stamina)
-VALUES
-    ('Adelin Vancea', 20, 'FORWARD', 87, 99, 95, 93, 82);
+-- Barcelona Players (IDs 15-28)
+(15, 'Ter Stegen', 32, 'GOALKEEPER'),
+(16, 'Araujo', 25, 'DEFENDER'),
+(17, 'Kounde', 26, 'DEFENDER'),
+(18, 'Balde', 21, 'DEFENDER'),
+(19, 'Cancelo', 30, 'DEFENDER'),
+(20, 'Gavi', 20, 'MIDFIELDER'),
+(21, 'Pedri', 22, 'MIDFIELDER'),
+(22, 'De Jong', 27, 'MIDFIELDER'),
+(23, 'Yamal', 17, 'FORWARD'),
+(24, 'Lewandowski', 36, 'FORWARD'),
+(25, 'Raphinha', 28, 'FORWARD'),
+(26, 'Pena', 25, 'GOALKEEPER'),   -- Sub
+(27, 'Martinez', 23, 'DEFENDER'),   -- Sub
+(28, 'Torres', 24, 'FORWARD');     -- Sub

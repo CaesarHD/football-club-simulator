@@ -3,6 +3,7 @@ package org.ball.controller;
 import org.ball.Utils.Constants;
 import org.ball.entity.Goal;
 import org.ball.entity.Match;
+import org.ball.entity.PlayerMatchStats;
 import org.ball.repository.MatchRepository;
 import org.ball.service.GoalService;
 import org.ball.service.MatchService;
@@ -33,6 +34,16 @@ public class MatchController {
                                           @PathVariable("year") int year) {
         return matchService.getMatchesBySeasonAndClubName(year, clubName);
     }
+
+    @GetMapping("/stats/{matchId}/{clubId}")
+    public List<PlayerMatchStats> getPlayerMatchStatsForClub(
+            @PathVariable Long matchId,
+            @PathVariable Long clubId) {
+
+        return matchService.getAllPlayersMatchStatsByMatchAndClub(matchId, clubId);
+    }
+
+
 
     @GetMapping("/goals/{matchId}")
     public List<Goal> getGoals(@PathVariable("matchId") Long matchId) {

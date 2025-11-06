@@ -7,11 +7,13 @@ import org.ball.entity.Goal;
 import org.ball.entity.GoalType;
 import org.ball.entity.Match;
 import org.ball.repository.GoalRepository;
+import org.ball.entity.PlayerMatchStats;
 import org.ball.repository.MatchRepository;
 import org.ball.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.ball.repository.PlayerMatchStatsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,11 +24,19 @@ import java.util.List;
 public class MatchService {
 
     private final MatchRepository matchRepository;
+    private final PlayerMatchStatsRepository playerMatchStatsRepository;
     private final GoalRepository goalRepository;
     private static final Logger log =  LoggerFactory.getLogger(MatchService.class);
 
-    public MatchService(MatchRepository matchRepository, GoalRepository goalRepository) {
+
+    public List<PlayerMatchStats> getAllPlayersMatchStatsByMatchAndClub(Long matchId, Long clubId) {
+        return playerMatchStatsRepository.findAllByMatchIdAndClubId(matchId, clubId);
+    }
+
+
+    public MatchService(MatchRepository matchRepository, PlayerMatchStatsRepository playerMatchStatsRepository, GoalRepository goalRepository) {
         this.matchRepository = matchRepository;
+        this.playerMatchStatsRepository = playerMatchStatsRepository;
         this.goalRepository = goalRepository;
     }
 
@@ -137,6 +147,7 @@ public class MatchService {
     public List<Match> getMatchesBySeason(int year) {
         return matchRepository.findAllMatchesByYear(year);
     }
+
 
     public Match getMatchById(Long matchId) {
         Match match;
