@@ -50,6 +50,6 @@ public class Main {
                 .date(LocalDateTime.of(2025, 7, 24, 19, 0))
                 .build();
 
-        //matchService.saveMatch(match);
+//        matchService.saveMatch(match);
     }
 }

@@ -1,4 +1,4 @@
-fetch('/players')
+fetch('/api/players')
     .then(response => {
         if (!response.ok) {
             throw new Error('Error fetching players: ' + response.status);

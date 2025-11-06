@@ -45,8 +45,8 @@ public class MatchController {
 
 
 
-    @GetMapping("/goals/{matchId}")
-    public List<Goal> getGoals(@PathVariable("matchId") Long matchId) {
+    @GetMapping("/goals")
+    public List<Goal> getGoals(@RequestParam("matchId") Long matchId) {
         System.out.println("Fetching goals for matchId = " + matchId);
 
         if (matchId == null) {
