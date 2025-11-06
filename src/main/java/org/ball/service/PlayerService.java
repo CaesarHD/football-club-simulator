@@ -34,7 +34,7 @@ public class PlayerService {
         Player player;
         try {
             log.info("Finding player by club {} and name {}", club.getName(), playerName);
-            player = playerRepository.findPlayerByClubAndName(club, playerName);
+            player = playerRepository.findPlayerByNameAndClubId(playerName, club.getId());
             log.info("Found player by club {} and name {}", club.getName(), playerName);
         } catch (Exception e) {
             throw new NullPointerException("Could not find player by club and name " + playerName);

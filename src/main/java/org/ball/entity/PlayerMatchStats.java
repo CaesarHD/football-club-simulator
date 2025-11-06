@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "match_stats")
+@Table(name = "player_match_stats")
 public class PlayerMatchStats {
 
     @Id
