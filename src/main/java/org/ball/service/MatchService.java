@@ -4,12 +4,10 @@ import org.ball.Utils.Constants;
 import org.ball.Utils.DataUtil;
 import org.ball.entity.Club;
 import org.ball.entity.Goal;
-import org.ball.entity.GoalType;
 import org.ball.entity.Match;
 import org.ball.repository.GoalRepository;
 import org.ball.entity.PlayerMatchStats;
 import org.ball.repository.MatchRepository;
-import org.ball.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,6 @@ import org.ball.repository.PlayerMatchStatsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,12 +24,6 @@ public class MatchService {
     private final PlayerMatchStatsRepository playerMatchStatsRepository;
     private final GoalRepository goalRepository;
     private static final Logger log =  LoggerFactory.getLogger(MatchService.class);
-
-
-    public List<PlayerMatchStats> getAllPlayersMatchStatsByMatchAndClub(Long matchId, Long clubId) {
-        return playerMatchStatsRepository.findAllByMatchIdAndClubId(matchId, clubId);
-    }
-
 
     public MatchService(MatchRepository matchRepository, PlayerMatchStatsRepository playerMatchStatsRepository, GoalRepository goalRepository) {
         this.matchRepository = matchRepository;
@@ -159,5 +150,30 @@ public class MatchService {
             throw new RuntimeException(e);
         }
         return match;
+    }
+
+    public List<PlayerMatchStats> getAllPlayersMatchStatsByMatchIdAndClubId(Long matchId, Long clubId) {
+        List<PlayerMatchStats> result;
+        try{
+            if(matchId == null || matchId <= 0) {
+                log.warn("Match id is null or empty");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Match id is null or empty");
+            }
+            if(clubId == null || clubId <= 0) {
+                log.warn("Club id is null or empty");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Club id is null or empty");
+            }
+
+            log.debug("Getting players match stats by match id {} and club id {}", matchId, clubId);
+
+            result = playerMatchStatsRepository.findAllByMatchIdAndClubId(matchId, clubId);
+
+            log.debug("Found {} players match stats by match id {} and club id {} ", result.size(), matchId, clubId);
+        }
+        catch (Exception e){
+            log.error("Error while fetching players' match stats by match id {} and club id {}", matchId, clubId, e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not fetch communicate with the db");
+        }
+        return playerMatchStatsRepository.findAllByMatchIdAndClubId(matchId, clubId);
     }
 }

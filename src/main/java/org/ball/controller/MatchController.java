@@ -4,10 +4,8 @@ import org.ball.Utils.Constants;
 import org.ball.entity.Goal;
 import org.ball.entity.Match;
 import org.ball.entity.PlayerMatchStats;
-import org.ball.repository.MatchRepository;
 import org.ball.service.GoalService;
 import org.ball.service.MatchService;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,7 +38,7 @@ public class MatchController {
             @PathVariable Long matchId,
             @PathVariable Long clubId) {
 
-        return matchService.getAllPlayersMatchStatsByMatchAndClub(matchId, clubId);
+        return matchService.getAllPlayersMatchStatsByMatchIdAndClubId(matchId, clubId);
     }
 
 
