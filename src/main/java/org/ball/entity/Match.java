@@ -1,14 +1,12 @@
 package org.ball.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import org.ball.Utils.Constants;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "matches")
@@ -27,12 +25,7 @@ public class Match {
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Goal> goals;
-
-    @Column(name = "home_team_score")
-    private int homeTeamScore;
-    @Column(name = "away_team_score")
-    private int awayTeamScore;
+    private List<Goal> goals = new ArrayList<>();
 
     private LocalDateTime date;
 
@@ -50,11 +43,15 @@ public class Match {
         this.season = this.date.getYear();
     }
 
+    @JsonProperty("homeTeamNoGoals")
+    public int getHomeTeamNoGoals() {
+        if (homeClub == null || goals == null) return 0;
+        return (int) goals.stream().filter(g -> g.getClub().equals(homeClub)).count();
+    }
 
-
-    private void calculateGoals() {
-        homeTeamScore = getHomeGoals().size();
-        awayTeamScore = getAwayGoals().size();
+    @JsonProperty("awayTeamNoGoals")
+    public int getAwayTeamNoGoals() {
+        return (int) goals.stream().filter(g -> g.getClub().equals(awayClub)).count();
     }
 
     public Match(Builder builder) {
@@ -67,7 +64,6 @@ public class Match {
             goal.setMatch(this);
         }
 
-        calculateGoals();
     }
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -77,16 +73,9 @@ public class Match {
     List<PlayerMatchStats> awayTeam;
 
     public Match() {}
-    private List<Goal> getHomeGoals() {
-        return goals.stream()
-                .filter(goal -> goal.getPlayer().getClub().getId().equals(homeClub.getId()))
-                .collect(Collectors.toList());
-    }
 
-    private List<Goal> getAwayGoals() {
-        return goals.stream()
-                .filter(goal -> goal.getPlayer().getClub().getId().equals(awayClub.getId()))
-                .collect(Collectors.toList());
+    public List<Goal> getGoals() {
+        return goals;
     }
 
     public Club getAwayClub() {
@@ -108,25 +97,6 @@ public class Match {
     public Long getId() {
         return id;
     }
-    public List<Goal> getGoals() {
-        return goals;
-    }
-
-    public int getHomeTeamScore() {
-        return homeTeamScore;
-    }
-
-    public void setHomeTeamScore(int homeTeamScore) {
-        this.homeTeamScore = homeTeamScore;
-    }
-
-    public int getAwayTeamScore() {
-        return awayTeamScore;
-    }
-
-    public void setAwayTeamScore(int awayTeamScore) {
-        this.awayTeamScore = awayTeamScore;
-    }
 
     public LocalDateTime getDate() {
         return date;
@@ -139,12 +109,11 @@ public class Match {
     @Override
     public String toString() {
         return "Game{" +
-                "homeClub=" + homeClub +
-                ", awayClub=" + awayClub +
-                ", homeTeamScore=" + homeTeamScore +
-                ", awayTeamScore=" + awayTeamScore +
+                "homeClub=" + homeClub.getName() +
+                ", awayClub=" + awayClub.getName() +
+                ", homeTeamScore=" + this.getHomeTeamNoGoals() +
+                ", awayTeamScore=" + this.getAwayTeamNoGoals() +
                 ", date=" + date +
-                ", goals=" + goals +
                 '}';
     }
 
@@ -172,8 +141,6 @@ public class Match {
         return homeTeam;
     }
 
-
-
     public static class Builder {
         private Club homeClub;
         private Club awayClub;
@@ -190,8 +157,8 @@ public class Match {
             return this;
         }
 
-        public Builder addGoal(int minute, Player scorer, GoalType goalType) {
-            Goal goal = new Goal(minute, scorer, goalType);
+        public Builder addGoal(int minute, Player scorer, Club club, GoalType goalType) {
+            Goal goal = new Goal(minute, club, scorer, goalType);
             goals.add(goal);
             return this;
         }

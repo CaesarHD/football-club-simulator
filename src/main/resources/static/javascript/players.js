@@ -10,7 +10,6 @@ fetch('/api/players')
         players.forEach(player => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${player.id}</td>
                 <td>
                      <a href="javascript:void(0)" onclick="openPlayerHistory(${player.id})">
                         ${player.name}

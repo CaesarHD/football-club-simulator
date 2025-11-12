@@ -40,7 +40,6 @@ function renderPlayerStats(statsList) {
         const row = document.createElement('tr');
 
         row.innerHTML = `
-            <td>${stats.player?.id ?? '-'}</td>
             <td>${stats.player?.name ?? '-'}</td>
             <td>${stats.position ?? '-'}</td>
             <td>${stats.status ?? '-'}</td>

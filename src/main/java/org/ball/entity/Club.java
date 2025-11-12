@@ -4,28 +4,36 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "clubs")
 public class Club {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int budget;
+    private String country;
+
+    @OneToOne
+    @JoinColumn(name = "stadium_id")
+    private Stadium stadium;
+
+
 
     @OneToMany(mappedBy = "club")
     @JsonIgnore
-    private List<Player> players;
+    private List<Player> players =  new ArrayList<>();
 
+    public Club() {}
 
-
-    public Club() {
-    }
-
-    public Club(String name) {
+    public Club(String name,  int budget, Stadium stadium) {
         this.name = name;
+        this.budget = budget;
+        this.stadium = stadium;
     }
 
     public void setId(Long id) {
@@ -57,8 +65,32 @@ public class Club {
         this.budget = budget;
     }
 
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public Stadium getStadium() {
+        return stadium;
+    }
+
+    public void setStadium(Stadium stadium) {
+        this.stadium = stadium;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
 }

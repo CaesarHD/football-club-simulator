@@ -31,21 +31,21 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    @PostConstruct
-    public void init() {
-
-
-        Club liverpool = clubService.getClubByName("Liverpool");
-        Club psg = clubService.getClubByName("PSG");
-
-        Match match = new Match.Builder()
-                .homeClub(liverpool)
-                .awayClub(psg)
-                .addGoal(12, playerService.getPlayerByNameAndClub(liverpool, "Salah"), GoalType.PENALTY)
-                .addGoal(54, playerService.getPlayerByNameAndClub(liverpool, "Van Dijk"), GoalType.FREE_KICK)
-                .date(LocalDateTime.of(2025, 7, 24, 19, 0))
-                .build();
-
-        //matchService.saveMatch(match);
-    }
+//    @PostConstruct
+//    public void init() {
+//
+//
+//        Club liverpool = clubService.getClubByName("Liverpool");
+//        Club barcelona = clubService.getClubByName("Barcelona");
+//
+//        Match match = new Match.Builder()
+//                .homeClub(liverpool)
+//                .awayClub(barcelona)
+//                .addHomeClubGoal(12, playerService.getPlayerByNameAndClub(liverpool, "Salah"), liverpool, GoalType.PENALTY)
+//                .addAwayClubGoal(54, playerService.getPlayerByNameAndClub(liverpool, "Lewandowski"), barcelona, GoalType.FREE_KICK)
+//                .date(LocalDateTime.of(2025, 7, 24, 19, 0))
+//                .build();
+//
+//        //matchService.saveMatch(match);
+//    }
 }

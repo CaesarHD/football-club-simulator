@@ -2,7 +2,9 @@ package org.ball.service;
 
 import org.ball.entity.Club;
 import org.ball.entity.Player;
+import org.ball.entity.Stadium;
 import org.ball.repository.ClubRepository;
+import org.ball.repository.StadiumRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,9 +18,12 @@ import java.util.List;
 public class ClubService {
     private static final Logger log = LoggerFactory.getLogger(ClubService.class);
     private final ClubRepository clubRepository;
+    private final StadiumRepository stadiumRepository;
 
-    public ClubService(ClubRepository clubRepository) {
+
+    public ClubService(ClubRepository clubRepository, StadiumRepository stadiumRepository) {
         this.clubRepository = clubRepository;
+        this.stadiumRepository = stadiumRepository;
     }
 
     public List<Club> getAllClubs() {
@@ -32,8 +37,6 @@ public class ClubService {
         }
         return clubs;
     }
-
-
 
     public Club getClubByName(String name) {
         if(name == null || name.isEmpty()) {
@@ -49,6 +52,13 @@ public class ClubService {
             throw new RuntimeException(e);
         }
         return club;
+    }
+
+    public Club saveClub(Club club, int stadiumId) {
+        Stadium stadium = stadiumRepository.findById(stadiumId)
+                .orElseThrow(() -> new RuntimeException("Stadium not found"));
+        club.setStadium(stadium);
+        return clubRepository.save(club);
     }
 
 }

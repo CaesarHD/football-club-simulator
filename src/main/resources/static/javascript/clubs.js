@@ -12,6 +12,9 @@ fetch('/api/clubs')
             row.innerHTML = `
                 <td><a href="../html/matches.html?clubName=${club.name}">${club.name}</a></td>
                 <td>${club.budget} mil</td>
+                <td>${club.stadium ? club.stadium.name : '-'}</td>
+                <td>${club.stadium ? club.stadium.capacity : '-'}k</td>
+                <td>${club.country ? club.country : '-'}</td>
             `;
             tableBody.appendChild(row);
         });

@@ -76,10 +76,12 @@ public class MatchService {
         try {
             log.info("Saving match {}", match);
             matchRepository.save(match);
+
             log.info("Match {} saved", match);
             log.info("Saving goals {}",  match.getGoals());
             saveMatchGoals(match.getGoals());
             log.info("Goals {} saved",  match.getGoals());
+
         } catch (Exception e) {
             log.error("Error saving match {}", match, e);
             throw new IllegalStateException("Error saving match", e);
