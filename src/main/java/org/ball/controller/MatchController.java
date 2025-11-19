@@ -78,4 +78,35 @@ public class MatchController {
         );
     }
 
+    @GetMapping("/details/{matchId}/{clubId}")
+    public Map<String, Object> getMatchDetails(
+            @PathVariable Long matchId,
+            @PathVariable Long clubId) {
+
+        Match match = matchService.getMatchById(matchId);
+        if (match == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Match not found");
+        }
+
+        List<PlayerMatchStats> players =
+                matchService.getAllPlayersMatchStatsByMatchIdAndClubId(matchId, clubId);
+
+        boolean isHome = match.getHomeClub().getId().equals(clubId);
+
+        Map<String, Object> teamStats = Map.of(
+                "possession", isHome ? match.getHomeTeamPossession() : match.getAwayTeamPossession(),
+                "shots", isHome ? match.getHomeTeamShots() : match.getAwayTeamShots(),
+                "passes", isHome ? match.getHomeTeamPasses() : match.getAwayTeamPasses(),
+                "corners", isHome ? match.getHomeTeamCorners() : match.getAwayTeamCorners(),
+                "formation", isHome ? match.getHomeTeamFormation() : match.getAwayTeamFormation(),
+                "strategy", isHome ? match.getHomeTeamStrategy() : match.getAwayTeamStrategy()
+        );
+
+        return Map.of(
+                "teamStats", teamStats,
+                "players", players
+        );
+    }
+
+
 }

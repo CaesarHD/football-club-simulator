@@ -57,12 +57,29 @@
 <h1 id="match-stats-title">Players Stats</h1>
 
 <div class="table-container">
+
+    <div id="team-stats" class="table-container mb-4" style="display:none;">
+        <h3>Team Stats</h3>
+        <table class="table table-bordered">
+            <tbody>
+            <tr><th>Possession</th><td id="possession"></td></tr>
+            <tr><th>Shots</th><td id="shots"></td></tr>
+            <tr><th>Passes</th><td id="passes"></td></tr>
+            <tr><th>Corners</th><td id="corners"></td></tr>
+            <tr><th>Formation</th><td id="formation"></td></tr>
+            <tr><th>Strategy</th><td id="strategy"></td></tr>
+            </tbody>
+        </table>
+    </div>
+
     <table class="table table-striped table-hover align-middle">
         <thead>
+
         <tr>
             <th>Player Name</th>
             <th>Position</th>
-            <th>Status</th>
+            <th>Status At The Start Of The Match</th>
+            <th>Status At The End Of The Match</th>
         </tr>
         </thead>
         <tbody id="player-stats-table-body">

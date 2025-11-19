@@ -5,7 +5,8 @@ create table player_match_stats
     match_id      BIGINT      not null,
     player_id     BIGINT      not null,
     club_id       BIGINT      not null,
-    status varchar(30) null,
+    status_start varchar(30) null,
+    status_end varchar(30) null,
     position varchar(30) null,
     id            BIGINT auto_increment
         primary key,

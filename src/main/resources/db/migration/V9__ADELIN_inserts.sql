@@ -75,46 +75,57 @@ VALUES
 (27, 2, 0, 0, 0, '2022-07-01', NULL), -- Sub
 (28, 2, 0, 0, 0, '2022-01-01', NULL); -- Sub
 
-INSERT INTO matches (home_club_id, away_club_id, date)
-VALUES ((SELECT id FROM clubs WHERE name = 'Liverpool'), (SELECT id FROM clubs WHERE name = 'Barcelona'),
-        '2025-01-11 18:00:00');
+INSERT INTO matches (
+    home_club_id, away_club_id, date,
+    home_team_possession, away_team_possession,
+    home_team_strategy, away_team_strategy,
+    home_team_formation, away_team_formation
+)
+VALUES (
+           (SELECT id FROM clubs WHERE name = 'Liverpool'),
+           (SELECT id FROM clubs WHERE name = 'Barcelona'),
+           '2025-01-11 18:00:00',
+           40, 60,
+           'ATTACKING', 'DEFENDING',
+           'F4_3_3', 'F4_3_1_2'
+       );
 
-INSERT INTO player_match_stats (match_id, player_id, club_id, status, position) VALUES
+INSERT INTO player_match_stats (match_id, player_id, club_id, status_start, status_end, position) VALUES
 -- Liverpool Starters (Club ID: 1, Match ID: 1)
-(1, 1, 1, 'STARTER', 'GOALKEEPER'),
-(1, 2, 1, 'STARTER', 'DEFENDER'),
-(1, 3, 1, 'STARTER', 'DEFENDER'),
-(1, 4, 1, 'STARTER', 'DEFENDER'),
-(1, 5, 1, 'STARTER', 'DEFENDER'),
-(1, 6, 1, 'STARTER', 'MIDFIELDER'),
-(1, 7, 1, 'STARTER', 'MIDFIELDER'),
-(1, 8, 1, 'STARTER', 'MIDFIELDER'),
-(1, 9, 1, 'STARTER', 'FORWARD'),
-(1, 10, 1, 'STARTER', 'FORWARD'),
-(1, 11, 1, 'STARTER', 'FORWARD'),
+(1, 1, 1, 'WHOLE_GAME', 'WHOLE_GAME', 'GOALKEEPER'),
+(1, 2, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'DEFENDER'),
+(1, 3, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'DEFENDER'),
+(1, 4, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'DEFENDER'),
+(1, 5, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'DEFENDER'),
+(1, 6, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'MIDFIELDER'),
+(1, 7, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'MIDFIELDER'),
+(1, 8, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'MIDFIELDER'),
+(1, 9, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'FORWARD'),
+(1, 10, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'FORWARD'),
+(1, 11, 1, 'WHOLE_GAME', 'WHOLE_GAME',  'FORWARD'),
 
 -- Liverpool Substitutes (Club ID: 1, Match ID: 1)
-(1, 12, 1, 'SUBSTITUTE', 'GOALKEEPER'),
-(1, 13, 1, 'SUBSTITUTE', 'DEFENDER'),
-(1, 14, 1, 'SUBSTITUTE', 'MIDFIELDER'),
+(1, 12, 1, 'SUBSTITUTE', 'SUBSTITUTE', 'GOALKEEPER'),
+(1, 13, 1, 'SUBSTITUTE', 'SUBSTITUTE', 'DEFENDER'),
+(1, 14, 1, 'SUBSTITUTE', 'SUBSTITUTE', 'MIDFIELDER'),
 
 -- Barcelona Starters (Club ID: 2, Match ID: 1)
-(1, 15, 2, 'STARTER', 'GOALKEEPER'),
-(1, 16, 2, 'STARTER', 'DEFENDER'),
-(1, 17, 2, 'STARTER', 'DEFENDER'),
-(1, 18, 2, 'STARTER', 'DEFENDER'),
-(1, 19, 2, 'STARTER', 'DEFENDER'),
-(1, 20, 2, 'STARTER', 'MIDFIELDER'),
-(1, 21, 2, 'STARTER', 'MIDFIELDER'),
-(1, 22, 2, 'STARTER', 'MIDFIELDER'),
-(1, 23, 2, 'STARTER', 'FORWARD'),
-(1, 24, 2, 'STARTER', 'FORWARD'),
-(1, 25, 2, 'STARTER', 'FORWARD'),
+(1, 15, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'GOALKEEPER'),
+(1, 16, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'DEFENDER'),
+(1, 17, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'DEFENDER'),
+(1, 18, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'DEFENDER'),
+(1, 19, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'DEFENDER'),
+(1, 20, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'MIDFIELDER'),
+(1, 21, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'MIDFIELDER'),
+(1, 22, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'MIDFIELDER'),
+(1, 23, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'FORWARD'),
+(1, 24, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'FORWARD'),
+(1, 25, 2, 'WHOLE_GAME', 'WHOLE_GAME',  'FORWARD'),
 
 -- Barcelona Substitutes (Club ID: 2, Match ID: 1)
-(1, 26, 2, 'SUBSTITUTE', 'GOALKEEPER'),
-(1, 27, 2, 'SUBSTITUTE', 'DEFENDER'),
-(1, 28, 2, 'SUBSTITUTE', 'FORWARD');
+(1, 26, 2, 'SUBSTITUTE', 'SUBSTITUTE',  'GOALKEEPER'),
+(1, 27, 2, 'SUBSTITUTE', 'SUBSTITUTE',  'DEFENDER'),
+(1, 28, 2, 'SUBSTITUTE', 'SUBSTITUTE', 'FORWARD');
 
 
 
