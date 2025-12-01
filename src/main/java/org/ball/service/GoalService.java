@@ -12,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+import static org.ball.Utils.ValidationUtil.validateMatch;
+
 @Service
 public class GoalService {
     private final MatchRepository matchRepository;
@@ -23,7 +25,7 @@ public class GoalService {
     }
 
     public List<Goal> getGoals(Match match) {
-        MatchService.validateMatch(match);
+        validateMatch(match);
         List<Goal> goals;
         try {
             log.info("Finding goals for match {}", match);
