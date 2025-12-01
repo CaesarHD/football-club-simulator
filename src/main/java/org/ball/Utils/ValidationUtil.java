@@ -1,9 +1,9 @@
 package org.ball.Utils;
 
 import org.apache.logging.log4j.util.Strings;
-import org.ball.entity.Club;
-import org.ball.entity.Goal;
-import org.ball.entity.Match;
+import org.ball.domain.Club;
+import org.ball.domain.Goal;
+import org.ball.domain.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
