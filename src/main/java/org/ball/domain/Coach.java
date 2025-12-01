@@ -1,23 +1,19 @@
-package org.ball.entity;
+package org.ball.domain;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name ="managers")
-public class Manager {
+@Table(name = "coaches")
+public class Coach {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    public Manager() {}
+    public Coach() {}
 
-    public Manager(String name) {
-        this.name = name;
-    }
-
-    public void setName(String name) {
+    public Coach(String name) {
         this.name = name;
     }
 
@@ -29,9 +25,13 @@ public class Manager {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
-        return "Manager{" +
+        return "Coach{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

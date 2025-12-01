@@ -1,7 +1,7 @@
 package org.ball.service;
 
-import org.ball.entity.Goal;
-import org.ball.entity.Match;
+import org.ball.domain.Goal;
+import org.ball.domain.Match;
 import org.ball.repository.GoalRepository;
 import org.ball.repository.MatchRepository;
 import org.slf4j.Logger;

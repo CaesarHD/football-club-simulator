@@ -1,7 +1,6 @@
 package org.ball.service;
 
-import org.ball.entity.Manager;
-import org.ball.entity.Player;
+import org.ball.domain.Manager;
 import org.ball.repository.ManagerRepository;
 
 import java.util.List;

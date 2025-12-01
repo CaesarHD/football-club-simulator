@@ -7,33 +7,38 @@ fetch('/api/players')
     })
     .then(players => {
         const tableBody = document.getElementById('players-table');
+
         players.forEach(player => {
+
+            const skills = player.skills || {}; // safe fallback if null
+
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${player.id}</td>
                 <td>
-                     <a href="javascript:void(0)" onclick="openPlayerHistory(${player.id})">
+                    <a href="javascript:void(0)" onclick="openPlayerHistory(${player.id})">
                         ${player.name}
-                     </a>
+                    </a>
                 </td>
+
                 <td>${player.age}</td>
-                <td>${player.position}</td>
                 <td>${player.club ? player.club.name : 'No club'}</td>
-                <td>${player.pace}</td>
-                <td>${player.stamina}</td>
-                <td>${player.defending}</td>
-                <td>${player.physical}</td>
-                <td>${player.dribbling}</td>
-                <td>${player.shooting}</td>
-                <td>${player.passing}</td>
-                <td>${player.position === 'GOALKEEPER' ? player.reflexes : '-'}</td>
-                <td>${player.position === 'GOALKEEPER' ? player.diving : '-'}</td>
+                <td>${skills.position || '-'}</td>
+
+                <td>${skills.pace ?? '-'}</td>
+                <td>${skills.stamina ?? '-'}</td>
+                <td>${skills.defending ?? '-'}</td>
+                <td>${skills.physical ?? '-'}</td>
+                <td>${skills.dribbling ?? '-'}</td>
+                <td>${skills.shooting ?? '-'}</td>
+                <td>${skills.passing ?? '-'}</td>
+
+                <td>${skills.position === 'GOALKEEPER' ? (skills.reflexes ?? '-') : '-'}</td>
+                <td>${skills.position === 'GOALKEEPER' ? (skills.diving ?? '-') : '-'}</td>
             `;
             tableBody.appendChild(row);
         });
     })
     .catch(error => {
-
         console.error('Error:', error);
     });
 
