@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-import static org.ball.Utils.ValidationUtil.validateMatch;
+import static org.ball.Utils.ValidationUtil.*;
 
 @Service
 public class GoalService {
@@ -27,6 +27,7 @@ public class GoalService {
     public List<Goal> getGoals(Match match) {
         validateMatch(match);
         List<Goal> goals;
+
         try {
             log.info("Finding goals for match {}", match);
             goals = goalRepository.findByMatch(match);
@@ -38,31 +39,6 @@ public class GoalService {
         return goals;
     }
 
-    public static void validateGoal(Goal goal) {
-
-        log.info("Verifying goal {}", goal);
-        if(goal == null) {
-            log.error("Goal cannot be null");
-            throw new NullPointerException("Goal cannot be null");
-        }
-
-        //TODO: validatePlayer
-//        validatePlayer(goal.getPlayer);
-        if(goal.getPlayer() == null) {
-            log.error("Player cannot be null");
-            throw new NullPointerException("Player cannot be null");
-        }
-
-        if(goal.getGoalType() == null) {
-            log.error("Goal type cannot be null");
-            throw new NullPointerException("Goal type cannot be null");
-        }
-
-        if(goal.getMinute() < 0 || goal.getMinute() > 90) {
-            log.error("Invalid minute");
-            throw new IllegalStateException("Invalid minute");
-        }
-    }
 
     public void saveGoal(Goal goal) {
         validateGoal(goal);

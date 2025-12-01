@@ -1,11 +1,17 @@
 package org.ball;
 
+import jakarta.annotation.PostConstruct;
+import org.ball.domain.Club;
+import org.ball.domain.GoalType;
+import org.ball.domain.Match;
 import org.ball.service.ClubService;
 import org.ball.service.GoalService;
 import org.ball.service.MatchService;
 import org.ball.service.PlayerService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class Main {
@@ -27,9 +33,9 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-//    @PostConstruct
-//    public void init() {
-//
+    @PostConstruct
+    public void init() {
+
 //
 //        Club liverpool = clubService.getClubByName("Liverpool");
 //        Club barcelona = clubService.getClubByName("Barcelona");
@@ -37,11 +43,11 @@ public class Main {
 //        Match match = new Match.Builder()
 //                .homeClub(liverpool)
 //                .awayClub(barcelona)
-//                .addHomeClubGoal(12, playerService.getPlayerByNameAndClub(liverpool, "Salah"), liverpool, GoalType.PENALTY)
-//                .addAwayClubGoal(54, playerService.getPlayerByNameAndClub(liverpool, "Lewandowski"), barcelona, GoalType.FREE_KICK)
+//                .addGoal(12, playerService.getPlayerByNameAndClub(liverpool, "Salah"), liverpool, GoalType.PENALTY)
+//                .addGoal(54, playerService.getPlayerByNameAndClub(liverpool, "Lewandowski"), barcelona, GoalType.FREE_KICK)
 //                .date(LocalDateTime.of(2025, 7, 24, 19, 0))
 //                .build();
-//
-//        //matchService.saveMatch(match);
-//    }
+
+        //matchService.saveMatch(match);
+    }
 }

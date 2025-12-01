@@ -12,6 +12,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+import static org.ball.Utils.ValidationUtil.validateClub;
+import static org.ball.Utils.ValidationUtil.validateName;
+
 @Service
 public class ClubService {
     private static final Logger log = LoggerFactory.getLogger(ClubService.class);
@@ -37,10 +40,7 @@ public class ClubService {
     }
 
     public Club getClubByName(String name) {
-        if(name == null || name.isEmpty()) {
-            log.warn("Club name is mandatory, cannot be empty");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Club name is mandatory, cannot be empty");
-        }
+        validateName(name);
         Club club;
         try {
             log.info("Getting club {}", name);
@@ -52,11 +52,18 @@ public class ClubService {
         return club;
     }
 
-    public Club saveClub(Club club, int stadiumId) {
-        Stadium stadium = stadiumRepository.findById(stadiumId)
-                .orElseThrow(() -> new RuntimeException("Stadium not found"));
-        club.setStadium(stadium);
-        return clubRepository.save(club);
+    public Club saveClub(Club club) {
+        validateClub(club);
+        Club saved;
+        try {
+            log.info("Saving club {}", club);
+            saved = clubRepository.save(club);
+            log.info("Returning saved club {}", saved);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return saved;
     }
 
 }

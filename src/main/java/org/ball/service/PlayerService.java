@@ -1,5 +1,6 @@
 package org.ball.service;
 
+import org.ball.Utils.ValidationUtil;
 import org.ball.domain.Club;
 import org.ball.domain.Player;
 import org.ball.domain.PlayerHistory;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+
+import static org.ball.Utils.ValidationUtil.*;
 
 @Service
 public class PlayerService {
@@ -27,16 +30,10 @@ public class PlayerService {
 
     public Player savePlayer(Player player) {
         Player result;
-        try {
-            if(player == null) {
-                log.warn("Player is null");
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player payload is mandatory, cannot be null");
-            }
 
-            if(player.getName() == null || player.getName().isEmpty()) {
-                log.warn("Player name is null or empty");
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player name is mandatory, cannot be null");
-            }
+        validatePlayer(player);
+
+        try {
 
             log.debug("Saving player {}...", player.getName());
             result = playerRepository.save(player);
@@ -62,21 +59,16 @@ public class PlayerService {
             log.error("Error while fetching all players ", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not communicate with the db ");
         }
-
         return result;
     }
 
     public Player getPlayerByNameAndClub(Club club, String playerName) {
+
+        validateClub(club);
+
         Player result;
         try {
-            if(club == null) {
-                log.warn("Club is null");
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Club payload is mandatory, cannot be null");
-            }
-            else if(playerName == null || playerName.isEmpty()) {
-                log.warn("Player name is null or empty");
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player name is mandatory, cannot be null");
-            }
+            validateName(playerName);
             log.info("Finding player by club {} and name {}", club.getName(), playerName);
             result = playerRepository.findPlayerByNameAndClubId(playerName, club.getId());
             log.info("Found player by club {} and name {}", club.getName(), playerName);

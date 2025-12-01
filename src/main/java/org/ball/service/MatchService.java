@@ -33,61 +33,12 @@ public class MatchService {
         this.goalRepository = goalRepository;
     }
 
-    public static void validateMatch(Match match) {
-        if (match == null) {
-            log.warn("Match is null");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Match payload is mandatory");
-        }
-
-        if (match.getHomeClub() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Home club cannot be null");
-        }
-
-        if (match.getAwayClub() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Away club cannot be null");
-        }
-
-        if (match.getDate() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Match date cannot be null");
-        }
-
-        validateClubName(match.getHomeClub().getName());
-        validateClubName(match.getAwayClub().getName());
-    }
-
-    private static void validateClubName(String clubName) {
-        if (clubName == null || clubName.isEmpty()) {
-            log.warn("Club name is null or empty");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Club name cannot be null or empty");
-        }
-    }
-
-    private static void validateSeason(int season) {
-        if (season < Constants.FIRST_SEASON_YEAR || season > DataUtil.getCurrentYear()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Invalid season: " + season);
-        }
-    }
-
-
     public void saveMatch(Match match) {
 
         validateMatch(match);
 
         try {
             log.info("Saving match {}", match);
-
-            if (match.getHomeTeamStats() == null) {
-                match.setHomeTeamStats(new TeamMatchStats());
-            }
-            if (match.getAwayTeamStats() == null) {
-                match.setAwayTeamStats(new TeamMatchStats());
-            }
 
             Match saved = matchRepository.save(match);
 
@@ -104,8 +55,7 @@ public class MatchService {
 
     private void saveMatchGoals(List<Goal> goals) {
 
-        if (goals == null || goals.isEmpty())
-            return;
+        validateGoals(goals);
 
         log.info("Saving match goals {}", goals);
 
@@ -123,7 +73,7 @@ public class MatchService {
     public List<Match> getMatchesBySeasonAndClubName(int season, String clubName) {
 
         validateSeason(season);
-        validateClubName(clubName);
+        validateName(clubName);
 
         try {
             return matchRepository.findAllMatchesByYearAndClubName(season, clubName);
@@ -134,19 +84,8 @@ public class MatchService {
         }
     }
 
-
-    public List<Match> getMatchesByClubName(String clubName) {
-        validateClubName(clubName);
-        return matchRepository.findAllMatchesByClub(clubName);
-    }
-
-    public List<Match> getMatchesBySeason(int year) {
-        validateSeason(year);
-        return matchRepository.findAllMatchesByYear(year);
-    }
-
-
     public Match getMatchById(Long matchId) {
+
         if (matchId == null || matchId <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Match ID invalid");
         }
@@ -165,6 +104,7 @@ public class MatchService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Could not fetch match");
         }
+
     }
 
     public List<PlayerMatchStats> getAllPlayersMatchStatsByMatchIdAndClubId(Long matchId, Long clubId) {

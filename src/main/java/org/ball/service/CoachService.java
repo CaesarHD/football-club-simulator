@@ -10,6 +10,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+import static org.ball.Utils.ValidationUtil.validateCoach;
+import static org.ball.Utils.ValidationUtil.validateName;
+
 @Service
 public class CoachService {
     private static final Logger log = LoggerFactory.getLogger(CoachService.class);
@@ -21,18 +24,10 @@ public class CoachService {
     }
 
     public Coach saveCoach(Coach coach) {
-        //NOTE: example of Service method with logging and exception handling
+        validateCoach(coach);
+
         Coach result;
-
         try {
-            if (coach == null) {
-                log.warn("Coach is null");
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Coach payload is mandatory, cannot be null");
-            }
-
-            if (coach.getName() == null || coach.getName().isEmpty()) {
-                //todo: implement this
-            }
 
             log.debug("Saving coach with id {}", coach.getId());
 
@@ -48,6 +43,17 @@ public class CoachService {
     }
 
     public List<Coach> getAllCoaches() {
-        return coachRepository.findAll();
+
+        List<Coach> coaches;
+        try {
+            log.debug("Retrieving all coaches");
+            coaches = coachRepository.findAll();
+            log.debug("Retrieving all coaches successfully");
+        } catch (Exception e) {
+            log.error("Error while retrieving all coaches", e);
+            throw new RuntimeException(e);
+        }
+
+        return coaches;
     }
 }
