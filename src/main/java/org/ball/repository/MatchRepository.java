@@ -39,4 +39,6 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
                                                 @Param("clubName") String clubName);
 
     Match findMatchById(Long id);
+
+    Match getMatchById(Long id);
 }

@@ -1,6 +1,6 @@
 package org.ball.service;
 
-import org.ball.Utils.ValidationUtil;
+import org.springframework.transaction.annotation.Transactional;
 import org.ball.domain.Club;
 import org.ball.domain.Player;
 import org.ball.domain.PlayerHistory;
@@ -63,19 +63,21 @@ public class PlayerService {
     }
 
     public Player getPlayerByNameAndClub(Club club, String playerName) {
-
         validateClub(club);
+        validateName(playerName);
 
-        Player result;
-        try {
-            validateName(playerName);
-            log.info("Finding player by club {} and name {}", club.getName(), playerName);
-            result = playerRepository.findPlayerByNameAndClubId(playerName, club.getId());
-            log.info("Found player by club {} and name {}", club.getName(), playerName);
-        } catch (Exception e) {
-            log.error("Error while  fetching player by name {} and club with id {}", playerName, club.getId() , e);
-            throw new NullPointerException("Could not find player by club and name " + playerName);
+        log.info("Finding player by club {} and name {}", club.getName(), playerName);
+
+        Player result = playerRepository.findPlayerByNameAndClubId(playerName, club.getId());
+
+        if (result == null) {
+            throw new NullPointerException("Player " + playerName + " not found in club " + club.getName());
         }
+
+        log.info("Found player {}, club={}",
+                result.getName(),
+                result.getClub().getName());
+
         return result;
     }
 

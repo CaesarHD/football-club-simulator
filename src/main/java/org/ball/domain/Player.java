@@ -9,7 +9,6 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private int age;
 
@@ -20,7 +19,7 @@ public class Player {
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private PlayerSkills skills;
 
-    private double salaryPerSeason;
+    private double salary;
 
     public Player() {}
 
@@ -30,10 +29,10 @@ public class Player {
         this.skills.setPlayer(this);
     }
 
-    public Player(String name, int age,  double salaryPerSeason,  Club club, PlayerSkills skills) {
+    public Player(String name, int age, double salary, Club club, PlayerSkills skills) {
         this.name = name;
         this.age = age;
-        this.salaryPerSeason = salaryPerSeason;
+        this.salary = salary;
         this.club = club;
         skills.setPlayer(this);
         this.skills = skills;
@@ -80,4 +79,11 @@ public class Player {
     }
 
 
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salaryPerSeason) {
+        this.salary = salaryPerSeason;
+    }
 }

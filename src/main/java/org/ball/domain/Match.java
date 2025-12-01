@@ -32,7 +32,6 @@ public class Match {
     @Transient
     private Integer season;
 
-
     @OneToOne
     @JoinColumn(name = "home_team_stats_id")
     private TeamMatchStats homeTeamStats;
@@ -154,6 +153,8 @@ public class Match {
     public static class Builder {
         private Club homeClub;
         private Club awayClub;
+        private TeamMatchStats  homeTeamStats;
+        private TeamMatchStats  awayTeamStats;
         private List<Goal> goals = new ArrayList<>();
         private LocalDateTime date;
 
@@ -164,6 +165,16 @@ public class Match {
 
         public Builder awayClub(Club awayClub) {
             this.awayClub = awayClub;
+            return this;
+        }
+
+        public Builder homeTeamStats(TeamMatchStats homeTeamStats) {
+            this.homeTeamStats = homeTeamStats;
+            return this;
+        }
+
+        public Builder awayTeamStats(TeamMatchStats awayTeamStats) {
+            this.awayTeamStats = awayTeamStats;
             return this;
         }
 

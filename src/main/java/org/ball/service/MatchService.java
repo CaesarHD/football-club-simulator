@@ -1,12 +1,10 @@
 package org.ball.service;
 
-import org.apache.logging.log4j.util.Strings;
-import org.ball.Utils.Constants;
-import org.ball.Utils.DataUtil;
 import org.ball.domain.*;
 import org.ball.repository.GoalRepository;
 import org.ball.repository.MatchRepository;
 import org.ball.repository.PlayerMatchStatsRepository;
+import org.ball.repository.TeamMatchStatsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,28 +19,43 @@ import static org.ball.Utils.ValidationUtil.*;
 public class MatchService {
 
     private final MatchRepository matchRepository;
+    private final TeamMatchStatsRepository teamMatchStatsRepository;
     private final PlayerMatchStatsRepository playerMatchStatsRepository;
     private final GoalRepository goalRepository;
     private static final Logger log = LoggerFactory.getLogger(MatchService.class);
 
-    public MatchService(MatchRepository matchRepository,
+    public MatchService(MatchRepository matchRepository, TeamMatchStatsRepository teamMatchStatsRepository,
                         PlayerMatchStatsRepository playerMatchStatsRepository,
                         GoalRepository goalRepository) {
         this.matchRepository = matchRepository;
+        this.teamMatchStatsRepository = teamMatchStatsRepository;
         this.playerMatchStatsRepository = playerMatchStatsRepository;
         this.goalRepository = goalRepository;
     }
 
     public void saveMatch(Match match) {
 
-        validateMatch(match);
+//        validateMatch(match);
 
         try {
+
+            TeamMatchStats homeTeamMatchStats = match.getHomeTeamStats();
+            TeamMatchStats awayTeamMatchStats = match.getAwayTeamStats();
+
+            log.info("Saving match stats for match" + match);
+            teamMatchStatsRepository.save(homeTeamMatchStats);
+            teamMatchStatsRepository.save(awayTeamMatchStats);
+            log.info("Match stats saved");
+
             log.info("Saving match {}", match);
 
             Match saved = matchRepository.save(match);
 
-            saveMatchGoals(saved.getGoals());
+            log.info("Saved match {}", saved);
+
+            log.info("Saving goals {}", match.getGoals());
+
+            saveMatchGoals(match.getGoals());
 
             log.info("Match {} saved successfully", saved.getId());
 
@@ -121,6 +134,27 @@ public class MatchService {
             log.error("Error fetching player match stats", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Could not fetch player match stats");
+        }
+    }
+
+    public void changeFormation(Match match, Formation formation, Coach coach) {
+        validateCoach(coach);
+        validateMatch(match);
+
+        Club coachClub = coach.getClub();
+        TeamMatchStats matchStats;
+        if(coachClub == match.getHomeClub()) {
+            matchStats = match.getHomeTeamStats();
+        } else {
+            matchStats = match.getAwayTeamStats();
+        }
+
+        matchStats.setFormation(formation);
+
+        try {
+            teamMatchStatsRepository.save(matchStats);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not update match");
         }
     }
 }

@@ -17,6 +17,10 @@ public class Club {
     private int budget;
     private String country;
 
+    @OneToOne(mappedBy = "club")
+    @JsonIgnore
+    private Coach coach;
+
     @OneToOne
     @JoinColumn(name = "stadium_id")
     private Stadium stadium;
@@ -24,10 +28,6 @@ public class Club {
     @OneToMany(mappedBy = "club")
     @JsonIgnore
     private List<Player> players =  new ArrayList<>();
-
-    @OneToOne(mappedBy = "club")
-    @JsonIgnore
-    private Coach coach;
 
     @OneToOne(mappedBy = "club")
     @JsonIgnore
@@ -96,6 +96,14 @@ public class Club {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public Coach getCoach() {
+        return coach;
+    }
+
+    public void setCoach(Coach coach) {
+        this.coach = coach;
     }
 
 }
