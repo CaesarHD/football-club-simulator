@@ -1,20 +1,23 @@
-package org.ball.entity;
+package org.ball.domain;
 
 import jakarta.persistence.*;
-import org.springframework.validation.annotation.Validated;
 
 @Entity
-@Table(name = "coaches")
-public class Coach {
+@Table(name ="managers")
+public class Manager {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    public Coach() {}
+    public Manager() {}
 
-    public Coach(String name) {
+    public Manager(String name) {
+        this.name = name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -26,13 +29,9 @@ public class Coach {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public String toString() {
-        return "Coach{" +
+        return "Manager{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

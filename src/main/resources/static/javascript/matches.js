@@ -58,21 +58,22 @@ function renderMatches(matches) {
     matches.forEach(match => {
         const row = document.createElement('tr');
         row.innerHTML = `
-                          <td>
-                            <a href="javascript:void(0)" 
-                               onclick="openMatchStats(${match.id}, ${match.homeClub?.id}, '${match.homeClub?.name}')">
-                               ${match.homeClub?.name ?? '-'}
-                            </a>
-                          </td>
-                          <td><a href= "../html/goals.html?matchId=${match.id}">${match.homeTeamScore ?? '-'} - ${match.awayTeamScore ?? '-'} </a></td>
-                          <td>
-                            <a href="javascript:void(0)" 
-                               onclick="openMatchStats(${match.id}, ${match.awayClub?.id}, '${match.awayClub?.name}')">
-                               ${match.awayClub?.name ?? '-'}
-                            </a>
-                          </td>
-                          <td>${formatDate(match.date)}</td>
-                        `;
+          <td>
+            <a href="javascript:void(0)" 
+               onclick="openMatchStats(${match.id}, ${match.homeClub?.id}, '${match.homeClub?.name}')">
+               ${match.homeClub?.name ?? '-'}
+            </a>
+          </td>
+          <td><a href="javascript:void(0)" 
+                 onclick="openGoalsStats(${match.id})" > ${match.homeTeamNoGoals ?? '-'} - ${match.awayTeamNoGoals ?? '-'}</a></td>
+          <td>
+            <a href="javascript:void(0)" 
+               onclick="openMatchStats(${match.id}, ${match.awayClub?.id}, '${match.awayClub?.name}')">
+               ${match.awayClub?.name ?? '-'}
+            </a>
+          </td>
+          <td>${formatDate(match.date)}</td>
+        `;
         tableBody.appendChild(row);
     });
 }
@@ -100,4 +101,11 @@ function openMatchStats(matchId, clubId, clubName) {
     sessionStorage.setItem('selectedClubId', clubId);
     sessionStorage.setItem('selectedClubName', clubName);
     window.location.href = 'match_stats.html';
+}
+
+function openGoalsStats(matchId) {
+    sessionStorage.removeItem('selectedMatchId');
+
+    sessionStorage.setItem('selectedMatchId', matchId);
+    window.location.href = 'goals.html';
 }

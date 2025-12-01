@@ -1,12 +1,11 @@
 package org.ball.service;
 
-import org.ball.entity.Coach;
+import org.ball.domain.Coach;
 import org.ball.repository.CoachRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;

@@ -2,22 +2,16 @@ package org.ball.service;
 
 import org.ball.Utils.Constants;
 import org.ball.Utils.DataUtil;
-import org.ball.entity.Club;
-import org.ball.entity.Goal;
-import org.ball.entity.GoalType;
-import org.ball.entity.Match;
+import org.ball.domain.*;
 import org.ball.repository.GoalRepository;
-import org.ball.entity.PlayerMatchStats;
 import org.ball.repository.MatchRepository;
-import org.ball.repository.PlayerRepository;
+import org.ball.repository.PlayerMatchStatsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.ball.repository.PlayerMatchStatsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,15 +20,11 @@ public class MatchService {
     private final MatchRepository matchRepository;
     private final PlayerMatchStatsRepository playerMatchStatsRepository;
     private final GoalRepository goalRepository;
-    private static final Logger log =  LoggerFactory.getLogger(MatchService.class);
+    private static final Logger log = LoggerFactory.getLogger(MatchService.class);
 
-
-    public List<PlayerMatchStats> getAllPlayersMatchStatsByMatchAndClub(Long matchId, Long clubId) {
-        return playerMatchStatsRepository.findAllByMatchIdAndClubId(matchId, clubId);
-    }
-
-
-    public MatchService(MatchRepository matchRepository, PlayerMatchStatsRepository playerMatchStatsRepository, GoalRepository goalRepository) {
+    public MatchService(MatchRepository matchRepository,
+                        PlayerMatchStatsRepository playerMatchStatsRepository,
+                        GoalRepository goalRepository) {
         this.matchRepository = matchRepository;
         this.playerMatchStatsRepository = playerMatchStatsRepository;
         this.goalRepository = goalRepository;
@@ -43,40 +33,44 @@ public class MatchService {
     public static void validateMatch(Match match) {
         if (match == null) {
             log.warn("Match is null");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Match payload is mandatory, cannot be null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Match payload is mandatory");
         }
 
-        Club homeClub = match.getHomeClub();
-        Club awayClub = match.getAwayClub();
         if (match.getHomeClub() == null) {
-            log.warn("Home Club is null");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Home club is mandatory, cannot be null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Home club cannot be null");
         }
 
         if (match.getAwayClub() == null) {
-            log.warn("Away Club is null");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Away club is mandatory, cannot be null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Away club cannot be null");
         }
-        validateClubName(homeClub.getName());
-        validateClubName(awayClub.getName());
-        validateDate(match);
-    }
 
-    public static void validateDate(Match match) {
         if (match.getDate() == null) {
-            log.warn("Date is null");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Date is mandatory, cannot be null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Match date cannot be null");
+        }
+
+        validateClubName(match.getHomeClub().getName());
+        validateClubName(match.getAwayClub().getName());
+    }
+
+    private static void validateClubName(String clubName) {
+        if (clubName == null || clubName.isEmpty()) {
+            log.warn("Club name is null or empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Club name cannot be null or empty");
         }
     }
 
-
-    public static int getCurrentSeason() {
-        return DataUtil.getCurrentYear();
+    private static void validateSeason(int season) {
+        if (season < Constants.FIRST_SEASON_YEAR || season > DataUtil.getCurrentYear()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid season: " + season);
+        }
     }
 
-    public static int getFirstSeason() {
-        return Constants.FIRST_SEASON_YEAR;
-    }
 
     public void saveMatch(Match match) {
 
@@ -84,29 +78,43 @@ public class MatchService {
 
         try {
             log.info("Saving match {}", match);
-            matchRepository.save(match);
-            log.info("Match {} saved", match);
-            log.info("Saving goals {}",  match.getGoals());
-            saveMatchGoals(match.getGoals());
-            log.info("Goals {} saved",  match.getGoals());
+
+            if (match.getHomeTeamStats() == null) {
+                match.setHomeTeamStats(new TeamMatchStats());
+            }
+            if (match.getAwayTeamStats() == null) {
+                match.setAwayTeamStats(new TeamMatchStats());
+            }
+
+            Match saved = matchRepository.save(match);
+
+            saveMatchGoals(saved.getGoals());
+
+            log.info("Match {} saved successfully", saved.getId());
+
         } catch (Exception e) {
             log.error("Error saving match {}", match, e);
             throw new IllegalStateException("Error saving match", e);
         }
     }
 
+
     private void saveMatchGoals(List<Goal> goals) {
 
+        if (goals == null || goals.isEmpty())
+            return;
+
         log.info("Saving match goals {}", goals);
+
         for (Goal goal : goals) {
             try {
                 goalRepository.save(goal);
             } catch (Exception e) {
                 log.error("Error saving match goal {}", goal, e);
-                throw new RuntimeException(e);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Could not save goal");
             }
         }
-        log.info("Match goals saved");
     }
 
     public List<Match> getMatchesBySeasonAndClubName(int season, String clubName) {
@@ -114,50 +122,62 @@ public class MatchService {
         validateSeason(season);
         validateClubName(clubName);
 
-        List<Match> matches;
         try {
-            log.info("Getting matches by season {}", season);
-            matches = matchRepository.findAllMatchesByYearAndClubName(season, clubName);
-            log.info("Found {} matches", matches.size());
+            return matchRepository.findAllMatchesByYearAndClubName(season, clubName);
         } catch (Exception e) {
-            log.warn("Matches for season {} and club name {} not found", season, clubName, e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Matches for season " + season + " and club name " + clubName);
-        }
-        return matches;
-    }
-
-    private static void validateClubName(String clubName) {
-        if (clubName == null || clubName.isEmpty()) {
-            log.warn("Club name is null or empty");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Club name can't be null or empty");
+            log.error("Error fetching matches by season and club", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Could not fetch matches");
         }
     }
 
-    private static void validateSeason(int season) {
-        if (season < getFirstSeason() || season > getCurrentSeason()) {
-            log.warn("No matches found for season {}", season);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No matches found for season " + season);
-        }
-    }
 
     public List<Match> getMatchesByClubName(String clubName) {
+        validateClubName(clubName);
         return matchRepository.findAllMatchesByClub(clubName);
     }
 
     public List<Match> getMatchesBySeason(int year) {
+        validateSeason(year);
         return matchRepository.findAllMatchesByYear(year);
     }
 
 
     public Match getMatchById(Long matchId) {
-        Match match;
-        try {
-            log.info("Getting match {}", matchId);
-            match = matchRepository.findMatchById(matchId);
-            log.info("Match {} found", match);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (matchId == null || matchId <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Match ID invalid");
         }
-        return match;
+
+        try {
+            Match match = matchRepository.findMatchById(matchId);
+
+            if (match == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Match not found");
+            }
+
+            return match;
+
+        } catch (Exception e) {
+            log.error("Error fetching match {}", matchId, e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Could not fetch match");
+        }
+    }
+
+    public List<PlayerMatchStats> getAllPlayersMatchStatsByMatchIdAndClubId(Long matchId, Long clubId) {
+        if (matchId == null || matchId <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Match ID invalid");
+        }
+        if (clubId == null || clubId <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Club ID invalid");
+        }
+
+        try {
+            return playerMatchStatsRepository.findAllByMatchIdAndClubId(matchId, clubId);
+        } catch (Exception e) {
+            log.error("Error fetching player match stats", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Could not fetch player match stats");
+        }
     }
 }

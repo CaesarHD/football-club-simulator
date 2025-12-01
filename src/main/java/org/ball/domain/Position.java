@@ -1,4 +1,4 @@
-package org.ball.entity;
+package org.ball.domain;
 
 public enum Position {
     FORWARD, MIDFIELDER, DEFENDER, GOALKEEPER

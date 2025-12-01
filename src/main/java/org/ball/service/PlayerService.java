@@ -1,13 +1,15 @@
 package org.ball.service;
 
-import org.ball.entity.Club;
-import org.ball.entity.Player;
-import org.ball.entity.PlayersHistory;
+import org.ball.domain.Club;
+import org.ball.domain.Player;
+import org.ball.domain.PlayerHistory;
 import org.ball.repository.PlayerRepository;
-import org.ball.repository.PlayersHistoryRepository;
+import org.ball.repository.PlayerHistoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -16,35 +18,97 @@ public class PlayerService {
 
     public static final Logger log = LoggerFactory.getLogger(PlayerService.class);
     private final PlayerRepository playerRepository;
-    private final PlayersHistoryRepository playersHistoryRepository;
+    private final PlayerHistoryRepository playersHistoryRepository;
 
-    public PlayerService(PlayerRepository playerRepository, PlayersHistoryRepository playersHistoryRepository) {
+    public PlayerService(PlayerRepository playerRepository, PlayerHistoryRepository playersHistoryRepository) {
         this.playerRepository = playerRepository;
         this.playersHistoryRepository = playersHistoryRepository;
     }
 
     public Player savePlayer(Player player) {
-        return playerRepository.save(player);
+        Player result;
+        try {
+            if(player == null) {
+                log.warn("Player is null");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player payload is mandatory, cannot be null");
+            }
+
+            if(player.getName() == null || player.getName().isEmpty()) {
+                log.warn("Player name is null or empty");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player name is mandatory, cannot be null");
+            }
+
+            log.debug("Saving player {}...", player.getName());
+            result = playerRepository.save(player);
+            log.debug("Saved player {}", player.getName());
+        }
+        catch (Exception e)  {
+            log.error("Error while saving player with id {}", player.getId(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not communicate with the db ");
+        }
+
+        return result;
     }
 
     public List<Player> getAllPlayers() {
-        return playerRepository.findAllWithClub();
+        List<Player> result;
+        try {
+            log.debug("Getting all players ...");
+
+            result =  playerRepository.findAllWithClub();
+
+            log.debug("Fetched all players.");
+        } catch (Exception e) {
+            log.error("Error while fetching all players ", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not communicate with the db ");
+        }
+
+        return result;
     }
 
-    public Player getPlayerByClubAndName(Club club, String playerName) {
-
-        Player player;
+    public Player getPlayerByNameAndClub(Club club, String playerName) {
+        Player result;
         try {
+            if(club == null) {
+                log.warn("Club is null");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Club payload is mandatory, cannot be null");
+            }
+            else if(playerName == null || playerName.isEmpty()) {
+                log.warn("Player name is null or empty");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player name is mandatory, cannot be null");
+            }
             log.info("Finding player by club {} and name {}", club.getName(), playerName);
-            player = playerRepository.findPlayerByNameAndClubId(playerName, club.getId());
+            result = playerRepository.findPlayerByNameAndClubId(playerName, club.getId());
             log.info("Found player by club {} and name {}", club.getName(), playerName);
         } catch (Exception e) {
+            log.error("Error while  fetching player by name {} and club with id {}", playerName, club.getId() , e);
             throw new NullPointerException("Could not find player by club and name " + playerName);
         }
-        return player;
+        return result;
     }
 
-    public List<PlayersHistory> getHistoryByPlayerId(Long playerId) {
-        return playersHistoryRepository.findByPlayerId(playerId);
+    public List<PlayerHistory> getHistoryByPlayerId(Long playerId) {
+        List<PlayerHistory> result;
+        try {
+            if(playerId == null) {
+                log.warn("Player id is null");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player id is mandatory, cannot be null");
+            }
+            if(playerId <= 0) {
+                log.warn("Player id is negative");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player id must be an integer greater than zero");
+            }
+            log.debug("Getting history by player id {} ...", playerId);
+
+            result = playersHistoryRepository.findByPlayerId(playerId);
+
+            log.debug("Fetched history by player id {} ", playerId);
+        }
+        catch (Exception e) {
+            log.error("Error while fetching history by player id {}", playerId, e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not communicate with the db ");
+
+        }
+        return result;
     }
 }

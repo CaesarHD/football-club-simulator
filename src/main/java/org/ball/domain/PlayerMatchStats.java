@@ -1,4 +1,4 @@
-package org.ball.entity;
+package org.ball.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -27,8 +27,13 @@ public class PlayerMatchStats {
     @Enumerated(EnumType.STRING)
     private Position position;
 
+    @Column(name = "status_start")
     @Enumerated(EnumType.STRING)
-    private PlayerStatusInMatch status;
+    private PlayerStatusInMatch statusAtTheStartOfTheMatch;
+
+    @Column(name = "status_end")
+    @Enumerated(EnumType.STRING)
+    private PlayerStatusInMatch statusAtTheEndOfTheMatch;
 
     public PlayerMatchStats() {}
 
@@ -42,8 +47,12 @@ public class PlayerMatchStats {
         this.position = position;
     }
 
-    public void setStatus(PlayerStatusInMatch status) {
-        this.status = status;
+    public void setStatusAtTheStartOfTheMatch(PlayerStatusInMatch status) {
+        this.statusAtTheStartOfTheMatch = status;
+    }
+
+    public void setStatusAtTheEndOfTheMatch(PlayerStatusInMatch status) {
+        this.statusAtTheEndOfTheMatch = status;
     }
 
     public Club getClub() {
@@ -66,7 +75,9 @@ public class PlayerMatchStats {
         return position;
     }
 
-    public PlayerStatusInMatch getStatus() {
-        return status;
+    public PlayerStatusInMatch getStatusAtTheStartOfTheMatch() {
+        return statusAtTheStartOfTheMatch;
     }
+
+    public PlayerStatusInMatch getStatusAtTheEndOfTheMatch() { return statusAtTheEndOfTheMatch; }
 }
