@@ -1,4 +1,4 @@
-package org.ball.entity;
+package org.ball.domain;
 
 import jakarta.persistence.*;
 
@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "players_history")
-public class PlayersHistory {
+public class PlayerHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,5 @@
-const urlParams = new URLSearchParams(window.location.search);
-const matchId = urlParams.get('matchId');
+const matchId = sessionStorage.getItem('selectedMatchId');
+console.log("Loaded match ID:", matchId);
 
 if (!matchId) {
     document.body.insertAdjacentHTML('beforeend',
@@ -26,6 +26,7 @@ if (!matchId) {
                     <td>${goal.minute ?? '-'}</td>
                     <td>${goal.player?.name ?? 'Unknown'}</td>
                     <td>${goal.goalType ?? '-'}</td>
+                    <td>${goal.club?.name ?? 'Unknown'}</td>
                 `;
                 tableBody.appendChild(row);
             });

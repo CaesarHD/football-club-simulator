@@ -1,4 +1,4 @@
-package org.ball.entity;
+package org.ball.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -17,24 +17,28 @@ public class Goal {
 
     @Column(name = "minute")
     private int minute;
+
     @ManyToOne
     @JoinColumn(name = "player_id")
     private Player player;
+
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "goal_type")
     private GoalType goalType;
 
 
-    public Goal(int minute, Player player, GoalType goalType) {
+    public Goal(int minute, Club club, Player player, GoalType goalType) {
         this.minute = minute;
+        this.club = club;
         this.player = player;
         this.goalType = goalType;
     }
 
-    public Goal() {
-
-    }
+    public Goal() {}
 
     public Long getId() {
         return id;
@@ -76,6 +80,9 @@ public class Goal {
         this.match = match;
     }
 
+    public Club getClub() {return club;}
+
+    public void setClub(Club club) {this.club = club;}
     @Override
     public String toString() {
         return "Goal{" +

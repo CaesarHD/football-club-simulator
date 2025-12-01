@@ -7,11 +7,20 @@ CREATE TABLE goals
     player_id BIGINT,
     id_match  BIGINT,
     goal_type VARCHAR(50),
+    club_id BIGINT,
+
+    CONSTRAINT goals_clubs_id_fk
+        FOREIGN KEY (club_id)
+            REFERENCES clubs (id)
+            ON DELETE SET NULL
+            ON UPDATE CASCADE,
+
     CONSTRAINT fk_goal_player
         FOREIGN KEY (player_id)
             REFERENCES players (id)
             ON DELETE SET NULL
             ON UPDATE CASCADE,
+
     CONSTRAINT fk_goal_match
         FOREIGN KEY (id_match)
             REFERENCES matches (id)

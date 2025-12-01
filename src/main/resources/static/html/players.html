@@ -24,10 +24,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        table {
-            margin-top: 10px;
-        }
-
         th {
             text-transform: capitalize;
             font-size: 15px;
@@ -43,13 +39,6 @@
         tr:hover {
             background-color: #f1f1f1;
         }
-
-        @media (max-width: 768px) {
-            th, td {
-                font-size: 13px;
-                padding: 6px;
-            }
-        }
     </style>
 </head>
 
@@ -60,11 +49,10 @@
     <table class="table table-striped table-hover align-middle">
         <thead>
         <tr>
-            <th>ID</th>
             <th>Name</th>
             <th>Age</th>
-            <th>Position</th>
             <th>Club</th>
+            <th>Position</th>
             <th>Pace</th>
             <th>Stamina</th>
             <th>Defending</th>
@@ -76,9 +64,8 @@
             <th>Diving</th>
         </tr>
         </thead>
-        <tbody id="players-table">
 
-        </tbody>
+        <tbody id="players-table"></tbody>
     </table>
 </div>
 
