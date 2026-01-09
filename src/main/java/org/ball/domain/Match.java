@@ -32,9 +32,7 @@ public class Match {
     @Transient
     private Integer season;
 
-    /** ================================
-     *   NEW: TEAM MATCH STATS
-     *  ================================ */
+
     @OneToOne
     @JoinColumn(name = "home_team_stats_id")
     private TeamMatchStats homeTeamStats;

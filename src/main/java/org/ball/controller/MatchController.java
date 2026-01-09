@@ -41,7 +41,7 @@ public class MatchController {
     }
 
     @GetMapping("/goals/{matchId}")
-    public List<Goal> getGoals(@PathVariable("matchId") Long matchId) {
+    public List<Goal> getMatchGoals(@PathVariable("matchId") Long matchId) {
 
         if (matchId == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "matchId is required");

@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.2.1">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.2.4">
   <diagram name="Page-1" id="QD51mIUdGZlhdxtHizwM">
-    <mxGraphModel dx="1601" dy="713" grid="1" gridSize="7" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="731" dy="1963" grid="1" gridSize="7" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -29,10 +29,10 @@
             <mxPoint x="336" y="126" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="1jIHu0d_KwhPj7syKJ8F-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Crearea si trimiterea ofertei catre antrenor" vertex="1">
+        <mxCell id="1jIHu0d_KwhPj7syKJ8F-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Introducere noua capacitate" vertex="1">
           <mxGeometry height="60" width="168" x="336" y="95" as="geometry" />
         </mxCell>
-        <mxCell id="1jIHu0d_KwhPj7syKJ8F-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Generare cautare antrenor" vertex="1">
+        <mxCell id="1jIHu0d_KwhPj7syKJ8F-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Generare cautare stadion" vertex="1">
           <mxGeometry height="60" width="168" x="483" y="217" as="geometry" />
         </mxCell>
         <mxCell id="1jIHu0d_KwhPj7syKJ8F-8" edge="1" parent="1" source="1jIHu0d_KwhPj7syKJ8F-6" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" target="1jIHu0d_KwhPj7syKJ8F-7" value="">
@@ -43,8 +43,8 @@
         </mxCell>
         <mxCell id="1jIHu0d_KwhPj7syKJ8F-9" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;strokeWidth=7;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="728" y="1092" as="sourcePoint" />
-            <mxPoint x="728" y="14" as="targetPoint" />
+            <mxPoint x="700" y="1071" as="sourcePoint" />
+            <mxPoint x="700" y="-7" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="1jIHu0d_KwhPj7syKJ8F-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Preluarea informatie cautata" vertex="1">
@@ -56,7 +56,7 @@
             <mxPoint x="799" y="60" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="1jIHu0d_KwhPj7syKJ8F-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Validare informatie cautata si date introduse in oferta" vertex="1">
+        <mxCell id="1jIHu0d_KwhPj7syKJ8F-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Validare informatie cautata si capacitate introdusa" vertex="1">
           <mxGeometry height="60" width="168" x="840" y="203" as="geometry" />
         </mxCell>
         <mxCell id="1jIHu0d_KwhPj7syKJ8F-15" edge="1" parent="1" source="1jIHu0d_KwhPj7syKJ8F-11" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="1jIHu0d_KwhPj7syKJ8F-14" value="">
@@ -153,7 +153,7 @@
         <mxCell id="1jIHu0d_KwhPj7syKJ8F-39" edge="1" parent="1" source="1jIHu0d_KwhPj7syKJ8F-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="1jIHu0d_KwhPj7syKJ8F-38">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="1jIHu0d_KwhPj7syKJ8F-36" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Executarea interogarii si actualizarea in tabelul de oferte" vertex="1">
+        <mxCell id="1jIHu0d_KwhPj7syKJ8F-36" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Executarea interogarii si actualizarea capacitatii" vertex="1">
           <mxGeometry height="60" width="182" x="1281" y="331.33" as="geometry" />
         </mxCell>
         <mxCell id="1jIHu0d_KwhPj7syKJ8F-41" edge="1" parent="1" source="1jIHu0d_KwhPj7syKJ8F-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;exitPerimeter=0;" target="1jIHu0d_KwhPj7syKJ8F-40">
@@ -197,7 +197,7 @@
             <mxPoint x="301" y="757.4705882352941" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="1jIHu0d_KwhPj7syKJ8F-49" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Vizualizare oferta" vertex="1">
+        <mxCell id="1jIHu0d_KwhPj7syKJ8F-49" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Vizualizare date stadion" vertex="1">
           <mxGeometry height="60" width="168" x="448" y="728" as="geometry" />
         </mxCell>
         <mxCell id="1jIHu0d_KwhPj7syKJ8F-51" parent="1" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
@@ -276,6 +276,9 @@
         </mxCell>
         <mxCell id="jycmeZDYwezt8LEHdYCY-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 36px;&quot;&gt;Server&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="60" x="1386" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="p9mdOYs-88J99fAwPPwa-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 36px;&quot;&gt;Expand Stadium&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="268" x="301" y="-98" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

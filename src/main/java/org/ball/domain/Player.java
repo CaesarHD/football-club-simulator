@@ -20,12 +20,23 @@ public class Player {
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private PlayerSkills skills;
 
+    private double salaryPerSeason;
+
     public Player() {}
 
     public Player(String name) {
         this.name = name;
         this.skills = new PlayerSkills();
         this.skills.setPlayer(this);
+    }
+
+    public Player(String name, int age,  double salaryPerSeason,  Club club, PlayerSkills skills) {
+        this.name = name;
+        this.age = age;
+        this.salaryPerSeason = salaryPerSeason;
+        this.club = club;
+        skills.setPlayer(this);
+        this.skills = skills;
     }
 
     public int getAge() {

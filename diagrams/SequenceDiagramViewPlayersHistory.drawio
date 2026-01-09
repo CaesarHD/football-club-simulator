@@ -1,0 +1,91 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.2.6">
+  <diagram name="Page-1" id="Uxw_6F2Mi5wdwcKe9MN6">
+    <mxGraphModel dx="512" dy="604" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-4" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="60" width="120" x="70" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-2" parent="TK5pgJXijr3-HEr2-Xwt-4" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="120" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-3" parent="TK5pgJXijr3-HEr2-Xwt-4" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="gui: PlayerGUI" vertex="1">
+          <mxGeometry height="30" width="90" x="10" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-9" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="60" width="130" x="290" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-5" parent="TK5pgJXijr3-HEr2-Xwt-9" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="120" x="10" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-8" parent="TK5pgJXijr3-HEr2-Xwt-9" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="p: PlayerController" vertex="1">
+          <mxGeometry height="30" width="130" y="15" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-12" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="60" width="120" x="490" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-10" parent="TK5pgJXijr3-HEr2-Xwt-12" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="120" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-11" parent="TK5pgJXijr3-HEr2-Xwt-12" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="PlayerService" vertex="1">
+          <mxGeometry height="30" width="100" x="10" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-17" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="40" y="160" as="sourcePoint" />
+            <mxPoint x="120" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="1: btn_clicked" vertex="1">
+          <mxGeometry height="30" width="83" x="30" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="1230" width="10" x="120" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-22" edge="1" parent="1" source="TK5pgJXijr3-HEr2-Xwt-21" style="endArrow=classic;html=1;rounded=0;exitX=1.12;exitY=0.009;exitDx=0;exitDy=0;exitPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="250" y="280" as="sourcePoint" />
+            <mxPoint x="360" y="171" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-23" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="2: SearchPlayersHistoryByPlayerId" vertex="1">
+          <mxGeometry height="30" width="210" x="130" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-26" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="60" width="120" x="750" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-13" parent="TK5pgJXijr3-HEr2-Xwt-26" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="120" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-14" parent="TK5pgJXijr3-HEr2-Xwt-26" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value=":PlayerRepository" vertex="1">
+          <mxGeometry height="30" width="110" x="5" y="15" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-30" edge="1" parent="1" source="TK5pgJXijr3-HEr2-Xwt-21" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.43;entryY=0.977;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" target="TK5pgJXijr3-HEr2-Xwt-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="300" y="290" as="sourcePoint" />
+            <mxPoint x="350" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="1230" width="10" x="355" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-33" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="70" width="180" x="750" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-34" parent="TK5pgJXijr3-HEr2-Xwt-33" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="70" width="180" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-35" parent="TK5pgJXijr3-HEr2-Xwt-33" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value=":PlayerHistoryRepository" vertex="1">
+          <mxGeometry height="35" width="172.5" y="17.5" as="geometry" />
+        </mxCell>
+        <mxCell id="TK5pgJXijr3-HEr2-Xwt-37" edge="1" parent="1" source="TK5pgJXijr3-HEr2-Xwt-31" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;" target="TK5pgJXijr3-HEr2-Xwt-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="151" y="221" as="sourcePoint" />
+            <mxPoint x="150" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
