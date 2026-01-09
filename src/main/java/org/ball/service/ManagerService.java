@@ -1,7 +1,8 @@
 package org.ball.service;
 
-import org.ball.domain.*;
+import org.ball.domain.Manager;
 import org.ball.repository.ManagerRepository;
+import org.springframework.stereotype.Service;
 import org.ball.repository.PlayerHistoryRepository;
 import org.ball.repository.PlayerRepository;
 import org.ball.repository.TransferRepository;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
 
 @Service
 public class ManagerService {
@@ -65,6 +67,15 @@ public class ManagerService {
         return managerRepository.findAll();
     }
 
+    public Manager getManagerByName(String name) {
+        Manager manager = null;
+        try {
+            manager = managerRepository.findManagerByName(name);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return manager;
+    }
     public List<Transfer> getAllTransferOffers() {
         return transferRepository.findAll();
     }

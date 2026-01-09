@@ -108,6 +108,19 @@ public class PlayerService {
         return result;
     }
 
+    public Player getPlayerByName(String s) {
+        Player p =  null;
+        if(s == null) {
+            log.warn("Player name is null");
+        }
+        try {
+            p = playerRepository.findPlayerByName(s);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not find the player in the db ");
+        }
+        return p;
+    }
+
     public void transfer(Transfer transfer) {
         Player player = transfer.getPlayer();
 

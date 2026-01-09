@@ -64,9 +64,7 @@ public class Club {
                 ", name='" + name + '\'' +
                 ", budget=" + budget +
                 ", country='" + country + '\'' +
-                ", coach=" + coach +
-                ", stadium=" + stadium +
-                ", manager=" + manager +
+                ", stadium=" + stadium.getName() +
                 '}';
     }
 

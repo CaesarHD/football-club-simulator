@@ -2,6 +2,7 @@ package org.ball.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.ball.domain.PlayerSkills;
 
 import java.util.List;
 
@@ -25,6 +26,17 @@ public class Player {
     private double salary;
 
     public Player() {}
+
+    public Player(String name, int age, Position position) {
+        this.name = name;
+        this.age = age;
+
+        PlayerSkills playerSkills = new PlayerSkills();
+        playerSkills.setPosition(position);
+
+        playerSkills.setPlayer(this);
+        this.skills = playerSkills;
+    }
 
     public Player(String name) {
         this.name = name;
@@ -79,6 +91,9 @@ public class Player {
 
     public void setSkills(PlayerSkills skills) {
         this.skills = skills;
+        if (skills != null) {
+            skills.setPlayer(this);
+        }
     }
 
 
@@ -96,8 +111,8 @@ public class Player {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
-                ", club=" + club +
-                ", skills=" + skills +
+                ", club=" + club.getName() +
+                ", position=" + skills.getPosition().toString() +
                 ", salary=" + salary +
                 '}';
     }
