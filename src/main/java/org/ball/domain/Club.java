@@ -66,7 +66,6 @@ public class Club {
                 ", country='" + country + '\'' +
                 ", coach=" + coach +
                 ", stadium=" + stadium +
-                ", players=" + players +
                 ", manager=" + manager +
                 '}';
     }

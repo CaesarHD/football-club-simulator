@@ -19,8 +19,8 @@ public class GoalService {
     private final MatchRepository matchRepository;
     private static final Logger log = LoggerFactory.getLogger(GoalService.class);
     private final GoalRepository goalRepository;
-    public GoalService(GoalRepository goalRepository1, MatchRepository matchRepository) {
-        this.goalRepository = goalRepository1;
+    public GoalService(GoalRepository goalRepository, MatchRepository matchRepository) {
+        this.goalRepository = goalRepository;
         this.matchRepository = matchRepository;
     }
 

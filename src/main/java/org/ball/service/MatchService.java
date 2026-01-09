@@ -23,15 +23,17 @@ public class MatchService {
     private final GoalRepository goalRepository;
     private static final Logger log = LoggerFactory.getLogger(MatchService.class);
     private final PlayerRepository playerRepository;
+    private final ClubRepository clubRepository;
 
     public MatchService(MatchRepository matchRepository, TeamMatchStatsRepository teamMatchStatsRepository,
                         PlayerMatchStatsRepository playerMatchStatsRepository,
-                        GoalRepository goalRepository, PlayerRepository playerRepository) {
+                        GoalRepository goalRepository, PlayerRepository playerRepository, ClubRepository clubRepository) {
         this.matchRepository = matchRepository;
         this.teamMatchStatsRepository = teamMatchStatsRepository;
         this.playerMatchStatsRepository = playerMatchStatsRepository;
         this.goalRepository = goalRepository;
         this.playerRepository = playerRepository;
+        this.clubRepository = clubRepository;
     }
 
     public void saveMatch(Match match) {
@@ -159,7 +161,6 @@ public class MatchService {
         }
     }
 
-    @Transactional
     public void changePlayerStatus(
             Long matchId,
             Long playerId,
@@ -168,11 +169,38 @@ public class MatchService {
     ) {
 
         Match  match = matchRepository.findMatchById(matchId);
-        Player player = playerRepository.findPlayersById(playerId);
+        Player player = playerRepository.findPlayerById(playerId);
         PlayerMatchStats stats = playerMatchStatsRepository.findByPlayerAndMatch(player, match)
                 .orElseThrow(() -> new RuntimeException("Player stats not found for playerId: " + playerId));
 
         stats.setStatusAtTheStartOfTheMatch(startStatus);
         stats.setStatusAtTheEndOfTheMatch(endStatus);
+        playerMatchStatsRepository.save(stats);
+    }
+
+    public void updateFormation(Long matchId, Long clubId, Formation formation) {
+        Match match = matchRepository.findMatchById(matchId);
+        Club club = clubRepository.findById(clubId);
+
+        if ( match.getHomeClub() == club ) {
+            match.getHomeTeamStats().setFormation(formation);
+        } else {
+            match.getAwayTeamStats().setFormation(formation);
+        }
+
+        matchRepository.save(match);
+    }
+
+    public void updateStrategy(Long matchId, Long clubId, MatchStrategy strategy) {
+        Match match = matchRepository.findMatchById(matchId);
+        Club club = clubRepository.findById(clubId);
+
+        if ( match.getHomeClub() == club ) {
+            match.getHomeTeamStats().setStrategy(strategy);
+        } else {
+            match.getAwayTeamStats().setStrategy(strategy);
+        }
+
+        matchRepository.save(match);
     }
 }

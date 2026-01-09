@@ -177,4 +177,17 @@ INSERT INTO player_match_stats (match_id, player_id, club_id, status_start, stat
 
 -- GOALS
 INSERT INTO goals (minute, club_id, player_id, id_match, goal_type)
-VALUES(70, (SELECT id FROM clubs WHERE name = 'Barcelona'), (SELECT id FROM players WHERE name = 'Lewandowski'), 1, 'REGULAR')
+VALUES(70, (SELECT id FROM clubs WHERE name = 'Barcelona'), (SELECT id FROM players WHERE name = 'Lewandowski'), 1, 'REGULAR');
+
+INSERT INTO goals (minute, club_id, player_id, id_match, goal_type)
+VALUES(26, (SELECT id FROM clubs WHERE name = 'Liverpool'), (SELECT id FROM players WHERE name = 'Salah'), 1, 'PENALTY');
+
+INSERT INTO goals (minute, club_id, player_id, id_match, goal_type)
+VALUES(13, (SELECT id FROM clubs WHERE name = 'Barcelona'), (SELECT id FROM players WHERE name = 'Lewandowski'), 1, 'REGULAR');
+
+INSERT INTO goals (minute, club_id, player_id, id_match, goal_type)
+VALUES(55, (SELECT id FROM clubs WHERE name = 'Liverpool'), (SELECT id FROM players WHERE name = 'Szoboszlai'), 1, 'FREE_KICK');
+
+INSERT INTO goals (minute, club_id, player_id, id_match, goal_type)
+VALUES(6, (SELECT id FROM clubs WHERE name = 'Liverpool'), (SELECT id FROM players WHERE name = 'Szoboszlai'), 1, 'REGULAR');
+
