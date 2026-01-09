@@ -25,6 +25,14 @@ public class Club {
     @JsonIgnore
     private List<Player> players =  new ArrayList<>();
 
+    @OneToOne(mappedBy = "club")
+    @JsonIgnore
+    private Coach coach;
+
+    @OneToOne(mappedBy = "club")
+    @JsonIgnore
+    private Manager manager;
+
     public Club() {}
 
     public Club(String name,  int budget, Stadium stadium) {

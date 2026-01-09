@@ -10,6 +10,11 @@ public class Manager {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private int age;
+
+    @OneToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
 
     public Manager() {}
 
@@ -28,6 +33,24 @@ public class Manager {
     public String getName() {
         return name;
     }
+
+    public int getAge() {
+        return age;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setClub(Club club) {
+        this.club = club;
+    }
+
+
 
     @Override
     public String toString() {

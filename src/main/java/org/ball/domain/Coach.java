@@ -10,6 +10,11 @@ public class Coach {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private double salaryPerSeason;
+
+    @OneToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
 
     public Coach() {}
 
@@ -27,6 +32,14 @@ public class Coach {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setSalaryPerSeason(double salaryPerSeason) {
+        this.salaryPerSeason = salaryPerSeason;
+    }
+
+    public double getSalaryPerSeason() {
+        return salaryPerSeason;
     }
 
     @Override
