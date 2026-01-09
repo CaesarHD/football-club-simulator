@@ -1,8 +1,8 @@
 package org.ball.service;
 
-import org.ball.domain.Club;
-import org.ball.domain.Coach;
+import org.ball.domain.*;
 import org.ball.repository.CoachRepository;
+import org.ball.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,16 +12,17 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 import static org.ball.Utils.ValidationUtil.validateCoach;
-import static org.ball.Utils.ValidationUtil.validateName;
 
 @Service
 public class CoachService {
     private static final Logger log = LoggerFactory.getLogger(CoachService.class);
 
     private final CoachRepository coachRepository;
+    private final TransferRequestRepository transferRequestRepository;
 
-    public CoachService(CoachRepository coachRepository) {
+    public CoachService(CoachRepository coachRepository, PlayerRepository playerRepository, TransferRequestRepository transferRequestRepository) {
         this.coachRepository = coachRepository;
+        this.transferRequestRepository = transferRequestRepository;
     }
 
     public Coach saveCoach(Coach coach) {
@@ -79,4 +80,20 @@ public class CoachService {
         }
         return coach;
     }
+
+
+//    public void sendRequestToManager(Player player, Coach coach) {
+//        if(player == null) {
+//            log.error("player is null");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "player is null");
+//        }
+//
+//        if(coach == null) {
+//            log.error("coach is null");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "coach is null");
+//        }
+//        TransferRequest transferRequest = new TransferRequest(player, coach.getClub());
+//        transferRequestRepository.save(transferRequest);
+//    }
+
 }

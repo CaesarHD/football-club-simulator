@@ -104,4 +104,9 @@ public class CoachController {
     public Coach saveCoach(Coach coach) {
         return coachService.saveCoach(coach);
     }
+
+    @PutMapping("/transfers{transferId}")
+    public void approveTransfer(@PathVariable("transferId") Long transferId) {
+
+    }
 }

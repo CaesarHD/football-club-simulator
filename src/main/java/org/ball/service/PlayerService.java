@@ -1,6 +1,6 @@
 package org.ball.service;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.ball.repository.ClubRepository;
 import org.ball.domain.Club;
 import org.ball.domain.Player;
 import org.ball.domain.PlayerHistory;
@@ -22,10 +22,14 @@ public class PlayerService {
     public static final Logger log = LoggerFactory.getLogger(PlayerService.class);
     private final PlayerRepository playerRepository;
     private final PlayerHistoryRepository playersHistoryRepository;
+    private final ClubRepository clubRepository;
+    private final PlayerClubInterestRepository playerClubInterestRepository;
 
-    public PlayerService(PlayerRepository playerRepository, PlayerHistoryRepository playersHistoryRepository) {
+    public PlayerService(PlayerRepository playerRepository, PlayerHistoryRepository playersHistoryRepository, ClubRepository clubRepository, PlayerClubInterestRepository playerClubInterestRepository) {
         this.playerRepository = playerRepository;
         this.playersHistoryRepository = playersHistoryRepository;
+        this.clubRepository = clubRepository;
+        this.playerClubInterestRepository = playerClubInterestRepository;
     }
 
     public Player savePlayer(Player player) {
@@ -104,5 +108,52 @@ public class PlayerService {
 
         }
         return result;
+    }
+
+    public List<Club> findAllOtherClubs(Player player) {
+        if(player == null) {
+            log.error("Player is null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player is null");
+        }
+        Club club = player.getClub();
+        if (club == null || club.getId() == null) {
+            return clubRepository.findAll();
+        }
+        Long myClubId = player.getClub().getId();
+        return clubRepository.findByIdNot(myClubId);
+    }
+
+    public void setInterestForCertainClub(Player player, Club club) {
+        if(player == null) {
+            log.error("Player is null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player is null");
+        }
+
+        if(club == null) {
+            log.error("Club is null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Club is null");
+        }
+
+        if(player.getClubsToJoin().contains(club)) {
+            return;
+        }
+
+        player.getClubsToJoin().add(club);
+    }
+
+    public void removeInterestForCertainClub(Player player, Club club) {
+        if(player == null) {
+            log.error("Player is null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player is null");
+        }
+
+        if(club == null) {
+            log.error("Club is null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Club is null");
+        }
+
+        if(player.getClubsToJoin().contains(club)) {
+            player.getClubsToJoin().remove(club);
+        }
     }
 }

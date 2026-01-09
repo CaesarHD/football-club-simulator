@@ -2,6 +2,8 @@ package org.ball.domain;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "players")
 public class Player {
@@ -19,10 +21,12 @@ public class Player {
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private PlayerSkills skills;
 
+    @OneToMany(mappedBy = "player")
+    List<Club> clubsToJoin;
+
     private double salary;
 
-    public Player() {
-    }
+    public Player() {}
 
     public Player(String name) {
         this.name = name;
@@ -88,15 +92,11 @@ public class Player {
         this.salary = salaryPerSeason;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Player{" +
-//                "id=" + id +
-//                ", name='" + name + '\'' +
-//                ", age=" + age +
-//                ", club=" + club +
-//                ", skills=" + skills +
-//                ", salary=" + salary +
-//                '}';
-//    }
+    public List<Club> getClubsToJoin() {
+        return clubsToJoin;
+    }
+
+    public void setClubsToJoin(List<Club> clubsToJoin) {
+        this.clubsToJoin = clubsToJoin;
+    }
 }
