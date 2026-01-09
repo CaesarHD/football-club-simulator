@@ -1,3 +1,6 @@
+use football_club_simulator;
+
+
 create table managers
 (
     id      BIGINT       not null

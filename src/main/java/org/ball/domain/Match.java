@@ -32,7 +32,6 @@ public class Match {
     @Transient
     private Integer season;
 
-
     @OneToOne
     @JoinColumn(name = "home_team_stats_id")
     private TeamMatchStats homeTeamStats;
@@ -42,12 +41,13 @@ public class Match {
     private TeamMatchStats awayTeamStats;
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<PlayerMatchStats> homeTeam;
+    private List<PlayerMatchStats> homePlayerMatchStats = new ArrayList<>();
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<PlayerMatchStats> awayTeam;
+    private List<PlayerMatchStats> awayPlayerMatchStats = new ArrayList<>();
 
-    public Match() {}
+    public Match() {
+    }
 
     public Match(Builder builder) {
         this.homeClub = builder.homeClub;
@@ -64,9 +64,78 @@ public class Match {
         this.homeTeamStats.setFormation(Formation.F4_3_3);
         this.awayTeamStats.setFormation(Formation.F4_3_3);
 
+        setDefaultPlayerStats(homeClub, homePlayerMatchStats);
+        setDefaultPlayerStats(awayClub, awayPlayerMatchStats);
+
         for (Goal goal : builder.goals) {
             goal.setMatch(this);
         }
+    }
+
+    private void setDefaultPlayerStats(Club club, List<PlayerMatchStats> playerStats) {
+        List<Player> players = club.getPlayers();
+        List<Player> goalkeepers = getPlayersType(players, Position.GOALKEEPER);
+        List<Player> defenders = getPlayersType(players, Position.DEFENDER);
+        List<Player> midfielders = getPlayersType(players, Position.MIDFIELDER);
+        List<Player> forwards = getPlayersType(players, Position.FORWARD);
+
+        addMatchStatsForPlayers(
+                club,
+                playerStats,
+                goalkeepers,
+                1
+        );
+
+        addMatchStatsForPlayers(
+                club,
+                playerStats,
+                defenders,
+                4
+        );
+
+        addMatchStatsForPlayers(
+                club,
+                playerStats,
+                midfielders,
+                3
+        );
+
+        addMatchStatsForPlayers(
+                club,
+                playerStats,
+                forwards,
+                3
+        );
+    }
+
+    private void addMatchStatsForPlayers(Club club, List<PlayerMatchStats> playerStats, List<Player> players, int integralistCount) {
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+
+            PlayerStatusInMatch status =
+                    i < integralistCount
+                            ? PlayerStatusInMatch.WHOLE_GAME
+                            : PlayerStatusInMatch.SUBSTITUTE;
+
+            playerStats.add(new PlayerMatchStats(
+                    this,
+                    club,
+                    player,
+                    player.getSkills().getPosition(),
+                    status,
+                    status
+            ));
+        }
+    }
+
+    private List<Player> getPlayersType(List<Player> players, Position position) {
+        List<Player> result = new ArrayList<>();
+        for (Player player : players) {
+            if (player.getSkills().getPosition().equals(position)) {
+                result.add(player);
+            }
+        }
+        return result;
     }
 
     @PostLoad
@@ -101,43 +170,81 @@ public class Match {
     }
 
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Club getHomeClub() { return homeClub; }
+    public Club getHomeClub() {
+        return homeClub;
+    }
 
-    public Club getAwayClub() { return awayClub; }
+    public Club getAwayClub() {
+        return awayClub;
+    }
 
-    public void setHomeClub(Club homeClub) { this.homeClub = homeClub; }
+    public void setHomeClub(Club homeClub) {
+        this.homeClub = homeClub;
+    }
 
-    public void setAwayClub(Club awayClub) { this.awayClub = awayClub; }
+    public void setAwayClub(Club awayClub) {
+        this.awayClub = awayClub;
+    }
 
-    public LocalDateTime getDate() { return date; }
+    public LocalDateTime getDate() {
+        return date;
+    }
 
-    public void setDate(LocalDateTime date) { this.date = date; }
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 
-    public List<Goal> getGoals() { return goals; }
+    public List<Goal> getGoals() {
+        return goals;
+    }
 
-    public void setGoals(List<Goal> goals) { this.goals = goals; }
+    public void setGoals(List<Goal> goals) {
+        this.goals = goals;
+    }
 
-    public TeamMatchStats getHomeTeamStats() { return homeTeamStats; }
+    public TeamMatchStats getHomeTeamStats() {
+        return homeTeamStats;
+    }
 
-    public TeamMatchStats getAwayTeamStats() { return awayTeamStats; }
+    public TeamMatchStats getAwayTeamStats() {
+        return awayTeamStats;
+    }
 
-    public void setHomeTeamStats(TeamMatchStats stats) { this.homeTeamStats = stats; }
+    public void setHomeTeamStats(TeamMatchStats stats) {
+        this.homeTeamStats = stats;
+    }
 
-    public void setAwayTeamStats(TeamMatchStats stats) { this.awayTeamStats = stats; }
+    public void setAwayTeamStats(TeamMatchStats stats) {
+        this.awayTeamStats = stats;
+    }
 
-    public List<PlayerMatchStats> getHomeTeam() { return homeTeam; }
+    public List<PlayerMatchStats> getHomePlayerMatchStats() {
+        return homePlayerMatchStats;
+    }
 
-    public List<PlayerMatchStats> getAwayTeam() { return awayTeam; }
+    public List<PlayerMatchStats> getAwayPlayerMatchStats() {
+        return awayPlayerMatchStats;
+    }
 
-    public void setHomeTeam(List<PlayerMatchStats> homeTeam) { this.homeTeam = homeTeam; }
+    public void setHomePlayerMatchStats(List<PlayerMatchStats> homeTeam) {
+        this.homePlayerMatchStats = homeTeam;
+    }
 
-    public void setAwayTeam(List<PlayerMatchStats> awayTeam) { this.awayTeam = awayTeam; }
+    public void setAwayPlayerMatchStats(List<PlayerMatchStats> awayTeam) {
+        this.awayPlayerMatchStats = awayTeam;
+    }
 
-    public int getSeason() { return season; }
+    public int getSeason() {
+        return season;
+    }
 
-    public void setSeason(int season) { this.season = season; }
+    public void setSeason(int season) {
+        this.season = season;
+    }
 
     @Override
     public String toString() {
@@ -154,6 +261,8 @@ public class Match {
     public static class Builder {
         private Club homeClub;
         private Club awayClub;
+        private TeamMatchStats homeTeamStats;
+        private TeamMatchStats awayTeamStats;
         private List<Goal> goals = new ArrayList<>();
         private LocalDateTime date;
 
@@ -164,6 +273,16 @@ public class Match {
 
         public Builder awayClub(Club awayClub) {
             this.awayClub = awayClub;
+            return this;
+        }
+
+        public Builder homeTeamStats(TeamMatchStats homeTeamStats) {
+            this.homeTeamStats = homeTeamStats;
+            return this;
+        }
+
+        public Builder awayTeamStats(TeamMatchStats awayTeamStats) {
+            this.awayTeamStats = awayTeamStats;
             return this;
         }
 
@@ -178,6 +297,8 @@ public class Match {
             return this;
         }
 
-        public Match build() { return new Match(this); }
+        public Match build() {
+            return new Match(this);
+        }
     }
 }

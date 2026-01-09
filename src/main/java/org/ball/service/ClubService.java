@@ -3,6 +3,7 @@ package org.ball.service;
 import org.ball.domain.Club;
 import org.ball.domain.Stadium;
 import org.ball.repository.ClubRepository;
+import org.ball.repository.PlayerRepository;
 import org.ball.repository.StadiumRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +21,13 @@ public class ClubService {
     private static final Logger log = LoggerFactory.getLogger(ClubService.class);
     private final ClubRepository clubRepository;
     private final StadiumRepository stadiumRepository;
+    private final PlayerRepository playerRepository;
 
 
-    public ClubService(ClubRepository clubRepository, StadiumRepository stadiumRepository) {
+    public ClubService(ClubRepository clubRepository, StadiumRepository stadiumRepository, PlayerRepository playerRepository) {
         this.clubRepository = clubRepository;
         this.stadiumRepository = stadiumRepository;
+        this.playerRepository = playerRepository;
     }
 
     public List<Club> getAllClubs() {
@@ -45,6 +48,7 @@ public class ClubService {
         try {
             log.info("Getting club {}", name);
             club = clubRepository.getClubByName(name);
+            club.setPlayers(playerRepository.findByClubId(club.getId()));
             log.info("Returning club {}", club);
         } catch (Exception e) {
             throw new RuntimeException(e);

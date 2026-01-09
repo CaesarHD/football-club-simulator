@@ -37,10 +37,13 @@ public class PlayerMatchStats {
 
     public PlayerMatchStats() {}
 
-    public PlayerMatchStats(Match match, Club club, Player player) {
+    public PlayerMatchStats(Match match, Club club, Player player, Position position, PlayerStatusInMatch statusAtTheStartOfTheMatch, PlayerStatusInMatch statusAtTheEndOfTheMatch) {
         this.match = match;
         this.club = club;
         this.player = player;
+        this.position = position;
+        this.statusAtTheStartOfTheMatch = statusAtTheStartOfTheMatch;
+        this.statusAtTheEndOfTheMatch = statusAtTheEndOfTheMatch;
     }
 
     public void setPosition(Position position) {

@@ -55,7 +55,7 @@ public class ValidationUtil {
             throw new NullPointerException(msg);
         }
 
-        validateClub(goal.getClub());
+//        validateClub(goal.getClub());
     }
 
 
@@ -85,26 +85,14 @@ public class ValidationUtil {
 
     public static void validateClub(Club club) {
         if (club == null) {
-            String msg = "Club is null";
-            log.warn(msg);
-            throw new NullPointerException(msg);
+            throw new IllegalArgumentException("Club is null");
         }
 
         validateName(club.getName());
 
-
-        if(club.getPlayers() == null || club.getPlayers().isEmpty()) {
-            String msg = "Players are null";
-            log.warn(msg);
-            throw new NullPointerException(msg);
+        if (club.getId() == null) {
+            throw new IllegalStateException("Club must be persisted");
         }
-
-        if(club.getStadium() == null) {
-            String msg = "Stadium is null";
-            log.warn(msg);
-            throw new NullPointerException(msg);
-        }
-
     }
 
     public static void validateSeason(int season) {

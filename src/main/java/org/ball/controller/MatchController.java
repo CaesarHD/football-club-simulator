@@ -1,10 +1,7 @@
 package org.ball.controller;
 
 import org.ball.Utils.Constants;
-import org.ball.domain.Goal;
-import org.ball.domain.Match;
-import org.ball.domain.PlayerMatchStats;
-import org.ball.domain.TeamMatchStats;
+import org.ball.domain.*;
 import org.ball.service.GoalService;
 import org.ball.service.MatchService;
 import org.springframework.http.HttpStatus;
@@ -99,7 +96,20 @@ public class MatchController {
 
         return Map.of(
                 "teamStats", teamStats,
-                "players", players
+                "players", players,
+                "matchDate", match.getDate()
         );
     }
+
+    @PutMapping("/{matchId}/{playerId}/{startStatus}/{endStatus}")
+    public void changePlayerStatus(
+            @PathVariable("matchId") Long matchId,
+            @PathVariable("playerId") Long playerId,
+            @PathVariable("startStatus") PlayerStatusInMatch startStatus,
+            @PathVariable("endStatus") PlayerStatusInMatch endStatus
+    ) {
+        matchService.changePlayerStatus(matchId, playerId, startStatus, endStatus);
+    }
+
+
 }

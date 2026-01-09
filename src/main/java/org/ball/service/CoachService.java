@@ -1,5 +1,6 @@
 package org.ball.service;
 
+import org.ball.domain.Club;
 import org.ball.domain.Coach;
 import org.ball.repository.CoachRepository;
 import org.slf4j.Logger;
@@ -55,5 +56,27 @@ public class CoachService {
         }
 
         return coaches;
+    }
+
+    public Coach getCoachByClub(Club club) {
+
+        Coach coach;
+        try {
+             coach = coachRepository.getCoachByClub(club);
+            log.debug("Retrieving coach from club {}", club.getName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return coach;
+    }
+
+    public Coach getCoachById(Long coachId) {
+        Coach coach;
+        try {
+            coach = coachRepository.getCoachById(coachId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return coach;
     }
 }
