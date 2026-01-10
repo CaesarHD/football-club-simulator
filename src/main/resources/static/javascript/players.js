@@ -10,7 +10,7 @@ fetch('/api/players')
 
         players.forEach(player => {
 
-            const skills = player.skills || {}; // safe fallback if null
+            const skills = player.skills || {};
 
             const row = document.createElement('tr');
             row.innerHTML = `
