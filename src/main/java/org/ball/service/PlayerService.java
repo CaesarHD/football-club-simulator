@@ -1,6 +1,7 @@
 package org.ball.service;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.ball.domain.Transfer;
+import org.ball.repository.ClubRepository;
 import org.ball.domain.Club;
 import org.ball.domain.Player;
 import org.ball.domain.PlayerHistory;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.ball.Utils.ValidationUtil.*;
@@ -21,11 +23,11 @@ public class PlayerService {
 
     public static final Logger log = LoggerFactory.getLogger(PlayerService.class);
     private final PlayerRepository playerRepository;
-    private final PlayerHistoryRepository playersHistoryRepository;
+    private final PlayerHistoryRepository playerHistoryRepository;
 
-    public PlayerService(PlayerRepository playerRepository, PlayerHistoryRepository playersHistoryRepository) {
+    public PlayerService(PlayerRepository playerRepository, PlayerHistoryRepository playerHistoryRepository) {
         this.playerRepository = playerRepository;
-        this.playersHistoryRepository = playersHistoryRepository;
+        this.playerHistoryRepository = playerHistoryRepository;
     }
 
     public Player savePlayer(Player player) {
@@ -94,7 +96,7 @@ public class PlayerService {
             }
             log.debug("Getting history by player id {} ...", playerId);
 
-            result = playersHistoryRepository.findByPlayerId(playerId);
+            result = playerHistoryRepository.findByPlayerId(playerId);
 
             log.debug("Fetched history by player id {} ", playerId);
         }
@@ -105,4 +107,32 @@ public class PlayerService {
         }
         return result;
     }
+
+    public void transfer(Transfer transfer) {
+        Player player = transfer.getPlayer();
+
+        player.setClub(transfer.getNewClub());
+        updatePlayerHistory(player);
+        playerRepository.save(player);
+    }
+
+    private void updatePlayerHistory(Player player) {
+        List<PlayerHistory> histories =
+                playerHistoryRepository.findByPlayerId(player.getId());
+
+        if (!histories.isEmpty()) {
+            PlayerHistory last = histories.get(histories.size() - 1);
+            last.setLeftDate(LocalDate.now());
+            playerHistoryRepository.save(last); // ✅ REQUIRED
+        }
+
+        PlayerHistory newHistory = new PlayerHistory();
+        newHistory.setPlayer(player);
+        newHistory.setClub(player.getClub());
+        newHistory.setJoinedDate(LocalDate.now());
+
+        playerHistoryRepository.save(newHistory); // ✅ REQUIRED
+    }
+
+
 }

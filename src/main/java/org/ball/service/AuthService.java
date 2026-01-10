@@ -24,7 +24,4 @@ public class AuthService {
     public UserRole getRole(Long userId) {
         return roles.get(userId);
     }
-
-
-
 }

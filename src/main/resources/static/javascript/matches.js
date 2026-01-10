@@ -48,35 +48,86 @@ function loadMatches(season) {
     updateUrlQuery(season);
 }
 
-function renderMatches(matches) {
+async function renderMatches(matches) {
     tableBody.innerHTML = '';
     if (!matches || matches.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="5">No matches found.</td></tr>`;
         return;
     }
 
-    matches.forEach(match => {
+    const now = new Date();
+
+    for (const match of matches) {
+        const matchDate = new Date(match.date);
+        const isFuture = matchDate > now;
+
+        // Prepare score cell
+        let scoreCell = '';
+        if (isFuture) {
+            scoreCell = `<span>vs</span>`; // future matches not clickable
+        } else {
+            scoreCell = `<a href="javascript:void(0)" onclick="openGoalsStats(${match.id})">
+                            ${match.homeTeamNoGoals ?? '-'} - ${match.awayTeamNoGoals ?? '-'}
+                         </a>`;
+        }
+
+        // Create table row
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>
-            <a href="javascript:void(0)" 
-               onclick="openMatchStats(${match.id}, ${match.homeClub?.id}, '${match.homeClub?.name}')">
-               ${match.homeClub?.name ?? '-'}
-            </a>
-          </td>
-          <td><a href="javascript:void(0)" 
-                 onclick="openGoalsStats(${match.id})" > ${match.homeTeamNoGoals ?? '-'} - ${match.awayTeamNoGoals ?? '-'}</a></td>
-          <td>
-            <a href="javascript:void(0)" 
-               onclick="openMatchStats(${match.id}, ${match.awayClub?.id}, '${match.awayClub?.name}')">
-               ${match.awayClub?.name ?? '-'}
-            </a>
-          </td>
-          <td>${formatDate(match.date)}</td>
+            <td>
+                <a href="javascript:void(0)" 
+                   onclick="openMatchStats(${match.id}, ${match.homeClub?.id}, '${match.homeClub?.name}')">
+                   ${match.homeClub?.name ?? '-'}
+                </a>
+                <div class="goals-home" style="font-size: 0.8em; color: grey;"></div>
+            </td>
+            <td>${scoreCell}</td>
+            <td>
+                <a href="javascript:void(0)" 
+                   onclick="openMatchStats(${match.id}, ${match.awayClub?.id}, '${match.awayClub?.name}')">
+                   ${match.awayClub?.name ?? '-'}
+                </a>
+                <div class="goals-away" style="font-size: 0.8em; color: grey;"></div>
+            </td>
+            <td>${formatDate(match.date)}</td>
         `;
         tableBody.appendChild(row);
-    });
+
+        // Fetch goals for this match and display under club names
+        if (!isFuture) {
+            try {
+                const res = await fetch(`/api/matches/goals/${match.id}`);
+                if (!res.ok) throw new Error('Failed to load goals');
+                const goals = await res.json();
+
+                const homeGoalsDiv = row.querySelector('.goals-home');
+                const awayGoalsDiv = row.querySelector('.goals-away');
+
+                const homeGoals = goals.filter(g => g.club?.id === match.homeClub?.id);
+                const awayGoals = goals.filter(g => g.club?.id === match.awayClub?.id);
+
+                if (homeGoals.length) {
+                    homeGoalsDiv.innerHTML = homeGoals
+                        .sort((a, b) => a.minute - b.minute)
+                        .map(g => `<span style="color: grey;">⚽</span> ${g.minute}' ${g.player?.name ?? 'Unknown'}`)
+                        .join('<br>');
+                }
+
+                if (awayGoals.length) {
+                    awayGoalsDiv.innerHTML = awayGoals
+                        .sort((a, b) => a.minute - b.minute)
+                        .map(g => `<span style="color: grey;">⚽</span> ${g.minute}' ${g.player?.name ?? 'Unknown'}`)
+                        .join('<br>');
+                }
+
+            } catch (err) {
+                console.error('Failed to load goals for match', match.id, err);
+            }
+        }
+    }
 }
+
+
 
 function updateUrlQuery(season) {
     const newUrlParams = new URLSearchParams();

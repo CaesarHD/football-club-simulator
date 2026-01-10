@@ -2,10 +2,11 @@ package org.ball;
 
 import jakarta.annotation.PostConstruct;
 import org.ball.domain.*;
+import org.ball.repository.ClubRepository;
+import org.ball.repository.TransferRepository;
 import org.ball.service.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import java.time.LocalDateTime;
 
 @SpringBootApplication
@@ -16,17 +17,22 @@ public class Main {
     private final MatchService matchService;
     private final GoalService goalService;
     private final CoachService coachService;
+    private final TransferRepository transferRepository;
+    private final ManagerService managerService;
+    private final ClubRepository clubRepository;
 
-    public Main(ClubService clubService, PlayerService playerService, MatchService matchService, GoalService goalService, CoachService coachService) {
+    public Main(ClubService clubService, PlayerService playerService, MatchService matchService, GoalService goalService, CoachService coachService, TransferRepository transferRepository, ManagerService managerService, ClubRepository clubRepository) {
         this.clubService = clubService;
         this.playerService = playerService;
         this.matchService = matchService;
         this.goalService = goalService;
         this.coachService = coachService;
+        this.transferRepository = transferRepository;
+        this.managerService = managerService;
+        this.clubRepository = clubRepository;
     }
 
     public static void main(String[] args) {
-
         SpringApplication.run(Main.class, args);
     }
 
@@ -37,13 +43,11 @@ public class Main {
         Club liverpool = clubService.getClubByName("Liverpool");
         Club barcelona = clubService.getClubByName("Barcelona");
 
-        System.out.println(barcelona);
-
         Player leva;
         Player salah;
         try {
             salah = playerService.getPlayerByNameAndClub(liverpool, "Salah");
-            leva = playerService.getPlayerByNameAndClub(barcelona, "Lewandowski");
+//            leva = playerService.getPlayerByNameAndClub(barcelona, "Lewandowski");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -57,10 +61,8 @@ public class Main {
                 .build();
 
 //        matchService.saveMatch(match);
-//
-//        Club homeClub = match.getHomeClub();
-//        Coach coach = homeClub.getCoach();
 
-//        matchService.changeFormation(match, Formation.F4_4_2, coach);
+
+
     }
 }

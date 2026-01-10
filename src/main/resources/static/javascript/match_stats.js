@@ -1,154 +1,138 @@
-const matchId = sessionStorage.getItem('selectedMatchId');
-const clubId = sessionStorage.getItem('selectedClubId');
-const clubName = sessionStorage.getItem('selectedClubName');
+// ----------------- INIT -----------------
+const matchId = sessionStorage.getItem("selectedMatchId");
+const clubId = sessionStorage.getItem("selectedClubId");
+const clubName = sessionStorage.getItem("selectedClubName");
 
-const tableBody = document.getElementById('player-stats-table-body');
-const title = document.getElementById('match-stats-title');
+const title = document.getElementById("match-stats-title");
+const tableBody = document.getElementById("player-stats-table-body");
+const teamStatsDiv = document.getElementById("team-stats");
+const formationCell = document.getElementById("formation");
+const strategyCell = document.getElementById("strategy");
 
-window.currentStatsList = [];
+const PlayerStatusInMatch = ["WHOLE_GAME","SUBSTITUTE","SUB_IN","SUB_OUT"];
+const Formations = ["F4_3_3","F4_4_2","F5_3_2","F4_3_1_2"];
+const MatchStrategies = ["ATTACKING","BALANCED","DEFENDING"];
 
-const PlayerStatusInMatch = [
-    "WHOLE_GAME",
-    "SUBSTITUTE",
-    "SUB_IN",
-    "SUB_OUT"
-];
+let currentPlayers = [];
+let currentTeamStats = null;
+let matchDate = null;
 
 if (!matchId || !clubId) {
-    title.textContent = "Error: Match ID or Club ID is missing.";
-    tableBody.innerHTML =
-        `<tr><td colspan="4">Please navigate from the matches list.</td></tr>`;
+    title.textContent = "Error: Match or club not selected";
 } else {
-    title.textContent = `${clubName} players stats in the match:`;
-    loadMatchDetails(matchId, clubId);
+    title.textContent = `${clubName} – Match details`;
+    loadMatchDetails();
 }
 
-function loadMatchDetails(matchId, clubId) {
+function loadMatchDetails() {
     fetch(`/api/matches/details/${matchId}/${clubId}`)
-        .then(res => {
-            if (!res.ok) throw new Error("Failed to load team & player stats");
-            return res.json();
-        })
+        .then(res => res.json())
         .then(data => {
-            window.currentStatsList = data.players;
-            renderTeamStats(data.teamStats);
-            renderPlayerStats(data.players, data.matchDate);
-        })
-        .catch(err => {
-            console.error(err);
-            tableBody.innerHTML =
-                `<tr><td colspan="4">Failed to load stats.</td></tr>`;
-        });
-}
+            currentPlayers = data.players;
+            currentTeamStats = data.teamStats;
+            matchDate = new Date(data.matchDate);
 
-function renderPlayerStats(statsList, matchDate) {
-    tableBody.innerHTML = '';
-
-    if (!statsList || statsList.length === 0) {
-        tableBody.innerHTML =
-            `<tr><td colspan="4">No player statistics found for this team.</td></tr>`;
-        return;
-    }
-
-    const now = new Date();
-
-    statsList.forEach(stats => {
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td>${stats.player?.name ?? '-'}</td>
-            <td>${stats.position ?? '-'}</td>
-            <td>${createStatusSelect(stats, "start", matchDate, now)}</td>
-            <td>${createStatusSelect(stats, "end", matchDate, now)}</td>
-        `;
-
-        tableBody.appendChild(row);
-    });
-}
-
-function createStatusSelect(stats, type, matchDate, now) {
-    const value = type === "start"
-        ? stats.statusAtTheStartOfTheMatch
-        : stats.statusAtTheEndOfTheMatch;
-
-    if (new Date(matchDate) <= now) {
-        return mapStatusLabel(value, type);
-    }
-
-    return `
-        <select class="form-select form-select-sm"
-                onchange="onStatusChange(${stats.player.id}, this, '${type}')">
-            ${PlayerStatusInMatch.map(status => `
-                <option value="${status}" ${status === value ? "selected" : ""}>
-                    ${mapStatusLabel(status, type)}
-                </option>
-            `).join("")}
-        </select>
-    `;
-}
-
-function mapStatusLabel(status, type) {
-    if (!status) return "-";
-
-    if (type === "start") {
-        return status === "WHOLE_GAME" ? "STARTER" : status;
-    }
-
-    switch (status) {
-        case "SUBSTITUTE": return "UNUSED SUBSTITUTE";
-        case "WHOLE_GAME": return "INTEGRALIST";
-        case "SUB_IN":     return "SUBBED IN";
-        case "SUB_OUT":    return "SUBBED OUT";
-        default:           return status;
-    }
-}
-
-function onStatusChange(playerId, select, type) {
-    const newValue = select.value; // ALWAYS enum name
-
-    // Find the stats for this player
-    const stats = window.currentStatsList.find(s => s.player.id === playerId);
-    if (!stats) return;
-
-    if (type === "start") {
-        stats.statusAtTheStartOfTheMatch = newValue;
-    } else {
-        stats.statusAtTheEndOfTheMatch = newValue;
-    }
-
-    // Save immediately to backend
-    savePlayerStatus(playerId);
-}
-
-function savePlayerStatus(playerId) {
-    const stats = window.currentStatsList.find(s => s.player.id === playerId);
-    if (!stats) return;
-
-    const url = `/api/matches/${matchId}/${playerId}/${stats.statusAtTheStartOfTheMatch}/${stats.statusAtTheEndOfTheMatch}`;
-
-    console.log("Calling PUT:", url);
-
-    fetch(url, { method: "PUT" })
-        .then(res => {
-            if (!res.ok) throw new Error("Failed to save status");
-            console.log("Saved status for player ID:", playerId);
+            renderTeamStats();
+            renderPlayers();
         })
         .catch(err => console.error(err));
 }
 
-function renderTeamStats(stats) {
-    const container = document.getElementById("team-stats");
-    container.style.display = "block";
+function renderTeamStats() {
+    if (!currentTeamStats) return;
 
-    document.getElementById("possession").textContent = stats.possession + "%";
-    document.getElementById("shots").textContent = stats.shots;
-    document.getElementById("passes").textContent = stats.passes;
-    document.getElementById("corners").textContent = stats.corners;
-    document.getElementById("formation").textContent = formatFormation(stats.formation);
-    document.getElementById("strategy").textContent = stats.strategy;
+    teamStatsDiv.style.display = "block";
+    document.getElementById("possession").textContent = currentTeamStats.possession ?? "-";
+    document.getElementById("shots").textContent = currentTeamStats.shots ?? "-";
+    document.getElementById("passes").textContent = currentTeamStats.passes ?? "-";
+    document.getElementById("corners").textContent = currentTeamStats.corners ?? "-";
+
+    formationCell.innerHTML = renderSelectOrText(
+        currentTeamStats.formation, Formations, onFormationChange, formatFormation
+    );
+    strategyCell.innerHTML = renderSelectOrText(
+        currentTeamStats.strategy, MatchStrategies, onStrategyChange, formatStrategy
+    );
 }
 
-function formatFormation(formation) {
-    if (!formation) return "-";
-    return formation.replace("F", "").replace(/_/g, "-");
+function renderSelectOrText(value, options, onChangeHandler, formatter) {
+    if (matchDate <= new Date()) return formatter(value);
+
+    return `<select class="form-select form-select-sm" onchange="(${onChangeHandler.name})(this)">
+        ${options.map(o => `<option value="${o}" ${o === value ? "selected" : ""}>${formatter(o)}</option>`).join("")}
+    </select>`;
+}
+
+function onFormationChange(select) {
+    currentTeamStats.formation = select.value;
+    fetch('/api/coaches/match/formation', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ matchId, clubId, formation: select.value })
+    }).catch(err => console.error(err));
+}
+
+function onStrategyChange(select) {
+    currentTeamStats.strategy = select.value;
+    fetch('/api/coaches/match/strategy', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ matchId, clubId, strategy: select.value })
+    }).catch(err => console.error(err));
+}
+
+function renderPlayers() {
+    tableBody.innerHTML = "";
+    currentPlayers.forEach(p => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${p.player.name}</td>
+            <td>${p.position ?? "-"}</td>
+            <td>${renderPlayerSelectOrText(p, "start")}</td>
+            <td>${renderPlayerSelectOrText(p, "end")}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+function renderPlayerSelectOrText(playerStats, type) {
+    const value = type === "start" ? playerStats.statusAtTheStartOfTheMatch : playerStats.statusAtTheEndOfTheMatch;
+    if (matchDate <= new Date()) return formatPlayerStatus(value, type);
+
+    return `<select class="form-select form-select-sm" onchange="onPlayerStatusChange(${playerStats.player.id}, '${type}', this)">
+        ${PlayerStatusInMatch.map(s => `<option value="${s}" ${s === value ? "selected" : ""}>${formatPlayerStatus(s, type)}</option>`).join("")}
+    </select>`;
+}
+
+function onPlayerStatusChange(playerId, type, select) {
+    const stats = currentPlayers.find(p => p.player.id === playerId);
+    if (!stats) return;
+    if (type === "start") stats.statusAtTheStartOfTheMatch = select.value;
+    else stats.statusAtTheEndOfTheMatch = select.value;
+
+    fetch('/api/matches/player-status', {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            matchId,
+            playerId,
+            startStatus: stats.statusAtTheStartOfTheMatch,
+            endStatus: stats.statusAtTheEndOfTheMatch
+        })
+    }).catch(err => console.error(err));
+}
+
+function formatFormation(f) { return f ? f.replace("F", "").replaceAll("_", "-") : "-"; }
+function formatStrategy(s) { return s ? s.charAt(0) + s.slice(1).toLowerCase() : "-"; }
+
+function formatPlayerStatus(status, type) {
+    if (!status) return "-";
+    if (type === "start" && status === "WHOLE_GAME") return "STARTER";
+    switch (status) {
+        case "SUBSTITUTE": return "UNUSED SUBSTITUTE";
+        case "WHOLE_GAME": return "INTEGRALIST";
+        case "SUB_IN": return "SUBBED IN";
+        case "SUB_OUT": return "SUBBED OUT";
+        default: return status;
+    }
 }

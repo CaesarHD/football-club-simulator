@@ -1,6 +1,9 @@
 package org.ball.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "players")
@@ -21,8 +24,7 @@ public class Player {
 
     private double salary;
 
-    public Player() {
-    }
+    public Player() {}
 
     public Player(String name) {
         this.name = name;
@@ -88,15 +90,15 @@ public class Player {
         this.salary = salaryPerSeason;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Player{" +
-//                "id=" + id +
-//                ", name='" + name + '\'' +
-//                ", age=" + age +
-//                ", club=" + club +
-//                ", skills=" + skills +
-//                ", salary=" + salary +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", club=" + club +
+                ", skills=" + skills +
+                ", salary=" + salary +
+                '}';
+    }
 }
