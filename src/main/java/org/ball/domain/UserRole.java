@@ -1,8 +1,9 @@
 package org.ball.domain;
 
 public enum UserRole {
-    GUESS,
+    GUEST,
     COACH,
     PLAYER,
-    MANAGER
+    MANAGER,
+    ADMIN
 }

@@ -12,10 +12,19 @@ const strategyCell = document.getElementById("strategy");
 const PlayerStatusInMatch = ["WHOLE_GAME","SUBSTITUTE","SUB_IN","SUB_OUT"];
 const Formations = ["F4_3_3","F4_4_2","F5_3_2","F4_3_1_2"];
 const MatchStrategies = ["ATTACKING","BALANCED","DEFENDING"];
+// const UserRole = {
+//     COACH, GUEST, PLAYER, ADMIN, MANAGER
+// }
 
 let currentPlayers = [];
 let currentTeamStats = null;
 let matchDate = null;
+
+let userInfo = {
+    userId: null,
+    username: null,
+    // role: UserRole.COACH
+}; // should be global in current tab
 
 if (!matchId || !clubId) {
     title.textContent = "Error: Match or club not selected";
@@ -112,7 +121,10 @@ function onPlayerStatusChange(playerId, type, select) {
 
     fetch('/api/matches/player-status', {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+            "Content-Type": "application/json",
+            // "XUserId": userInfo.userId
+        },
         body: JSON.stringify({
             matchId,
             playerId,

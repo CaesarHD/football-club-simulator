@@ -9,12 +9,12 @@ import java.util.List;
 @Entity
 @Table(name = "players")
 public class Player {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int age;
+    private double salary;
 
     @ManyToOne
     @JoinColumn(name = "current_club_id")
@@ -22,8 +22,6 @@ public class Player {
 
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private PlayerSkills skills;
-
-    private double salary;
 
     public Player() {}
 

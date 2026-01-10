@@ -36,17 +36,9 @@ public class CoachController {
 
     @PutMapping()
     public void changeFormation(@RequestParam Formation formation, @RequestParam Long matchId, HttpServletRequest request) {
-        long coachId = Long.parseLong(request.getHeader("UserId"));
+        long userId = Long.parseLong(request.getHeader("XUserId"));
 
-        if (authService.getRole(coachId) != COACH) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to perform this action");
-        }
-        Coach coach;
-        try {
-            coach = coachService.getCoachById(coachId);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach with id " + coachId + " not found");
-        }
+        Coach coach = checkRolesAndPermissions(userId);
 
         Match match;
         try {
@@ -54,7 +46,22 @@ public class CoachController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         matchService.changeFormation(match, formation, coach);
+    }
+
+    private Coach checkRolesAndPermissions(long userId) {
+        if (authService.getRole(userId) != COACH) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to perform this action");
+        }
+
+        Coach coach;
+        try {
+            coach = coachService.getCoachById(userId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach with id " + userId + " not found");
+        }
+        return coach;
     }
 
     @PutMapping("/match/formation")
