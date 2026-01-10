@@ -24,8 +24,7 @@ public class Main {
     private final ClubRepository clubRepository;
     private final TcpServer tcpServer;
 
-    public Main(ClubService clubService, PlayerService playerService, MatchService matchService, GoalService goalService, CoachService coachService, TransferRepository transferRepository, ManagerService managerService, ClubRepository clubRepository) {
-    public Main(ClubService clubService, PlayerService playerService, MatchService matchService, GoalService goalService, CoachService coachService, TcpServer tcpServer) {
+    public Main(ClubService clubService, PlayerService playerService, MatchService matchService, GoalService goalService, CoachService coachService, TransferRepository transferRepository, ManagerService managerService, ClubRepository clubRepository, TcpServer tcpServer) {
         this.clubService = clubService;
         this.playerService = playerService;
         this.matchService = matchService;

@@ -1,6 +1,8 @@
 package org.ball.service;
 
 import org.ball.domain.Manager;
+import org.ball.domain.Transfer;
+import org.ball.domain.TransferStatus;
 import org.ball.repository.ManagerRepository;
 import org.springframework.stereotype.Service;
 import org.ball.repository.PlayerHistoryRepository;
@@ -70,7 +72,7 @@ public class ManagerService {
     public Manager getManagerByName(String name) {
         Manager manager = null;
         try {
-            manager = managerRepository.findManagerByName(name);
+            manager = managerRepository.findByName(name);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -84,8 +86,5 @@ public class ManagerService {
         return managerRepository.findById(id).orElse(null);
     }
 
-    public Manager getManagerByName(String name) {
-        return managerRepository.findByName(name);
-    }
 
 }
