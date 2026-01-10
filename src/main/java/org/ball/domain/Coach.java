@@ -27,6 +27,11 @@ public class Coach {
 
     public Coach() {}
 
+    public Coach(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
     public Coach(String name, int age, float salary, Club club) {
         this.name = name;
         this.age = age;
@@ -50,14 +55,6 @@ public class Coach {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Coach{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
     public int getAge() {
         return age;
     }
@@ -72,5 +69,16 @@ public class Coach {
 
     public void setSalary(float salary) {
         this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Coach{" +
+                "id=" + id +
+                ", age=" + age +
+                ", club=" + club.getName() +
+                ", name='" + name + '\'' +
+                ", salary=" + salary +
+                '}';
     }
 }

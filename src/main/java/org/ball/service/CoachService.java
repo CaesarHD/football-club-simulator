@@ -82,6 +82,16 @@ public class CoachService {
         return coach;
     }
 
+    public Coach getCoachByName(String name) {
+        Coach coach = null;
+        try {
+            coach = coachRepository.getCoachByName(name);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not find the coach in the DB");
+        }
+        return coach;
+    }
+
     public void approveTransfer(Long transferId) {
         Transfer transfer = transferRepository.findById(transferId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transfer not found"));

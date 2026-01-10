@@ -18,6 +18,11 @@ public class Manager {
 
     public Manager() {}
 
+    public Manager(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
     public Manager(String name) {
         this.name = name;
     }
@@ -50,12 +55,12 @@ public class Manager {
         this.club = club;
     }
 
-
-
     @Override
     public String toString() {
         return "Manager{" +
                 "id=" + id +
+                ", age=" + age +
+                ", club=" + club.getName() +
                 ", name='" + name + '\'' +
                 '}';
     }

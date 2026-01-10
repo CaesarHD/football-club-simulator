@@ -5,8 +5,10 @@ import org.ball.domain.*;
 import org.ball.repository.ClubRepository;
 import org.ball.repository.TransferRepository;
 import org.ball.service.*;
+import org.ball.tcp.TcpServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import java.time.LocalDateTime;
 
 @SpringBootApplication
@@ -20,8 +22,9 @@ public class Main {
     private final TransferRepository transferRepository;
     private final ManagerService managerService;
     private final ClubRepository clubRepository;
+    private final TcpServer tcpServer;
 
-    public Main(ClubService clubService, PlayerService playerService, MatchService matchService, GoalService goalService, CoachService coachService, TransferRepository transferRepository, ManagerService managerService, ClubRepository clubRepository) {
+    public Main(ClubService clubService, PlayerService playerService, MatchService matchService, GoalService goalService, CoachService coachService, TransferRepository transferRepository, ManagerService managerService, ClubRepository clubRepository, TcpServer tcpServer) {
         this.clubService = clubService;
         this.playerService = playerService;
         this.matchService = matchService;
@@ -30,14 +33,17 @@ public class Main {
         this.transferRepository = transferRepository;
         this.managerService = managerService;
         this.clubRepository = clubRepository;
+        this.tcpServer = tcpServer;
     }
 
     public static void main(String[] args) {
+
         SpringApplication.run(Main.class, args);
     }
 
     @PostConstruct
     public void init() {
+        tcpServer.start(5555);
 
 //
         Club liverpool = clubService.getClubByName("Liverpool");

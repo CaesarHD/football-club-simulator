@@ -142,7 +142,6 @@ public class ValidationUtil {
 
         validateName(coach.getName());
 
-        //TODO: implement this after create coach class
     }
 
 
