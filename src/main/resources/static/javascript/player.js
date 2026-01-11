@@ -66,7 +66,6 @@ async function fetchJson(url) {
         setText('pShooting', s.shooting ?? 0);
         setText('pPassing', s.passing ?? 0);
 
-        // goalkeepers only
         setText('pReflexes', s.position === 'GOALKEEPER' ? (s.reflexes ?? 0) : '-');
         setText('pDiving',   s.position === 'GOALKEEPER' ? (s.diving ?? 0) : '-');
 

@@ -1,6 +1,9 @@
 package org.ball.service;
 
+import org.ball.domain.LoginInfo;
+import org.ball.domain.UserInfo;
 import org.ball.domain.UserRole;
+import org.ball.repository.AuthRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,10 +15,12 @@ import static org.ball.domain.UserRole.*;
 
 @Service
 public class AuthService {
+    private final AuthRepository authRepository;
 
     private final Map<Long, UserRole> roles;
 
-    public AuthService() {
+    public AuthService(AuthRepository authRepository) {
+        this.authRepository = authRepository;
         this.roles = new HashMap<>();
         roles.put(1L, GUEST);
         roles.put(2L, PLAYER);
@@ -29,18 +34,24 @@ public class AuthService {
     }
 
     public UserInfo login(LoginInfo loginInfo) {
+        UserInfo userInfo;
         try {
-            //TODO: get userId, role, all user data from db by username and password
 
-//            if(userInfo == null) {
-//                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
-//            }
+            if(loginInfo == null) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Error: Invalid Login Info");
+            }
+
+            userInfo = authRepository.findByUsernameAndPassword(loginInfo.username(), loginInfo.password());
+            if(userInfo == null) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found in DB");
+            }
+
+
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
         }
 
-
-        return new UserInfo(1L,"Marcel", "Bostan", getRole(1L));
+        return userInfo;
     }
 
 }

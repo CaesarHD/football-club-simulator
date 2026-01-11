@@ -23,6 +23,10 @@ public class Player {
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private PlayerSkills skills;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserInfo user;
+
     public Player() {}
 
     public Player(String name, int age, Position position) {

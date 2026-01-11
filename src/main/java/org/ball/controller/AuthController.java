@@ -1,60 +1,62 @@
 package org.ball.controller;
 
+import org.ball.domain.LoginInfo;
+import org.ball.domain.Player;
+import org.ball.domain.UserInfo;
+import org.ball.domain.UserRole;
 import org.ball.service.AuthService;
-import org.ball.service.LoginInfo;
-import org.ball.service.UserInfo;
+import org.ball.service.CoachService;
+import org.ball.service.ManagerService;
+import org.ball.service.PlayerService;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Map;
-
-@Controller("/api/login")
+@RestController
+@RequestMapping("/api/auth")
 public class AuthController {
 
-//    private final AuthService authService;
-//    public AuthController(AuthService authService) {
-//        this.authService = authService;
-//    }
+    private final AuthService authService;
+    private final PlayerService playerService;
+    private final CoachService coachService;
+    private final ManagerService managerService;
 
-//    @PostMapping
-//    public UserInfo login(@RequestBody LoginInfo loginInfo) {
-//        return authService.login(loginInfo);
-//    }
-
-    private final UserRepository userRepo;
-    private final PlayerRepository playerRepo;
-
-    public AuthController(UserRepository userRepo, PlayerRepository playerRepo) {
-        this.userRepo = userRepo;
-        this.playerRepo = playerRepo;
+    public AuthController(AuthService authService, PlayerService playerService, CoachService coachService, ManagerService managerService) {
+        this.authService = authService;
+        this.playerService = playerService;
+        this.coachService = coachService;
+        this.managerService = managerService;
     }
 
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody Map<String, String> req) {
-        String username = req.get("username");
-        String password = req.get("password");
-
-        User u = userRepo.findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "invalid credentials"));
-
-        if (!u.getPassword().equals(password)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "invalid credentials");
+    public UserInfo login(@RequestBody LoginInfo loginInfo) {
+        if (loginInfo == null ||
+                loginInfo.username() == null || loginInfo.username().isBlank() ||
+                loginInfo.password() == null || loginInfo.password().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username and password are required");
         }
 
-        Map<String, Object> out = new HashMap<>();
-        out.put("role", u.getRole());
-        out.put("username", u.getUsername());
+        UserInfo userInfo = authService.login(new LoginInfo(loginInfo.username(), loginInfo.password()));
 
-        if ("PLAYER".equalsIgnoreCase(u.getRole())) {
-            Player p = playerRepo.findByUserId(u.getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "user has no player"));
-            out.put("playerId", p.getId());
+        if (userInfo == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }
 
-        return out;
+        return userInfo;
+    }
+
+    @PostMapping("/player_profile")
+    public Player getPlayerInfo(@RequestBody UserInfo userInfo) {
+        Long userId = userInfo.getId();
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is required");
+        }
+        Player player = null;
+        try {
+            player = playerService.getPlayerByUserId(userId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found");
+        }
+        return player;
     }
 }
