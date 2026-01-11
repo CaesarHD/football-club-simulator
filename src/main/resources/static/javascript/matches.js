@@ -67,11 +67,10 @@ async function renderMatches(matches) {
         const isFuture = matchDate > now;
 
         const isClickable =
-            userRole === 'COACH' ||
             userRole === 'PLAYER' ||
-            !isFuture;   // ← everyone (including guests) can click past matches
+            userRole === 'COACH' ||
+            userRole === 'MANAGER';
 
-        // Prepare score cell
         let scoreCell = '';
         if (isFuture) {
             scoreCell = `<span>vs</span>`;
@@ -85,7 +84,7 @@ async function renderMatches(matches) {
         const createClubCell = (club) => {
             if (!club?.name) return '-';
 
-            if (isClickable) {
+            if (!isClickable) {
                 const safeName = club.name.replace(/'/g, "\\'");
                 return `
                     <a href="javascript:void(0)" 
@@ -95,14 +94,12 @@ async function renderMatches(matches) {
                 `;
             }
 
-            // For non-players → plain text
             return club.name;
         };
 
         const homeClubContent = createClubCell(match.homeClub);
         const awayClubContent = createClubCell(match.awayClub);
 
-        // Create row
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>
@@ -118,7 +115,6 @@ async function renderMatches(matches) {
         `;
         tableBody.appendChild(row);
 
-        // Load goals for past matches
         if (!isFuture) {
             try {
                 const res = await fetch(`/api/matches/goals/${match.id}`);

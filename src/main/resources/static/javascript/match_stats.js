@@ -75,8 +75,14 @@ class MatchStatsController {
         }
     }
 
-    #canEdit() {
-        return role === ROLES.COACH && this.#matchDate > new Date();
+        #canEdit() {
+            console.log(currentUser.club.id);
+            console.log(this.#clubId);
+            return (
+            role === ROLES.COACH &&
+            this.#matchDate > new Date() &&
+            Number(currentUser.club.id) === Number(this.#clubId)
+        );
     }
 
     #render() {
@@ -229,7 +235,7 @@ class MatchStatsController {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'XUserId': String(currentUser.userId),
+                    'XUserId': String(currentUser.id),
                 },
                 body: JSON.stringify({
                     matchId: this.#matchId,
@@ -248,11 +254,12 @@ class MatchStatsController {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'XUserId': String(currentUser.userId),
+                    'XUserId': String(currentUser.id),
                 },
                 body: JSON.stringify({
                     matchId: this.#matchId,
                     playerId: playerStats.player.id,
+                    clubId: this.#clubId,
                     startStatus: playerStats.statusAtTheStartOfTheMatch,
                     endStatus: playerStats.statusAtTheEndOfTheMatch,
                 }),

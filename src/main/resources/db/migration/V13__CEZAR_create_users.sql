@@ -29,10 +29,3 @@ alter table managers
     add constraint managers_users_id_fk
         foreign key (user_id) references users (id);
 
-insert into users (username, password, role)
-values ('salah', 'parola123', 'PLAYER');
-
--- leg user-ul de playerul Salah (player id 9)
-update players
-set user_id = (select id from users where username = 'salah')
-where id = 9;

@@ -1,5 +1,6 @@
 package org.ball.service;
 
+import org.ball.domain.Coach;
 import org.ball.domain.Manager;
 import org.ball.domain.Transfer;
 import org.ball.domain.TransferStatus;
@@ -11,11 +12,10 @@ import org.ball.repository.TransferRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -87,4 +87,16 @@ public class ManagerService {
     }
 
 
+    public Manager getManagerByUserId(Long id) {
+        if(id == null || id <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id is mandatory, cannot be null");
+        }
+        Optional<Manager> manager;
+        try {
+            manager = managerRepository.findByUserId(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not find the manager in the db ");
+        }
+        return manager.get();
+    }
 }

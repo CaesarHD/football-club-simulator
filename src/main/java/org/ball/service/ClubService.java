@@ -111,5 +111,13 @@ public class ClubService {
     }
 
 
-
+    public Club getClubById(Long clubId) {
+        Club club;
+        try {
+            club = clubRepository.findById(clubId);
+        } catch (Exception e) {
+            throw new  ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to fetch club from the database.");
+        }
+        return club;
+    }
 }

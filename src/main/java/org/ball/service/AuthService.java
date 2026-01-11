@@ -11,46 +11,41 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.ball.domain.UserRole.*;
-
 @Service
 public class AuthService {
     private final AuthRepository authRepository;
 
-    private final Map<Long, UserRole> roles;
+    private final Map<Long, UserRole> rolesCache = new HashMap<>();
 
     public AuthService(AuthRepository authRepository) {
         this.authRepository = authRepository;
-        this.roles = new HashMap<>();
-        roles.put(1L, GUEST);
-        roles.put(2L, PLAYER);
-        roles.put(3L, COACH);
-        roles.put(4L, MANAGER);
-        roles.put(5L, ADMIN);
     }
 
-    //TODO: get role from db
     public UserRole getRole(Long userId) {
-        return roles.get(userId);
+        return rolesCache.computeIfAbsent(userId, k -> {
+            UserInfo userInfo = authRepository.findById(userId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+            return userInfo.getRole();
+        });
     }
 
     public UserInfo login(LoginInfo loginInfo) {
         UserInfo userInfo;
         try {
-
-            if(loginInfo == null) {
+            if (loginInfo == null) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Error: Invalid Login Info");
             }
 
             userInfo = authRepository.findByUsernameAndPassword(loginInfo.username(), loginInfo.password());
-            if(userInfo == null) {
+
+            if (userInfo == null) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found in DB");
             }
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
         }
-
         return userInfo;
     }
 
