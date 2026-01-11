@@ -20,8 +20,10 @@ const ROLES = Object.freeze({
     MANAGER: 'MANAGER',
 });
 
-const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || localStorage.getItem('user') || '{}');
-const userRole = currentUser.role || 'GUEST';
+const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+const role = currentUser.role || 'GUEST';
+const userId = currentUser.id;
+const isLoggedIn = !!currentUser.id && currentUser.isLoggedIn === true;
 
 class MatchStatsController {
     // Private fields
@@ -74,7 +76,7 @@ class MatchStatsController {
     }
 
     #canEdit() {
-        return userRole === ROLES.COACH && this.#matchDate > new Date();
+        return role === ROLES.COACH && this.#matchDate > new Date();
     }
 
     #render() {

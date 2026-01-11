@@ -29,6 +29,7 @@ public class AuthService {
         roles.put(5L, ADMIN);
     }
 
+    //TODO: get role from db
     public UserRole getRole(Long userId) {
         return roles.get(userId);
     }
@@ -45,7 +46,6 @@ public class AuthService {
             if(userInfo == null) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found in DB");
             }
-
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");

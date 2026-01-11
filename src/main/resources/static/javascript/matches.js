@@ -4,7 +4,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const clubName = urlParams.get('clubName');
 let season = urlParams.get('season');
 
-const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || localStorage.getItem('user') || '{}');
+const currentUser = JSON.parse(sessionStorage.getItem('user') || '{}');
 const userRole = currentUser.role || 'GUEST';
 
 const seasonSelect = document.getElementById('season-select');
