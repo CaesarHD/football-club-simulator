@@ -1,17 +1,17 @@
 package org.ball.controller;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.ball.domain.*;
 import org.ball.service.AuthService;
-import org.ball.service.CoachService;
 import org.ball.service.MatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.*;
+
+import java.util.Map;
+
 import static org.ball.domain.UserRole.COACH;
 
 @RestController
@@ -19,84 +19,62 @@ import static org.ball.domain.UserRole.COACH;
 public class CoachController {
 
     private static final Logger log = LoggerFactory.getLogger(CoachController.class);
+
     private final AuthService authService;
-    private final CoachService coachService;
     private final MatchService matchService;
 
-    public CoachController(CoachService coachService, AuthService authService, MatchService matchService) {
-        this.coachService = coachService;
+    public CoachController(AuthService authService, MatchService matchService) {
         this.authService = authService;
         this.matchService = matchService;
     }
 
-    @GetMapping
-    public List<Coach> getAllCoaches() {
-        return coachService.getAllCoaches();
-    }
-
-    @PutMapping()
-    public void changeFormation(@RequestParam Formation formation, @RequestParam Long matchId, HttpServletRequest request) {
-        long userId = Long.parseLong(request.getHeader("XUserId"));
-
-        Coach coach = checkRolesAndPermissions(userId);
-
-        Match match;
-        try {
-            match = matchService.getMatchById(matchId);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        matchService.changeFormation(match, formation, coach);
-    }
-
-    private Coach checkRolesAndPermissions(long userId) {
+    private void ensureCoach(Long userId) {
         if (authService.getRole(userId) != COACH) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to perform this action");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You must be a coach to perform this action");
         }
-
-        Coach coach;
-        try {
-            coach = coachService.getCoachById(userId);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach with id " + userId + " not found");
-        }
-        return coach;
     }
 
     @PutMapping("/match/formation")
-    public void updateFormation(@RequestBody Map<String, Object> body) {
+    public void updateFormation(
+            @RequestBody Map<String, Object> body,
+            @RequestHeader("XUserId") Long userId
+    ) {
+        log.debug("Received request to update formation of coach with id: {}", userId);
+        ensureCoach(userId);
+
         Long matchId = Long.valueOf(body.get("matchId").toString());
         Long clubId = Long.valueOf(body.get("clubId").toString());
-        String formationStr = body.get("formation").toString();
+        Formation formation = Formation.valueOf(body.get("formation").toString());
 
-        Formation formation = Formation.valueOf(formationStr); // convert string to enum
         matchService.updateFormation(matchId, clubId, formation);
     }
 
     @PutMapping("/match/strategy")
-    public void updateStrategy(@RequestBody Map<String, Object> body) {
+    public void updateStrategy(
+            @RequestBody Map<String, Object> body,
+            @RequestHeader("XUserId") Long userId
+    ) {
+        ensureCoach(userId);
+
         Long matchId = Long.valueOf(body.get("matchId").toString());
         Long clubId = Long.valueOf(body.get("clubId").toString());
-        String strategyStr = body.get("strategy").toString();
+        MatchStrategy strategy = MatchStrategy.valueOf(body.get("strategy").toString());
 
-        MatchStrategy strategy = MatchStrategy.valueOf(strategyStr); // convert string to enum
         matchService.updateStrategy(matchId, clubId, strategy);
     }
 
+    @PutMapping("/match/player-status")
+    public void updatePlayerStatus(
+            @RequestBody Map<String, Object> body,
+            @RequestHeader("XUserId") Long userId
+    ) {
+        ensureCoach(userId);
 
-    public Coach saveCoach(Coach coach) {
-        return coachService.saveCoach(coach);
+        Long matchId = Long.valueOf(body.get("matchId").toString());
+        Long playerId = Long.valueOf(body.get("playerId").toString());
+        PlayerStatusInMatch startStatus = PlayerStatusInMatch.valueOf(body.get("startStatus").toString());
+        PlayerStatusInMatch endStatus= PlayerStatusInMatch.valueOf(body.get("endStatus").toString());
+
+        matchService.updatePlayerStatus(matchId, playerId, startStatus, endStatus);
     }
-
-    @PutMapping("/transfers/approve{transferId}")
-    public void approveTransfer(@PathVariable("transferId") Long transferId) {
-        coachService.approveTransfer(transferId);
-    }
-
-    @PutMapping("/transfers/reject{transferId}")
-    public void rejectTransfer(@PathVariable("transferId") Long transferId) {
-        coachService.rejectTransfer(transferId);
-    }
-
 }

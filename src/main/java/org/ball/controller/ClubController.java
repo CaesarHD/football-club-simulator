@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/clubs")
 public class ClubController {
@@ -25,13 +24,8 @@ public class ClubController {
         return clubService.getAllClubs();
     }
 
-    @GetMapping(params = "name")
-    public Club getClubByName(@RequestParam String name) {
-       return clubService.getClubByName(name);
-    }
-
     @PostMapping("/transfers{playerId}/{clubId}")
-    public Transfer createTransfer(@PathVariable("playerId") Long playerId, @PathVariable("clubId") Long clubId ) {
+    public Transfer createTransfer(@PathVariable("playerId") Long playerId, @PathVariable("clubId") Long clubId) {
         return clubService.createTransfer(playerId, clubId);
     }
 }

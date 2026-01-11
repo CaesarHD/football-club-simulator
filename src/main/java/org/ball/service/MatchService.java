@@ -161,7 +161,7 @@ public class MatchService {
         }
     }
 
-    public void changePlayerStatus(
+    public void updatePlayerStatus(
             Long matchId,
             Long playerId,
             PlayerStatusInMatch startStatus,

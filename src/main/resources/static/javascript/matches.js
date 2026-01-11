@@ -1,6 +1,11 @@
+// matches-list.js
+
 const urlParams = new URLSearchParams(window.location.search);
 const clubName = urlParams.get('clubName');
 let season = urlParams.get('season');
+
+const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || localStorage.getItem('user') || '{}');
+const userRole = currentUser.role || 'GUEST';
 
 const seasonSelect = document.getElementById('season-select');
 const clubTitle = document.getElementById('club-name');
@@ -61,39 +66,59 @@ async function renderMatches(matches) {
         const matchDate = new Date(match.date);
         const isFuture = matchDate > now;
 
+        const isClickable =
+            userRole === 'COACH' ||
+            userRole === 'PLAYER' ||
+            !isFuture;   // ← everyone (including guests) can click past matches
+
         // Prepare score cell
         let scoreCell = '';
         if (isFuture) {
-            scoreCell = `<span>vs</span>`; // future matches not clickable
+            scoreCell = `<span>vs</span>`;
         } else {
             scoreCell = `<a href="javascript:void(0)" onclick="openGoalsStats(${match.id})">
                             ${match.homeTeamNoGoals ?? '-'} - ${match.awayTeamNoGoals ?? '-'}
                          </a>`;
         }
 
-        // Create table row
+        // Helper to create club cell content (link only for players)
+        const createClubCell = (club) => {
+            if (!club?.name) return '-';
+
+            if (isClickable) {
+                const safeName = club.name.replace(/'/g, "\\'");
+                return `
+                    <a href="javascript:void(0)" 
+                       onclick="openMatchStats(${match.id}, ${club.id}, '${safeName}')">
+                       ${club.name}
+                    </a>
+                `;
+            }
+
+            // For non-players → plain text
+            return club.name;
+        };
+
+        const homeClubContent = createClubCell(match.homeClub);
+        const awayClubContent = createClubCell(match.awayClub);
+
+        // Create row
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>
-                <a href="javascript:void(0)" 
-                   onclick="openMatchStats(${match.id}, ${match.homeClub?.id}, '${match.homeClub?.name}')">
-                   ${match.homeClub?.name ?? '-'}
-                </a>
+                ${homeClubContent}
                 <div class="goals-home" style="font-size: 0.8em; color: grey;"></div>
             </td>
             <td>${scoreCell}</td>
             <td>
-                <a href="javascript:void(0)" 
-                   onclick="openMatchStats(${match.id}, ${match.awayClub?.id}, '${match.awayClub?.name}')">
-                   ${match.awayClub?.name ?? '-'}
-                </a>
+                ${awayClubContent}
                 <div class="goals-away" style="font-size: 0.8em; color: grey;"></div>
             </td>
             <td>${formatDate(match.date)}</td>
         `;
         tableBody.appendChild(row);
 
-        // Fetch goals for this match and display under club names
+        // Load goals for past matches
         if (!isFuture) {
             try {
                 const res = await fetch(`/api/matches/goals/${match.id}`);
@@ -119,15 +144,12 @@ async function renderMatches(matches) {
                         .map(g => `<span style="color: grey;">⚽</span> ${g.minute}' ${g.player?.name ?? 'Unknown'}`)
                         .join('<br>');
                 }
-
             } catch (err) {
                 console.error('Failed to load goals for match', match.id, err);
             }
         }
     }
 }
-
-
 
 function updateUrlQuery(season) {
     const newUrlParams = new URLSearchParams();
@@ -143,11 +165,6 @@ seasonSelect.addEventListener('change', () => {
 });
 
 function openMatchStats(matchId, clubId, clubName) {
-    sessionStorage.removeItem('selectedMatchId');
-    sessionStorage.removeItem('selectedClubId');
-    sessionStorage.removeItem('selectedClubName');
-
-
     sessionStorage.setItem('selectedMatchId', matchId);
     sessionStorage.setItem('selectedClubId', clubId);
     sessionStorage.setItem('selectedClubName', clubName);
@@ -155,8 +172,6 @@ function openMatchStats(matchId, clubId, clubName) {
 }
 
 function openGoalsStats(matchId) {
-    sessionStorage.removeItem('selectedMatchId');
-
     sessionStorage.setItem('selectedMatchId', matchId);
     window.location.href = 'goals.html';
 }

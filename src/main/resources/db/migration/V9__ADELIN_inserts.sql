@@ -191,3 +191,5 @@ VALUES(55, (SELECT id FROM clubs WHERE name = 'Liverpool'), (SELECT id FROM play
 INSERT INTO goals (minute, club_id, player_id, id_match, goal_type)
 VALUES(6, (SELECT id FROM clubs WHERE name = 'Liverpool'), (SELECT id FROM players WHERE name = 'Szoboszlai'), 1, 'REGULAR');
 
+
+

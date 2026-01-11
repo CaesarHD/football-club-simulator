@@ -53,6 +53,44 @@
     <li><a href="/html/clubs.html">Clubs</a></li>
 </ul>
 
-<script src="/javascript/login.js"></script>
+<!-- Temporary testing controls - remove later! -->
+<hr>
+<h3>Quick test login (development only)</h3>
+
+<button onclick="fakeLogin('PLAYER')">Login as PLAYER</button>
+<button onclick="fakeLogin('COACH')">Login as COACH</button>
+<button onclick="fakeLogin('GUEST')">Login as GUEST</button>
+<button onclick="logout()">Logout / Clear</button>
+
+<p>Current role: <span id="current-role">not logged in</span></p>
+
+<script>
+    function fakeLogin(role) {
+        const fakeUser = {
+            userId: role === 'COACH' ? 3 : 5,
+            username: role.toLowerCase() + "test",
+            role: role
+        };
+
+        sessionStorage.setItem('currentUser', JSON.stringify(fakeUser));
+        updateRoleDisplay();
+        alert(`Logged in as ${role}`);
+    }
+
+    function logout() {
+        sessionStorage.removeItem('currentUser');
+        updateRoleDisplay();
+        alert('Logged out');
+    }
+
+    function updateRoleDisplay() {
+        const user = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+        document.getElementById('current-role').textContent =
+            user.role ? user.role : 'not logged in';
+    }
+
+    // Show current status when page loads
+    updateRoleDisplay();
+</script>
 </body>
 </html>

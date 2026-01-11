@@ -103,14 +103,16 @@ public class MatchController {
 
 
     @PutMapping("/player-status")
-    public void updatePlayerStatus(@RequestBody Map<String, Object> body) {
+    public void changePlayerStatus(@RequestBody Map<String, Object> body) {
         Long matchId = Long.valueOf(body.get("matchId").toString());
         Long playerId = Long.valueOf(body.get("playerId").toString());
 
-        PlayerStatusInMatch startStatus = PlayerStatusInMatch.valueOf(body.get("startStatus").toString());
-        PlayerStatusInMatch endStatus = PlayerStatusInMatch.valueOf(body.get("endStatus").toString());
+        PlayerStatusInMatch startStatus =
+                PlayerStatusInMatch.valueOf(body.get("startStatus").toString());
+        PlayerStatusInMatch endStatus =
+                PlayerStatusInMatch.valueOf(body.get("endStatus").toString());
 
-        matchService.changePlayerStatus(matchId, playerId, startStatus, endStatus);
+        matchService.updatePlayerStatus(matchId, playerId, startStatus, endStatus);
     }
 
 
