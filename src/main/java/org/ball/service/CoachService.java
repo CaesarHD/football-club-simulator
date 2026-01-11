@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.ball.Utils.ValidationUtil.validateCoach;
 
@@ -107,4 +108,16 @@ public class CoachService {
         }
     }
 
+    public Coach getCoachByUserId(Long id) {
+        if(id == null || id <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id is mandatory, cannot be null");
+        }
+        Optional<Coach> coach;
+        try {
+            coach = coachRepository.findByUserId(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not find the coach in the db ");
+        }
+        return coach.get();
+    }
 }

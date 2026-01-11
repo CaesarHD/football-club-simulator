@@ -10,3 +10,5 @@ CREATE TABLE coaches
     constraint coaches_club_id_fk
         foreign key (club_id) references clubs(id)
 );
+
+

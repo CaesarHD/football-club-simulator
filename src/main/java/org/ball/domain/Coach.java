@@ -17,6 +17,10 @@ public class Coach {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserInfo user;
+
     public Club getClub() {
         return club;
     }

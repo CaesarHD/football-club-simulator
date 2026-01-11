@@ -1,9 +1,6 @@
 package org.ball.controller;
 
-import org.ball.domain.LoginInfo;
-import org.ball.domain.Player;
-import org.ball.domain.UserInfo;
-import org.ball.domain.UserRole;
+import org.ball.domain.*;
 import org.ball.service.AuthService;
 import org.ball.service.CoachService;
 import org.ball.service.ManagerService;
@@ -59,4 +56,26 @@ public class AuthController {
         }
         return player;
     }
+
+    @PostMapping("/coach_profile")
+    public Coach getCoachInfo(@RequestBody UserInfo userInfo) {
+        Long userId = userInfo.getId();
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is required");
+        }
+
+        Coach coach;
+        try {
+            coach = coachService.getCoachByUserId(userId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach not found");
+        }
+
+        return coach;
+    }
+
+
+
+
+
 }

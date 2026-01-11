@@ -16,6 +16,10 @@ public class Manager {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserInfo user;
+
     public Manager() {}
 
     public Manager(String name, int age) {
