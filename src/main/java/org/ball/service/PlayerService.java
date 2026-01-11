@@ -147,5 +147,30 @@ public class PlayerService {
         playerHistoryRepository.save(newHistory); // ✅ REQUIRED
     }
 
+    public Player getPlayerById(Long id) {
+        if(id == null || id <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player id is mandatory, cannot be null");
+        }
+        Player player;
+        try {
+            player = playerRepository.findPlayerById(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not find the player in the db ");
+        }
+        return player;
+    }
+
+    public Player getPlayerByUserId(Long id) {
+        if(id == null || id <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player id is mandatory, cannot be null");
+        }
+        Optional<Player> player;
+        try {
+            player = playerRepository.findByUserId(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not find the player in the db ");
+        }
+        return player.get();
+    }
 
 }

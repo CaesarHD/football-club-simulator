@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class PlayerSkills {
 
     @Id
-    private Long id;   // not generated!
+    private Long id;
 
     @OneToOne
     @MapsId

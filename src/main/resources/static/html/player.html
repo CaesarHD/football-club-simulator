@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Player Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        body { background-color:#fafafa; color:#212529; }
+        .cardish { background:#fff; border-radius:10px; padding:20px; box-shadow:0 4px 8px rgba(0,0,0,.1); }
+        th { background-color:#343a40 !important; color:#fff !important; }
+        td, th { text-align:center; vertical-align:middle; }
+    </style>
+</head>
+<body class="container mt-5">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-dark btn-sm" href="/html/players.html">Players (guest)</a>
+        <a class="btn btn-outline-dark btn-sm" href="/html/clubs.html">Clubs (guest)</a>
+    </div>
+    <button id="logoutBtn" class="btn btn-outline-danger btn-sm">Logout</button>
+</div>
+
+<h1 id="title" class="text-center fw-bold mb-4">My Profile</h1>
+
+<div class="cardish mb-4">
+    <div class="row g-3">
+        <div class="col-md-4"><strong>Name:</strong> <span id="pName">-</span></div>
+        <div class="col-md-2"><strong>Age:</strong> <span id="pAge">-</span></div>
+        <div class="col-md-3"><strong>Salary:</strong> <span id="pSalary">-</span></div>
+        <div class="col-md-3"><strong>Current club:</strong> <span id="pClub">-</span></div>
+    </div>
+
+    <hr>
+
+    <h5 class="mb-3">Skills</h5>
+    <div class="row g-2">
+        <div class="col-md-3"><strong>Position:</strong> <span id="pPos">-</span></div>
+        <div class="col-md-3"><strong>Pace:</strong> <span id="pPace">-</span></div>
+        <div class="col-md-3"><strong>Stamina:</strong> <span id="pStamina">-</span></div>
+        <div class="col-md-3"><strong>Defending:</strong> <span id="pDefending">-</span></div>
+
+        <div class="col-md-3"><strong>Physical:</strong> <span id="pPhysical">-</span></div>
+        <div class="col-md-3"><strong>Dribbling:</strong> <span id="pDribbling">-</span></div>
+        <div class="col-md-3"><strong>Shooting:</strong> <span id="pShooting">-</span></div>
+        <div class="col-md-3"><strong>Passing:</strong> <span id="pPassing">-</span></div>
+
+        <div class="col-md-3"><strong>Reflexes:</strong> <span id="pReflexes">-</span></div>
+        <div class="col-md-3"><strong>Diving:</strong> <span id="pDiving">-</span></div>
+    </div>
+</div>
+
+<div class="cardish">
+    <h5 class="mb-3">My history</h5>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+            <tr>
+                <th>Club</th>
+                <th>Joined</th>
+                <th>Left</th>
+                <th>Matches</th>
+                <th>Goals</th>
+                <th>Assists</th>
+            </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+        </table>
+    </div>
+    <div id="historyEmpty" class="text-muted" style="display:none;">No history found.</div>
+</div>
+
+<script src="../javascript/player.js"></script>
+</body>
+</html>
