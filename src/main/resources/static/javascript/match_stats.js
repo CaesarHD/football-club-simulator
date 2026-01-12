@@ -76,8 +76,6 @@ class MatchStatsController {
     }
 
         #canEdit() {
-            console.log(currentUser.club.id);
-            console.log(this.#clubId);
             return (
             role === ROLES.COACH &&
             this.#matchDate > new Date() &&
