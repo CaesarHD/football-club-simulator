@@ -45,6 +45,17 @@
             padding: 20px;
             margin-bottom: 20px;
         }
+
+        .team-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .team-logo {
+            width: 120px; /* set a reasonable width */
+            height: auto; /* preserve aspect ratio */
+        }
     </style>
 </head>
 <body>
@@ -58,38 +69,57 @@
         Welcome, Coach!
     </div>
 
+    <!-- Team Management -->
     <div class="card">
-        <h2>Your Team</h2>
-        <p>Team management functionality will go here.</p>
+        <div class="team-header">
+            <img src="/assets/images/Liverpool.png" alt="Club Logo" id="clubLogo" class="team-logo">
+            <h2>Team Management</h2>
+        </div>
+        <p>Manage your squad, view players, and plan your tactics.</p>
     </div>
 
+    <!-- Next Match -->
     <div class="card">
-        <h2>Training Schedule</h2>
-        <p>Training schedule functionality will go here.</p>
+        <h2>Next Match</h2>
+        <p>Details about your upcoming match will appear here.</p>
     </div>
 
+    <!-- Transfers -->
     <div class="card">
-        <h2>Match Preparation</h2>
-        <p>Match preparation functionality will go here.</p>
+        <h2>Transfers</h2>
+        <p>Manage incoming and outgoing transfers here.</p>
     </div>
 </div>
 
 <script>
-    // Load coach data from session storage
     document.addEventListener('DOMContentLoaded', () => {
-        const userData = JSON.parse(sessionStorage.getItem('currentUser'));
+        const userData = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
 
         if (!userData || !userData.isLoggedIn || userData.role !== 'COACH') {
-            // If not logged in as coach, redirect to login page
+            // Redirect if not logged in as coach
             window.location.href = '/';
             return;
         }
 
-        // Display welcome message with coach name
+        // Welcome message
         const welcomeElement = document.getElementById('welcomeMessage');
-        welcomeElement.textContent = `Welcome, Coach ${userData.name || userData.username}!`;
+        welcomeElement.textContent = `Welcome, Coach ${userData.profile?.name || userData.username}!`;
 
-        // Logout functionality
+        // Club logo
+        const clubLogo = document.getElementById('clubLogo');
+        const clubName = userData.profile?.club?.name || 'default-club';
+        const logoPath = `/assets/images/${clubName}.png`;
+
+        console.log(clubName);
+        fetch(logoPath)
+            .then(res => {
+                if (res.ok) clubLogo.src = logoPath;
+            })
+            .catch(() => {
+                clubLogo.src = '/assets/images/Liverpool.png';
+            });
+
+        // Logout button
         document.getElementById('logoutBtn').addEventListener('click', () => {
             sessionStorage.removeItem('currentUser');
             window.location.href = '/';

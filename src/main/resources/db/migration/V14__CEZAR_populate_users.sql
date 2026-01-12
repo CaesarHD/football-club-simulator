@@ -55,10 +55,13 @@ VALUES
     ('arneslot', 'arneslot123', 'COACH'),
     ('xavi', 'xavi123', 'COACH');
 
-UPDATE coaches c
-    JOIN users u
-    ON LOWER(REPLACE(c.name, ' ', '')) = u.username
-SET c.user_id = u.id;
+UPDATE coaches
+SET user_id = (SELECT id FROM users WHERE username = 'arneslot')
+WHERE name = 'Arne Slot';
+
+UPDATE coaches
+SET user_id = (SELECT id FROM users WHERE username = 'xavi')
+WHERE name = 'Xavi Hernandez';
 
 
 INSERT INTO managers (club_id, name, age)
