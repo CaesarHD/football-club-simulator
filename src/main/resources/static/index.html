@@ -1,58 +1,197 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Football Club Simulator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+        }
+
+        body {
+            color: #fff;
+            background:
+                    linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)),
+                    url("/assets/images/photo-1522778526097-ce0a22ceb253.jpeg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+        }
+
+        .top-bar button {
+            padding: 10px 18px;
+            border-radius: 20px;
+            border: 1px solid #4dd0e1;
+            background: transparent;
+            color: #4dd0e1;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .center {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-card {
+            width: 440px;
+            background: rgba(18, 18, 18, 0.9);
+            border-radius: 18px;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 14px;
+            border-radius: 14px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background: #242424;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4dd0e1, #26c6da);
+            color: #000;
+        }
+
+        /* Modal */
+        #loginModal {
+            display: none;              /* ✅ hidden by default */
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-box {
+            background: #fff;
+            color: #000;
+            width: 320px;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-<button id="loginBtn" type="button" style="position: absolute; top: 16px; right: 16px;">Login</button>
 
-<div id="loginModal" style="
-    display:none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 9999;
-">
-    <div style="
-        background: #fff;
-        width: 320px;
-        max-width: calc(100% - 32px);
-        margin: 120px auto;
-        padding: 16px;
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-        font-family: Arial, sans-serif;
-    ">
-        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 12px;">
-            <strong>Login</strong>
-            <button id="closeModalBtn" type="button" style="border:0; background:transparent; font-size:18px; cursor:pointer;">✕</button>
-        </div>
+<div class="top-bar">
+    <button id="loginBtn">Login</button>
+</div>
+
+<div class="center">
+    <div class="menu-card">
+        <h1>Football Club Simulator</h1>
+        <p>Every club has a past. Every player leaves a mark.</p>
+
+        <button class="menu-btn btn-secondary"
+                onclick="location.href='/html/clubs.html'">
+            🏟 Clubs History
+        </button>
+
+        <button class="menu-btn btn-secondary"
+                onclick="location.href='/html/players.html'">
+            👤 Players History
+        </button>
+
+        <button class="menu-btn btn-primary" id="loginBtn2">
+            Enter Career Mode
+        </button>
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal">
+    <div class="modal-box">
+        <h3>Login</h3>
 
         <form id="loginForm">
-            <label style="display:block; margin-bottom:6px;">Username</label>
-            <input id="username" name="username" type="text" required style="width:100%; padding:8px; margin-bottom:12px;">
+            <input id="username" type="text" placeholder="Username" required>
+            <input id="password" type="password" placeholder="Password" required>
 
-            <label style="display:block; margin-bottom:6px;">Parola</label>
-            <input id="password" name="password" type="password" required style="width:100%; padding:8px; margin-bottom:14px;">
-
-            <div style="display:flex; gap:10px; justify-content:flex-end;">
-                <button id="cancelBtn" type="button">Cancel</button>
-                <button type="submit">Submit</button>
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" id="cancelBtn">Cancel</button>
+                <button type="submit">Login</button>
             </div>
         </form>
     </div>
 </div>
 
-<h1>Welcome to Football Club Simulator</h1>
+<!-- Modal control -->
+<script>
+    const loginModal = document.getElementById('loginModal');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginBtn2 = document.getElementById('loginBtn2');
+    const cancelBtn = document.getElementById('cancelBtn');
 
-<p>Choose content:</p>
-<ul>
+    function openModal() {
+        loginModal.style.display = 'flex';
+    }
 
-    <li><a href="/html/players.html">Players</a></li>
-    <li><a href="/html/clubs.html">Clubs</a></li>
-</ul>
+    function closeModal() {
+        loginModal.style.display = 'none';
+    }
 
+    loginBtn.addEventListener('click', openModal);
+    loginBtn2.addEventListener('click', openModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    // Close modal when clicking outside
+    loginModal.addEventListener('click', (e) => {
+        if (e.target === loginModal) closeModal();
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userData = JSON.parse(sessionStorage.getItem('currentUser'));
+
+        if (userData && userData.isLoggedIn) {
+            // User is already logged in, redirect based on role
+            switch (userData.role) {
+                case 'COACH':
+                    window.location.href = '/html/coach_dashboard.html';
+                    break;
+                case 'PLAYER':
+                    window.location.href = '/html/player_dashboard.html';
+                    break;
+                case 'MANAGER':
+                    window.location.href = '/html/manager.html';
+                    break;
+                default:
+                    console.log('Unknown role:', userData.role);
+                    break;
+            }
+        }
+    });
+</script>
+
+<!-- Your existing login logic -->
 <script src="/javascript/login.js"></script>
+
 </body>
 </html>

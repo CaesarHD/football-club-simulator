@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Football Club Simulator - Players History</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Club Simulator - Player History</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <style>
         body {
@@ -14,7 +16,7 @@
         h1 {
             font-weight: 700;
             text-align: center;
-            margin: 40px 0 30px;
+            margin-bottom: 30px;
         }
 
         .table-container {
@@ -24,10 +26,15 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        table {
+            margin-top: 10px;
+        }
+
         th {
+            text-transform: capitalize;
+            font-size: 15px;
             background-color: #343a40 !important;
             color: #fff !important;
-            text-transform: capitalize;
         }
 
         td, th {
@@ -46,32 +53,34 @@
             }
         }
     </style>
+
 </head>
+<body>
 
-<body class="container mt-4">
+<div class="container">
+    <h1>Player History</h1>
 
-<h1>Player History</h1>
-
-<div class="table-container">
-    <table class="table table-striped table-hover align-middle">
-        <thead>
-        <tr>
-            <th>Player</th>
-            <th>Club</th>
-            <th>Matches</th>
-            <th>Goals</th>
-            <th>Assists</th>
-            <th>Joined Date</th>
-            <th>Left Date</th>
-        </tr>
-        </thead>
-        <tbody id="players-history-table">
-
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th>Player</th>
+                <th>Club</th>
+                <th>Matches</th>
+                <th>Goals</th>
+                <th>Assists</th>
+                <th>Joined Date</th>
+                <th>Left Date</th>
+            </tr>
+            </thead>
+            <tbody id="players-history-table">
+            <!-- Data populated by JS -->
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="../javascript/players_history.js"></script>
+
 </body>
 </html>
-
