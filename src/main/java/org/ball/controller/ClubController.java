@@ -36,6 +36,15 @@ public class ClubController {
         return clubService.getAllTransfers(clubId);
     }
 
+    @GetMapping("/transfers/buying")
+    public List<Transfer> getBuyingTransfers(@RequestParam("clubId") Long clubId) {
+        return clubService.getBuyingTransfers(clubId);
+    }
+
+    @GetMapping("/transfers/selling")
+    public List<Transfer> getSellingTransfers(@RequestParam("clubId") Long clubId) {
+        return clubService.getSellingTransfers(clubId);
+    }
 
     @GetMapping("/next_match")
     public Match getNextMatch(@RequestParam("clubId") Long clubId) {
@@ -45,5 +54,15 @@ public class ClubController {
     @GetMapping("/transfers/player/{playerId}")
     public List<Transfer> getPlayerTransfers(@PathVariable("playerId") Long playerId) {
         return clubService.getTransfersByPlayerId(playerId);
+    }
+
+
+    // In ClubController.java
+
+    @PostMapping("/stadium/expand")
+    public void expandStadium(@RequestBody Map<String, Object> payload) {
+        Long clubId = Long.valueOf(payload.get("clubId").toString());
+        int seats = Integer.parseInt(payload.get("seats").toString());
+        clubService.expandStadium(clubId, seats);
     }
 }

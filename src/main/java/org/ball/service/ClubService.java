@@ -59,6 +59,19 @@ public class ClubService {
         return club;
     }
 
+    public List<Transfer> getBuyingTransfers(Long clubId) {
+        Club club = getClubById(clubId);
+        return transferRepository.findAllByNewClub(club);
+    }
+
+    // UPDATED: Now filters out DONE transfers
+    public List<Transfer> getSellingTransfers(Long clubId) {
+        Club club = getClubById(clubId);
+        // Fetch players in my club, but ignore the transfer if it is already DONE
+        // This prevents the "Buyer" from seeing it in their selling list after the player moves in.
+        return transferRepository.findByPlayer_ClubAndTransferStatusNot(club, TransferStatus.DONE);
+    }
+
     public Club saveClub(Club club) {
         validateClub(club);
         Club saved;
@@ -165,4 +178,52 @@ public class ClubService {
         }
 
     }
+
+    // In ClubService.java
+
+    public void expandStadium(Long clubId, int seatsToAdd) {
+        Club club = getClubById(clubId);
+
+        // Determine cost (Budget is in Millions)
+        int cost = 0;
+        int capacityIncrease = 0; // Capacity is in Thousands (k)
+
+        switch (seatsToAdd) {
+            case 1000:
+                cost = 1;        // 1 Mil
+                capacityIncrease = 1; // 1k
+                break;
+            case 5000:
+                cost = 5;        // 5 Mil
+                capacityIncrease = 5; // 5k
+                break;
+            case 10000:
+                cost = 12;       // 12 Mil
+                capacityIncrease = 10; // 10k
+                break;
+            default:
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid expansion package");
+        }
+
+        if (club.getBudget() < cost) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient funds! You need " + cost + " mil.");
+        }
+
+        // Deduct Budget
+        club.setBudget(club.getBudget() - cost);
+
+        // Increase Capacity
+        Stadium stadium = club.getStadium();
+        if (stadium != null) {
+            stadium.setCapacity(stadium.getCapacity() + capacityIncrease);
+            stadiumRepository.save(stadium);
+        }
+
+        // Save Club
+        clubRepository.save(club);
+
+        log.info("Stadium expanded by {} seats. Cost: {} mil. New Budget: {}", seatsToAdd, cost, club.getBudget());
+    }
+
+
 }
