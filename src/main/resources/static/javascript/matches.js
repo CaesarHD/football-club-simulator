@@ -55,6 +55,10 @@ fetch('/api/matches/seasons')
 function loadMatches(season) {
     tableBody.innerHTML = `<tr><td colspan="5">Loading matches...</td></tr>`;
 
+    if(userRole === 'PLAYER') {
+        clubId = userClubId;
+    }
+
     if (userRole === 'GUEST' || userRole === 'PLAYER') {
         // Guests or players fetch matches for the selected club and season
         if (!clubId) {
