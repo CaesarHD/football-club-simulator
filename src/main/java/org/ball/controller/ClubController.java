@@ -26,9 +26,9 @@ public class ClubController {
         return clubService.getAllClubs();
     }
 
-    @PostMapping("/transfers{playerId}/{clubId}")
+    @PostMapping("/transfers/{playerId}/{clubId}")
     public Transfer createTransfer(@PathVariable("playerId") Long playerId, @PathVariable("clubId") Long clubId) {
-        return clubService.createTransfer(playerId, clubId);
+        return clubService.createTransfer(clubId, playerId);
     }
 
     @GetMapping("/transfers")
@@ -40,5 +40,10 @@ public class ClubController {
     @GetMapping("/next_match")
     public Match getNextMatch(@RequestParam("clubId") Long clubId) {
         return clubService.getNextMatch(clubId);
+    }
+
+    @GetMapping("/transfers/player/{playerId}")
+    public List<Transfer> getPlayerTransfers(@PathVariable("playerId") Long playerId) {
+        return clubService.getTransfersByPlayerId(playerId);
     }
 }

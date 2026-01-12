@@ -155,4 +155,14 @@ public class ClubService {
         }
         return transfers;
     }
+
+    public List<Transfer> getTransfersByPlayerId(Long playerId) {
+        try {
+            return transferRepository.findByPlayerId(playerId);
+        } catch (Exception e) {
+            log.error("Failed to fetch player transfers", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching player transfers");
+        }
+
+    }
 }
