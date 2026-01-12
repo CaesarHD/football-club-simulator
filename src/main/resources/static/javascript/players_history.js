@@ -1,5 +1,13 @@
-const playerId = sessionStorage.getItem('selectedPlayerId');
-console.log("Loaded player ID:", playerId);
+const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+let playerId;
+
+if(currentUser.role === "PLAYER") {
+    playerId = currentUser.id;
+} else {
+    playerId = sessionStorage.getItem('selectedPlayerId')
+}
+console.log(playerId);
+
 
 if (playerId) {
     fetch(`/api/players/history/${playerId}`)
