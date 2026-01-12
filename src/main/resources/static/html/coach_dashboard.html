@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach Dashboard - Football Club Simulator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+        }
+
+        body {
+            color: #fff;
+            background:
+                    linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)),
+                    url("/assets/images/photo-1522778526097-ce0a22ceb253.jpeg");
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .welcome {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(18, 18, 18, 0.9);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="header">
+        <h1>🏆 Coach Dashboard</h1>
+        <button id="logoutBtn">Logout</button>
+    </div>
+
+    <div class="welcome" id="welcomeMessage">
+        Welcome, Coach!
+    </div>
+
+    <div class="card">
+        <h2>Your Team</h2>
+        <p>Team management functionality will go here.</p>
+    </div>
+
+    <div class="card">
+        <h2>Training Schedule</h2>
+        <p>Training schedule functionality will go here.</p>
+    </div>
+
+    <div class="card">
+        <h2>Match Preparation</h2>
+        <p>Match preparation functionality will go here.</p>
+    </div>
+</div>
+
+<script>
+    // Load coach data from session storage
+    document.addEventListener('DOMContentLoaded', () => {
+        const userData = JSON.parse(sessionStorage.getItem('currentUser'));
+
+        if (!userData || !userData.isLoggedIn || userData.role !== 'COACH') {
+            // If not logged in as coach, redirect to login page
+            window.location.href = '/';
+            return;
+        }
+
+        // Display welcome message with coach name
+        const welcomeElement = document.getElementById('welcomeMessage');
+        welcomeElement.textContent = `Welcome, Coach ${userData.name || userData.username}!`;
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = '/';
+        });
+    });
+</script>
+</body>
+</html>
