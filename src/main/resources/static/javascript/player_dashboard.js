@@ -4,89 +4,70 @@ const historyButton = document.getElementById('player-history-btn');
 const currentClubButton = document.getElementById('current-club-btn');
 const allClubsButton = document.getElementById('all-clubs-btn');
 
-const params = new URLSearchParams(window.location.search);
-const playerIdParam = params.get('playerId');
-const playerNameParam = params.get('playerName');
+// ---------- GET PLAYER INFO FROM SESSION ----------
+const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+let playerId = currentUser.id;
+let playerName = currentUser.username || currentUser.profile?.name;
+playerClubName = currentUser.profile?.club?.name || null;
 
-if (playerIdParam) {
-    sessionStorage.setItem('playerId', playerIdParam);
-}
 
-if (playerNameParam) {
-    sessionStorage.setItem('playerName', playerNameParam);
-}
-
-let playerId = sessionStorage.getItem('playerId');
-let playerName = sessionStorage.getItem('playerName');
-let playerClubName = sessionStorage.getItem('playerClubName');
-
+// ---------- UPDATE PLAYER CARD ----------
 function updatePlayerCard() {
-    if (playerName) {
-        playerNameElement.textContent = `Welcome, ${playerName}`;
-    } else {
-        playerNameElement.textContent = 'Welcome, Player';
-    }
+    playerNameElement.textContent = playerName
+        ? `Welcome, ${playerName}`
+        : 'Welcome, Player';
 
-    if (playerClubName) {
-        playerClubElement.textContent = `Current club: ${playerClubName}`;
-    } else {
-        playerClubElement.textContent = 'Current club: Not available';
-    }
+    playerClubElement.textContent = playerClubName
+        ? `Current club: ${playerClubName}`
+        : 'Current club: Not available';
 }
 
+// ---------- LOAD PLAYER DETAILS (OPTIONAL FETCH) ----------
 function loadPlayerDetails() {
     if (playerId && playerName && playerClubName) {
         updatePlayerCard();
         return;
     }
 
+    // Fallback: fetch all players (rarely needed if login already has profile)
     fetch('/api/players')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error fetching players: ' + response.status);
-            }
-            return response.json();
+        .then(res => {
+            if (!res.ok) throw new Error('Error fetching players: ' + res.status);
+            return res.json();
         })
         .then(players => {
             let player = null;
 
-            if (playerId) {
-                player = players.find(item => String(item.id) === String(playerId));
-            }
-
-            if (!player && playerName) {
-                player = players.find(item => item.name?.toLowerCase() === playerName.toLowerCase());
-            }
+            if (playerId) player = players.find(p => String(p.id) === String(playerId));
+            if (!player && playerName) player = players.find(p => p.name?.toLowerCase() === playerName.toLowerCase());
 
             if (player) {
                 playerId = playerId || player.id;
                 playerName = playerName || player.name;
-                playerClubName = player.club ? player.club.name : null;
+                playerClubName = player.club?.name || null;
 
-                sessionStorage.setItem('playerId', playerId);
-                if (playerName) {
-                    sessionStorage.setItem('playerName', playerName);
-                }
-                if (playerClubName) {
-                    sessionStorage.setItem('playerClubName', playerClubName);
-                }
+                // Save back to session for future use
+                currentUser.player = player;
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
             }
 
             updatePlayerCard();
         })
-        .catch(error => {
-            console.error('Error loading player data:', error);
+        .catch(err => {
+            console.error('Error loading player data:', err);
             updatePlayerCard();
         });
 }
 
+// ---------- BUTTON HANDLERS ----------
 historyButton.addEventListener('click', () => {
     if (!playerId) {
         alert('We could not find your player profile yet.');
         return;
     }
 
-    sessionStorage.setItem('selectedPlayerId', playerId);
+    currentUser.selectedPlayerId = playerId;
+    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
     window.location.href = 'players_history.html';
 });
 
@@ -104,4 +85,5 @@ allClubsButton.addEventListener('click', () => {
     window.location.href = 'clubs.html';
 });
 
+// ---------- INIT ----------
 loadPlayerDetails();
