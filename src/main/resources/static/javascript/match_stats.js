@@ -22,8 +22,6 @@ const ROLES = Object.freeze({
 
 const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
 const role = currentUser.role || 'GUEST';
-const userId = currentUser.id;
-const isLoggedIn = !!currentUser.id && currentUser.isLoggedIn === true;
 
 class MatchStatsController {
     // Private fields
@@ -75,11 +73,11 @@ class MatchStatsController {
         }
     }
 
-        #canEdit() {
-            return (
+    #canEdit() {
+        return (
             role === ROLES.COACH &&
             this.#matchDate > new Date() &&
-            Number(currentUser.club.id) === Number(this.#clubId)
+            Number(currentUser.profile?.club?.id) === Number(this.#clubId)
         );
     }
 

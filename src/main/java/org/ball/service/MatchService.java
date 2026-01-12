@@ -203,4 +203,14 @@ public class MatchService {
 
         matchRepository.save(match);
     }
+
+    public List<Match> getMatchesBySeasonAndClubId(int year, Long clubId) {
+        List<Match> matchByIdAndSeason = null;
+        try {
+            matchByIdAndSeason = matchRepository.findMatchByClubIdAndSeason(clubId, year);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return matchByIdAndSeason;
+    }
 }

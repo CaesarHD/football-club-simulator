@@ -1,22 +1,36 @@
-// matches-list.js
-
+// matches.js
 const urlParams = new URLSearchParams(window.location.search);
-const clubName = urlParams.get('clubName');
+
+// Get current user
+const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+const userRole = currentUser.role || 'GUEST';
+const userClubId = currentUser.profile?.club?.id ?? null;
+const userClubName = currentUser.profile?.club?.name ?? null;
+
+// Get clubId & season from URL
+let clubId = urlParams.get('clubId')
+    || (userRole === 'COACH' ? userClubId : sessionStorage.getItem('selectedClubId'));
 let season = urlParams.get('season');
 
-const currentUser = JSON.parse(sessionStorage.getItem('user') || '{}');
-const userRole = currentUser.role || 'GUEST';
-
+// DOM elements
 const seasonSelect = document.getElementById('season-select');
 const clubTitle = document.getElementById('club-name');
 const tableBody = document.getElementById('matches-table').querySelector('tbody');
 
+// Only require clubId for coaches
+if (userRole === 'COACH' && !clubId) {
+    clubTitle.textContent = 'Club not found';
+    throw new Error('User club missing');
+}
+
+// ---------------- Helper ----------------
 function formatDate(isoString) {
     if (!isoString) return '-';
     const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(isoString).toLocaleString(undefined, options);
 }
 
+// ---------------- Load seasons ----------------
 fetch('/api/matches/seasons')
     .then(res => res.json())
     .then(data => {
@@ -37,22 +51,58 @@ fetch('/api/matches/seasons')
     })
     .catch(err => console.error('Failed to load seasons:', err));
 
+// ---------------- Load matches ----------------
 function loadMatches(season) {
-    fetch(`/api/matches/club/${clubName}/${season}`)
-        .then(res => {
-            if (!res.ok) throw new Error(`Error fetching matches: ${res.status}`);
-            return res.json();
-        })
-        .then(matches => renderMatches(matches))
-        .catch(err => {
-            console.error('Failed to load matches:', err);
-            tableBody.innerHTML = `<tr><td colspan="5">Failed to load matches.</td></tr>`;
-        });
+    tableBody.innerHTML = `<tr><td colspan="5">Loading matches...</td></tr>`;
 
-    clubTitle.textContent = `Season ${season} matches for ${clubName}`;
+    if (userRole === 'GUEST' || userRole === 'PLAYER') {
+        // Guests or players fetch matches for the selected club and season
+        if (!clubId) {
+            tableBody.innerHTML = `<tr><td colspan="5">Please select a club.</td></tr>`;
+            return;
+        }
+
+        fetch('/api/matches/club', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ clubId: clubId, year: season })
+        })
+            .then(res => {
+                if (!res.ok) throw new Error(`Error fetching matches: ${res.status}`);
+                return res.json();
+            })
+            .then(matches => renderMatches(matches))
+            .catch(err => {
+                console.error('Failed to load matches:', err);
+                tableBody.innerHTML = `<tr><td colspan="5">Failed to load matches.</td></tr>`;
+            });
+
+        clubTitle.textContent = `Season ${season} matches for ${userClubName || 'Selected Club'}`;
+
+    } else {
+        // Coaches fetch only their club matches via POST
+        fetch('/api/matches/club', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ clubId: clubId, year: season })
+        })
+            .then(res => {
+                if (!res.ok) throw new Error(`Error fetching matches: ${res.status}`);
+                return res.json();
+            })
+            .then(matches => renderMatches(matches))
+            .catch(err => {
+                console.error('Failed to load matches:', err);
+                tableBody.innerHTML = `<tr><td colspan="5">Failed to load matches.</td></tr>`;
+            });
+
+        clubTitle.textContent = `Season ${season} matches for ${userClubName || 'Unknown Club'}`;
+    }
+
     updateUrlQuery(season);
 }
 
+// ---------------- Render matches ----------------
 async function renderMatches(matches) {
     tableBody.innerHTML = '';
     if (!matches || matches.length === 0) {
@@ -62,15 +112,18 @@ async function renderMatches(matches) {
 
     const now = new Date();
 
+    // For coaches: filter only their club matches
+    if (userRole === 'COACH' && userClubId) {
+        matches = matches.filter(m =>
+            m.homeClub?.id === userClubId || m.awayClub?.id === userClubId
+        );
+    }
+
     for (const match of matches) {
         const matchDate = new Date(match.date);
         const isFuture = matchDate > now;
 
-        const isClickable =
-            userRole === 'PLAYER' ||
-            userRole === 'COACH' ||
-            userRole === 'MANAGER';
-
+        // Score cell
         let scoreCell = '';
         if (isFuture) {
             scoreCell = `<span>vs</span>`;
@@ -80,21 +133,14 @@ async function renderMatches(matches) {
                          </a>`;
         }
 
-        // Helper to create club cell content (link only for players)
+        // ---------------- Club cell ----------------
+        // FIXED: GUEST can now click on club names too
         const createClubCell = (club) => {
             if (!club?.name) return '-';
 
-            if (!isClickable) {
-                const safeName = club.name.replace(/'/g, "\\'");
-                return `
-                    <a href="javascript:void(0)" 
-                       onclick="openMatchStats(${match.id}, ${club.id}, '${safeName}')">
-                       ${club.name}
-                    </a>
-                `;
-            }
-
-            return club.name;
+            // ALL roles can click on club names now (GUEST, PLAYER, MANAGER, COACH)
+            const safeName = club.name.replace(/'/g, "\\'");
+            return `<a href="javascript:void(0)" onclick="openMatchStats(${match.id}, ${club.id}, '${safeName}')">${club.name}</a>`;
         };
 
         const homeClubContent = createClubCell(match.homeClub);
@@ -102,19 +148,14 @@ async function renderMatches(matches) {
 
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>
-                ${homeClubContent}
-                <div class="goals-home" style="font-size: 0.8em; color: grey;"></div>
-            </td>
+            <td>${homeClubContent}<div class="goals-home" style="font-size:0.8em;color:grey;"></div></td>
             <td>${scoreCell}</td>
-            <td>
-                ${awayClubContent}
-                <div class="goals-away" style="font-size: 0.8em; color: grey;"></div>
-            </td>
+            <td>${awayClubContent}<div class="goals-away" style="font-size:0.8em;color:grey;"></div></td>
             <td>${formatDate(match.date)}</td>
         `;
         tableBody.appendChild(row);
 
+        // ---------------- Load goals for past matches ----------------
         if (!isFuture) {
             try {
                 const res = await fetch(`/api/matches/goals/${match.id}`);
@@ -130,14 +171,14 @@ async function renderMatches(matches) {
                 if (homeGoals.length) {
                     homeGoalsDiv.innerHTML = homeGoals
                         .sort((a, b) => a.minute - b.minute)
-                        .map(g => `<span style="color: grey;">⚽</span> ${g.minute}' ${g.player?.name ?? 'Unknown'}`)
+                        .map(g => `⚽ ${g.minute}' ${g.player?.name ?? 'Unknown'}`)
                         .join('<br>');
                 }
 
                 if (awayGoals.length) {
                     awayGoalsDiv.innerHTML = awayGoals
                         .sort((a, b) => a.minute - b.minute)
-                        .map(g => `<span style="color: grey;">⚽</span> ${g.minute}' ${g.player?.name ?? 'Unknown'}`)
+                        .map(g => `⚽ ${g.minute}' ${g.player?.name ?? 'Unknown'}`)
                         .join('<br>');
                 }
             } catch (err) {
@@ -147,14 +188,16 @@ async function renderMatches(matches) {
     }
 }
 
+// ---------------- URL helper ----------------
 function updateUrlQuery(season) {
     const newUrlParams = new URLSearchParams();
-    newUrlParams.set('clubName', clubName);
+    if (clubId) newUrlParams.set('clubId', clubId);
     newUrlParams.set('season', season);
     const newUrl = `${window.location.pathname}?${newUrlParams.toString()}`;
     window.history.replaceState({}, '', newUrl);
 }
 
+// ---------------- Event listeners ----------------
 seasonSelect.addEventListener('change', () => {
     season = seasonSelect.value;
     loadMatches(season);

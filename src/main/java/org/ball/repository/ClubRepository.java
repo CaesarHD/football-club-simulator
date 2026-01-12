@@ -11,4 +11,6 @@ public interface ClubRepository extends JpaRepository<Club, Integer> {
     List<Club> findByIdNot(Long excludedClubId);
 
     Club findById(Long id);
+
+    Club getClubById(Long clubId);
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MatchRepository extends JpaRepository<Match, Long> {
@@ -40,5 +41,25 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
 
     Match findMatchById(Long id);
 
-    Match getMatchById(Long id);
+    @Query("SELECT m FROM Match m " +
+            "JOIN FETCH m.homeClub hc " +
+            "JOIN FETCH m.awayClub ac " +
+            "LEFT JOIN FETCH m.homeTeamStats hts " +
+            "LEFT JOIN FETCH m.awayTeamStats ats " +
+            "WHERE (hc.id = :clubId OR ac.id = :clubId) " +
+            "AND m.date >= :currentDate " +
+            "ORDER BY m.date ASC")
+    List<Match> findNextMatchByClub(@Param("clubId") Long clubId,
+                                    @Param("currentDate") LocalDateTime currentDate);
+
+    @Query("SELECT m FROM Match m " +
+            "JOIN FETCH m.homeClub hc " +
+            "JOIN FETCH m.awayClub ac " +
+            "LEFT JOIN FETCH m.homeTeamStats hts " +
+            "LEFT JOIN FETCH m.awayTeamStats ats " +
+            "WHERE (hc.id = :clubId OR ac.id = :clubId) " +
+            "AND FUNCTION('YEAR', m.date) = :season " +
+            "ORDER BY m.date ASC")
+    List<Match> findMatchByClubIdAndSeason(@Param("clubId") Long clubId,
+                                           @Param("season") int season);
 }

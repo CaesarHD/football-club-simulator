@@ -56,6 +56,7 @@
             width: 120px; /* set a reasonable width */
             height: auto; /* preserve aspect ratio */
         }
+
     </style>
 </head>
 <body>
@@ -70,7 +71,7 @@
     </div>
 
     <!-- Team Management -->
-    <div class="card">
+    <div class="card" id="teamManagementCard" style="cursor: pointer;">
         <div class="team-header">
             <img src="/assets/images/Liverpool.png" alt="Club Logo" id="clubLogo" class="team-logo">
             <h2>Team Management</h2>
@@ -78,53 +79,21 @@
         <p>Manage your squad, view players, and plan your tactics.</p>
     </div>
 
-    <!-- Next Match -->
-    <div class="card">
+    <!-- Matches -->
+    <div class="card" id="matchesCard" style="cursor: pointer;">
         <h2>Next Match</h2>
-        <p>Details about your upcoming match will appear here.</p>
+        <div id="nextMatchInfo">
+            <p>Loading next match...</p>
+        </div>
     </div>
 
     <!-- Transfers -->
-    <div class="card">
+    <!-- Transfers -->
+    <div class="card" id="transfersCard" style="cursor: pointer;">
         <h2>Transfers</h2>
-        <p>Manage incoming and outgoing transfers here.</p>
+        <p>View and manage incoming and outgoing transfers.</p>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const userData = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
-
-        if (!userData || !userData.isLoggedIn || userData.role !== 'COACH') {
-            // Redirect if not logged in as coach
-            window.location.href = '/';
-            return;
-        }
-
-        // Welcome message
-        const welcomeElement = document.getElementById('welcomeMessage');
-        welcomeElement.textContent = `Welcome, Coach ${userData.profile?.name || userData.username}!`;
-
-        // Club logo
-        const clubLogo = document.getElementById('clubLogo');
-        const clubName = userData.profile?.club?.name || 'default-club';
-        const logoPath = `/assets/images/${clubName}.png`;
-
-        console.log(clubName);
-        fetch(logoPath)
-            .then(res => {
-                if (res.ok) clubLogo.src = logoPath;
-            })
-            .catch(() => {
-                clubLogo.src = '/assets/images/Liverpool.png';
-            });
-
-        // Logout button
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            sessionStorage.removeItem('currentUser');
-            window.location.href = '/';
-        });
-    });
-</script>
+<script src="../javascript/coach_dashboard.js"></script>
 </body>
 </html>

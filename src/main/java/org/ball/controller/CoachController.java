@@ -110,4 +110,38 @@ public class CoachController {
 
         matchService.updatePlayerStatus(matchId, playerId, startStatus, endStatus);
     }
+
+    @PutMapping("/approve")
+    @ResponseStatus(HttpStatus.OK)
+    public void approveTransfer(@RequestBody Map<String, Object> body) {
+        if (!body.containsKey("transferId")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transferId is required");
+        }
+
+        Long transferId;
+        try {
+            transferId = Long.valueOf(body.get("transferId").toString());
+        } catch (NumberFormatException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid transferId");
+        }
+
+        coachService.approveTransfer(transferId);
+    }
+
+    @DeleteMapping("/reject")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void rejectTransfer(@RequestBody Map<String, Object> body) {
+        if (!body.containsKey("transferId")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transferId is required");
+        }
+
+        Long transferId;
+        try {
+            transferId = Long.valueOf(body.get("transferId").toString());
+        } catch (NumberFormatException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid transferId");
+        }
+
+        coachService.rejectTransfer(transferId);
+    }
 }
