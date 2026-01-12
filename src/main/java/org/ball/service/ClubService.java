@@ -1,10 +1,7 @@
 package org.ball.service;
 
 import org.ball.domain.*;
-import org.ball.repository.ClubRepository;
-import org.ball.repository.PlayerRepository;
-import org.ball.repository.StadiumRepository;
-import org.ball.repository.TransferRepository;
+import org.ball.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.ball.Utils.ValidationUtil.validateClub;
@@ -24,13 +22,15 @@ public class ClubService {
     private final StadiumRepository stadiumRepository;
     private final PlayerRepository playerRepository;
     private final TransferRepository transferRepository;
+    private final MatchRepository matchRepository;
 
 
-    public ClubService(ClubRepository clubRepository, StadiumRepository stadiumRepository, PlayerRepository playerRepository, TransferRepository transferRepository) {
+    public ClubService(ClubRepository clubRepository, StadiumRepository stadiumRepository, PlayerRepository playerRepository, TransferRepository transferRepository, MatchRepository matchRepository) {
         this.clubRepository = clubRepository;
         this.stadiumRepository = stadiumRepository;
         this.playerRepository = playerRepository;
         this.transferRepository = transferRepository;
+        this.matchRepository = matchRepository;
     }
 
     public List<Club> getAllClubs() {
@@ -110,7 +110,6 @@ public class ClubService {
         return transfer;
     }
 
-
     public Club getClubById(Long clubId) {
         Club club;
         try {
@@ -119,5 +118,41 @@ public class ClubService {
             throw new  ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to fetch club from the database.");
         }
         return club;
+    }
+
+    public Match getNextMatch(Long clubId) {
+        Club club = getClubById(clubId);
+        List<Match> nextMatchByClub;
+        try {
+             nextMatchByClub = matchRepository.findNextMatchByClub(club.getId(), LocalDateTime.now());
+        } catch (Exception e) {
+            throw new  ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch matches from the database.");
+        }
+
+        nextMatchByClub.forEach(m -> log.info("Match: {}, Date: {}", m, m.getDate()));
+
+        Match nextMatch;
+        try {
+            log.info("Getting next match for club {}", club);
+            nextMatch = nextMatchByClub.get(0);
+        } catch (Exception e) {
+            log.error("Failed to fetch the next match from the database", e);
+            throw new  ResponseStatusException(HttpStatus.NOT_FOUND, "There is no more matches for this club.");
+        }
+
+        log.info("Returning next match for club {}", nextMatch);
+
+        return nextMatch;
+    }
+
+    public List<Transfer> getAllTransfers(Long clubId) {
+        List<Transfer> transfers;
+        try {
+            Club club = clubRepository.getClubById(clubId);
+            transfers = transferRepository.getAllTransfersByNewClub(club);
+        } catch (Exception e) {
+            throw new  ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to fetch transfers from the database.");
+        }
+        return transfers;
     }
 }

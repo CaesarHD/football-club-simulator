@@ -53,7 +53,7 @@ public class Main {
         Player salah;
         try {
             salah = playerService.getPlayerByNameAndClub(liverpool, "Salah");
-//            leva = playerService.getPlayerByNameAndClub(barcelona, "Lewandowski");
+            leva = playerService.getPlayerByNameAndClub(barcelona, "Lewandowski");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -68,6 +68,7 @@ public class Main {
 
 //        matchService.saveMatch(match);
 
+//        clubService.createTransfer(liverpool.getId(), leva.getId());
 
 
     }

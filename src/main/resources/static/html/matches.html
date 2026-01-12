@@ -1,29 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Club Matches</title>
+    <title>Club Matches - Football Simulator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
+            url("/assets/images/photo-1522778526097-ce0a22ceb253.jpeg") no-repeat center top;
+            background-size: cover;
+            color: #f3f4f6;
+            min-height: 100vh;
+            padding-top: 40px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .matches-card {
+            background: rgba(31, 41, 55, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+            padding: 32px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        #club-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px #000;
+        }
+
+        #season-select {
+            display: block;
+            margin: 0 auto 30px auto;
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: #111827;
+            color: #f3f4f6;
+        }
+
+        table {
+            background: #111827;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            width: 100%;
+        }
+
+        thead {
+            background: linear-gradient(90deg, #4f46e5, #3b82f6);
+            color: #f3f4f6;
+        }
+
+        th, td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 16px;
+            font-weight: 500;
+        }
+
+        tbody tr {
+            background: #1f2937;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        tbody tr:hover {
+            transform: scale(1.02);
+            background: #374151;
+            cursor: pointer;
+        }
+
+        .club-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .club-emblem {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .goals-home, .goals-away {
+            font-size: 0.85rem;
+            color: #d1d5db;
+        }
+
+        a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            th, td {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            #club-name {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
-<body class="container mt-4">
-<h1 id="club-name">Matches</h1>
+<body>
 
-<label for="season-select">Season:</label>
-<select id="season-select">
-</select>
+<div class="matches-card">
+    <h1 id="club-name">Loading Matches...</h1>
 
-<table class="table table-striped mt-3" id="matches-table">
-    <thead>
-    <tr>
-        <th>Home Club</th>
-        <th>Score</th>
-        <th>Away Club</th>
-        <th>Date</th>
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+    <label for="season-select" class="form-label">Season:</label>
+    <select id="season-select"></select>
+
+    <table class="table table-striped mt-3" id="matches-table">
+        <thead>
+        <tr>
+            <th>Home Club</th>
+            <th>Score</th>
+            <th>Away Club</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
 <script src="../javascript/matches.js"></script>
 </body>

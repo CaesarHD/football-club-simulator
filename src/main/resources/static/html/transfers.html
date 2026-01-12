@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfers</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-white mb-4">Transfers</h1>
+
+    <div class="card bg-dark text-white">
+        <div class="card-body">
+            <table class="table table-dark table-striped">
+                <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>New Club</th>
+                    <th>Fee</th>
+                    <th>Status</th>
+                    <th>Accept</th>
+                    <th>Reject</th>
+                </tr>
+                </thead>
+                <tbody id="transfers-table">
+                <!-- Transfers will load here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+        const clubId = currentUser.profile?.club?.id;
+
+        if (!clubId) {
+            document.getElementById('transfers-table').innerHTML =
+                '<tr><td colspan="6">No club found</td></tr>';
+            return;
+        }
+
+        loadTransfers(clubId);
+    });
+
+    function loadTransfers(clubId) {
+        fetch(`/api/clubs/transfers?clubId=${clubId}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load');
+                return response.json();
+            })
+            .then(transfers => {
+                const tableBody = document.getElementById('transfers-table');
+
+                if (!transfers || transfers.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="4">No transfers</td></tr>';
+                    return;
+                }
+
+                // Check if any transfer has PLAYER_INTERESTED status
+                const showActions = transfers.some(t => t.transferStatus === 'PLAYER_INTERESTED');
+
+                // Rebuild table header dynamically
+                const tableHead = tableBody.closest('table').querySelector('thead tr');
+                tableHead.innerHTML = `
+                <th>Player</th>
+                <th>New Club</th>
+                <th>Fee</th>
+                <th>Status</th>
+                ${showActions ? `<th>Accept</th><th>Reject</th>` : ''}
+            `;
+
+                tableBody.innerHTML = '';
+
+                transfers.forEach(transfer => {
+                    const transferId = transfer.id;
+                    const status = transfer.transferStatus || 'PENDING';
+                    const isActionable = status === 'PLAYER_INTERESTED';
+
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                    <td>${transfer.player?.name || 'Unknown'}</td>
+                    <td>${transfer.newClub?.name || 'Unknown'}</td>
+                    <td>€${transfer.transferSum || '0'}</td>
+                    <td id="status-${transferId}">${status}</td>
+                    ${isActionable ? `
+                        <td id="accept-cell-${transferId}">
+                            <button class="btn btn-success btn-sm" onclick="acceptTransfer(${transferId})">Accept</button>
+                        </td>
+                        <td id="reject-cell-${transferId}">
+                            <button class="btn btn-danger btn-sm" onclick="rejectTransfer(${transferId})">Reject</button>
+                        </td>
+                    ` : (showActions ? '<td></td><td></td>' : '')}
+                `;
+
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+                document.getElementById('transfers-table').innerHTML =
+                    '<tr><td colspan="4">Error loading transfers</td></tr>';
+            });
+    }
+
+
+    function acceptTransfer(transferId) {
+        // Disable buttons while processing
+        const acceptBtn = document.querySelector(`#accept-cell-${transferId} button`);
+        const rejectBtn = document.querySelector(`#reject-cell-${transferId} button`);
+
+        if (acceptBtn) acceptBtn.disabled = true;
+        if (rejectBtn) rejectBtn.disabled = true;
+
+        fetch('/api/coaches/approve', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ transferId: transferId })
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Update status
+                    document.getElementById(`status-${transferId}`).textContent = 'APPROVED';
+
+                    // Remove buttons
+                    document.getElementById(`accept-cell-${transferId}`).innerHTML =
+                        '<span class="text-success">✓</span>';
+                    document.getElementById(`reject-cell-${transferId}`).innerHTML =
+                        '<span class="text-muted">-</span>';
+                } else {
+                    // Re-enable buttons on error
+                    if (acceptBtn) acceptBtn.disabled = false;
+                    if (rejectBtn) rejectBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                // Re-enable buttons on error
+                if (acceptBtn) acceptBtn.disabled = false;
+                if (rejectBtn) rejectBtn.disabled = false;
+            });
+    }
+
+    function rejectTransfer(transferId) {
+        // Disable buttons while processing
+        const acceptBtn = document.querySelector(`#accept-cell-${transferId} button`);
+        const rejectBtn = document.querySelector(`#reject-cell-${transferId} button`);
+
+        if (acceptBtn) acceptBtn.disabled = true;
+        if (rejectBtn) rejectBtn.disabled = true;
+
+        fetch('/api/coaches/reject', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ transferId: transferId })
+        })
+            .then(response => {
+                if (response.ok || response.status === 204) {
+                    // Update status
+                    document.getElementById(`status-${transferId}`).textContent = 'REJECTED';
+
+                    // Remove buttons
+                    document.getElementById(`accept-cell-${transferId}`).innerHTML =
+                        '<span class="text-muted">-</span>';
+                    document.getElementById(`reject-cell-${transferId}`).innerHTML =
+                        '<span class="text-danger">✗</span>';
+                } else {
+                    // Re-enable buttons on error
+                    if (acceptBtn) acceptBtn.disabled = false;
+                    if (rejectBtn) rejectBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                // Re-enable buttons on error
+                if (acceptBtn) acceptBtn.disabled = false;
+                if (rejectBtn) rejectBtn.disabled = false;
+            });
+    }
+</script>
+
+<style>
+    body {
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+        url('/assets/images/photo-1522778526097-ce0a22ceb253.jpeg');
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    table {
+        margin-bottom: 0;
+    }
+
+    th {
+        border-bottom: 2px solid #666;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
+</body>
+</html>

@@ -29,6 +29,17 @@ public class MatchController {
         return matchService.getMatchesBySeasonAndClubName(year, clubName);
     }
 
+
+    // Fetch matches for a club and season
+    @PostMapping("/club")
+    public List<Match> getMatchesBySeason(@RequestBody Map<String, Object> request) {
+        Long clubId = Long.valueOf(request.get("clubId").toString());
+        int year = Integer.parseInt(request.get("year").toString());
+        return matchService.getMatchesBySeasonAndClubId(year, clubId);
+    }
+
+
+
     @GetMapping("/stats/{matchId}/{clubId}")
     public List<PlayerMatchStats> getPlayerMatchStatsForClub(
             @PathVariable Long matchId,
