@@ -29,57 +29,86 @@
         loginBtn.addEventListener('click', openModal);
         loginBtn2?.addEventListener('click', openModal);
         cancelBtn.addEventListener('click', closeModal);
+    function saveUserSession(userInfo) {
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('user', JSON.stringify(userInfo));
+
+        if (userInfo?.id != null) sessionStorage.setItem('userId', String(userInfo.id));
+        if (userInfo?.username != null) sessionStorage.setItem('username', userInfo.username);
+        if (userInfo?.role != null) sessionStorage.setItem('role', String(userInfo.role));
+    }
+
+    function savePlayerSession(playerInfo) {
+        if (!playerInfo) return;
+
+        if (playerInfo?.id != null) {
+            sessionStorage.setItem('playerId', String(playerInfo.id));
+            sessionStorage.setItem('selectedPlayerId', String(playerInfo.id));
+        }
+        if (playerInfo?.name != null) sessionStorage.setItem('playerName', playerInfo.name);
+        if (playerInfo?.club?.name != null) sessionStorage.setItem('playerClubName', playerInfo.club.name);
+
+        sessionStorage.setItem('playerProfile', JSON.stringify(playerInfo));
+        sessionStorage.setItem('player', JSON.stringify(playerInfo)); // dacă îl folosești în alte pagini
+    }
+
+    function redirectByRole(role) {
+        if (role === 'PLAYER') {
+            // fiind în /index.html, asta e ok
+            window.location.href = '/html/player_dashboard.html';
+            return;
+        }
+
+        if (role === 'COACH') {
+            window.location.href = '/html/coach_dashboard.html';
+            return;
+        }
+
+        if (role === 'MANAGER') {
+            window.location.href = '/html/manager_dashboard.html';
+            return;
+        }
+
+        console.warn('No dashboard implemented for role:', role);
+    }
+
+    loginBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
 
         loginModal.addEventListener('click', (e) => {
             if (e.target === loginModal) closeModal();
         });
 
-        /* ---------- LOGIN LOGIC ---------- */
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-        function saveToSession(userInfo, profileData) {
-            const fullUser = {
-                id: userInfo.id,
-                username: userInfo.username,
-                role: userInfo.role,
-                name: profileData.name,
-                age: profileData.age,
-                salary: profileData.salary,
-                club: profileData.club,
-                skills: profileData.skills,
-                isLoggedIn: true,
-                loginTime: new Date().toISOString()
-            };
+        const username = usernameEl?.value?.trim() ?? '';
+        const password = passwordEl?.value ?? '';
 
-            sessionStorage.setItem('currentUser', JSON.stringify(fullUser));
-            console.log('User saved to session:', fullUser);
-        }
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const username = usernameEl.value.trim();
-            const password = passwordEl.value;
-
-            if (!username || !password) {
-                alert('Please enter username and password');
+            if (!res.ok) {
+                const msg = await res.text().catch(() => '');
+                console.error("couldn't authenticate:", res.status, msg);
                 return;
             }
 
-            try {
-                const loginRes = await fetch('/api/auth/login', {
+            const userInfo = await res.json();
+            saveUserSession(userInfo);
+
+            // dacă e PLAYER, ia și profilul de player ca să umpli cheile așteptate de dashboard
+            if (userInfo?.role === 'PLAYER') {
+                const resPlayer = await fetch('/api/auth/player_profile', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify(userInfo)
                 });
-
-                if (!loginRes.ok) {
-                    alert(await loginRes.text());
-                    return;
-                }
-
-                const userInfo = await loginRes.json();
-                let profileData = {};
-
                 const roleEndpoints = {
                     PLAYER: '/api/auth/player_profile',
                     COACH: '/api/auth/coach_profile',
@@ -93,33 +122,25 @@
                         body: JSON.stringify({ id: userInfo.id })
                     });
 
-                    if (profileRes.ok) {
-                        profileData = await profileRes.json();
-                    }
+                if (!resPlayer.ok) {
+                    const msg = await resPlayer.text().catch(() => '');
+                    console.error("couldn't load player profile:", resPlayer.status, msg);
+                    // chiar dacă profilul nu vine, poți redirecționa totuși
+                } else {
+                    const playerInfo = await resPlayer.json();
+                    savePlayerSession(playerInfo);
+
+                    console.log('logged in user:', userInfo);
+                    console.log('player profile:', playerInfo);
                 }
-
-                saveToSession(userInfo, profileData);
-                closeModal();
-
-                switch (userInfo.role) {
-                    case 'COACH':
-                        window.location.href = '../html/coach_dashboard.html';
-                        break;
-                    case 'PLAYER':
-                        window.location.href = '/html/player_dashboard.html';
-                        break;
-                    case 'MANAGER':
-                        window.location.href = '/html/manager.html';
-                        break;
-                    default:
-                        alert(`No redirect page defined for role: ${userInfo.role}`);
-                        break;
-                }
-
-            } catch (err) {
-                console.error(err);
-                alert('Login failed. Check console.');
+            } else {
+                console.log('logged in user:', userInfo);
             }
-        });
 
+            closeModal();
+            redirectByRole(userInfo?.role);
+        } catch (err) {
+            console.error("login failed:", err);
+        }
     });
+})();

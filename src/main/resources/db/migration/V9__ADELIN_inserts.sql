@@ -120,7 +120,7 @@ VALUES (40, 10, 350, 5, 'ATTACKING', 'F4_3_3');
 INSERT INTO team_match_stats (possession, shots, passes, corners, strategy, formation)
 VALUES (60, 12, 480, 7, 'DEFENDING', 'F4_3_1_2');
 
-INSERT INTO matches (
+INSERT INTO   matches (
     home_club_id,
     away_club_id,
     date,
