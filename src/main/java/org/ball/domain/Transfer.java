@@ -77,6 +77,7 @@ public class Transfer {
         return transferStatus;
     }
 
+
     @Override
     public String toString() {
         return "Transfer{" +

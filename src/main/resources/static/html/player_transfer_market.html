@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Football Club Simulator - Player History</title>
+    <title>Transfer Market - Clubs</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <style>
         body {
-            /* Dark background with image overlay */
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
             url("/assets/images/bg.jpeg") no-repeat center top;
             background-size: cover;
@@ -16,7 +15,7 @@
             font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
-        .history-card {
+        .market-card {
             background: rgba(31, 41, 55, 0.95);
             border-radius: 20px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.5);
@@ -29,7 +28,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-shadow: 1px 1px 5px #000;
         }
 
@@ -37,81 +36,67 @@
             margin-bottom: 20px;
         }
 
-        /* Table Styles */
         table {
             background: #111827;
             border-radius: 16px;
             overflow: hidden;
             width: 100%;
-            margin-top: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            margin-top: 20px;
         }
 
         thead {
-            /* Blue gradient header */
-            background: linear-gradient(90deg, #4f46e5, #3b82f6);
-            color: #f3f4f6;
+            background: linear-gradient(90deg, #10b981, #059669); /* Verde pentru market */
+            color: #ffffff;
         }
 
         th, td {
             text-align: center;
             vertical-align: middle;
             padding: 16px;
-            font-weight: 500;
-            white-space: nowrap;
         }
 
         tbody tr {
             background: #1f2937;
             border-bottom: 1px solid #374151;
-            transition: transform 0.2s, background 0.2s;
         }
 
         tbody tr:hover {
-            transform: scale(1.01);
             background: #374151;
-            cursor: pointer;
         }
 
-        @media (max-width: 768px) {
-            th, td {
-                padding: 10px;
-                font-size: 0.85rem;
-            }
-            h1 {
-                font-size: 2rem;
-            }
+        a { color: #3b82f6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .btn-interest {
+            min-width: 140px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="history-card">
-        <button class="btn btn-outline-light back-btn" onclick="history.back()">&larr; Back</button>
-
-        <h1>Player History</h1>
+    <div class="market-card">
+        <button class="btn btn-outline-light back-btn" onclick="history.back()">&larr; Back to Dashboard</button>
+        <h1>Transfer Market</h1>
+        <p class="text-center text-secondary">Declare your interest in other clubs.</p>
 
         <div class="table-responsive">
-            <table class="table table-dark table-hover mb-0">
+            <table class="table table-dark table-hover" id="clubs-table">
                 <thead>
                 <tr>
-                    <th>Player</th>
-                    <th>Club</th>
-                    <th>Matches</th>
-                    <th>Goals</th>
-                    <th>Assists</th>
-                    <th>Joined Date</th>
-                    <th>Left Date</th>
-                </tr>
+                    <th>Club Name</th>
+                    <th>Budget (Mil)</th>
+
+                    <th>Country</th>
+                    <th>Interest</th> </tr>
                 </thead>
-                <tbody id="players-history-table">
+                <tbody id="clubs-table-body">
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<script src="../javascript/players_history.js"></script>
+<script src="../javascript/player_transfer_market.js"></script>
 </body>
 </html>

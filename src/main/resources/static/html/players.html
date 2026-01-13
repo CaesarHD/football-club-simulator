@@ -2,92 +2,116 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Club Simulator - Players</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <style>
         body {
-            background-color: #fafafa;
-            color: #212529;
+            /* Copied from transfer market style */
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
+            url("/assets/images/bg.jpeg") no-repeat center top;
+            background-size: cover;
+            color: #f3f4f6;
+            min-height: 100vh;
+            padding-top: 40px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .players-card {
+            background: rgba(31, 41, 55, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+            padding: 32px;
+            /* Increased width to fit the many columns of player stats */
+            max-width: 1400px;
+            margin: auto;
         }
 
         h1 {
+            font-size: 2.5rem;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .table-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px #000;
         }
 
         table {
-            margin-top: 10px;
+            background: #111827;
+            border-radius: 16px;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
 
-        th {
-            text-transform: capitalize;
-            font-size: 15px;
-            background-color: #343a40 !important;
-            color: #fff !important;
+        thead {
+            /* Using the blue gradient usually reserved for general lists (Clubs/Players) */
+            /* If you prefer the green market style, change to: linear-gradient(90deg, #10b981, #059669) */
+            background: linear-gradient(90deg, #4f46e5, #3b82f6);
+            color: #ffffff;
         }
 
-        td, th {
+        th, td {
             text-align: center;
             vertical-align: middle;
+            padding: 12px; /* Slightly reduced padding to fit more columns */
+            white-space: nowrap; /* Prevents header text from wrapping awkwardly */
         }
 
-        tr:hover {
-            background-color: #f1f1f1;
+        tbody tr {
+            background: #1f2937;
+            border-bottom: 1px solid #374151;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        tbody tr:hover {
+            transform: scale(1.01);
+            background: #374151;
+            cursor: pointer;
         }
 
         @media (max-width: 768px) {
             th, td {
-                font-size: 13px;
-                padding: 6px;
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+            h1 {
+                font-size: 2rem;
             }
         }
     </style>
-
 </head>
 <body>
 
 <div class="container">
-    <h1>Players</h1>
+    <div class="players-card">
+        <h1>Players</h1>
 
-    <div class="table-container">
-        <table class="table table-hover align-middle">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Club</th>
-                <th>Position</th>
-                <th>Pace</th>
-                <th>Stamina</th>
-                <th>Defending</th>
-                <th>Physical</th>
-                <th>Dribbling</th>
-                <th>Shooting</th>
-                <th>Passing</th>
-                <th>Reflexes</th>
-                <th>Diving</th>
-            </tr>
-            </thead>
-            <tbody id="players-table">
-            <!-- Populated from players.js -->
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Club</th>
+                    <th>Position</th>
+                    <th>Pace</th>
+                    <th>Stamina</th>
+                    <th>Defending</th>
+                    <th>Physical</th>
+                    <th>Dribbling</th>
+                    <th>Shooting</th>
+                    <th>Passing</th>
+                    <th>Reflexes</th>
+                    <th>Diving</th>
+                </tr>
+                </thead>
+                <tbody id="players-table">
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script src="../javascript/players.js"></script>
-
 </body>
 </html>

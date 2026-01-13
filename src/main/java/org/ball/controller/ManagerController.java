@@ -17,16 +17,23 @@ public class ManagerController {
         this.managerService = managerService;
     }
 
-    @PutMapping("/transfers/approve{transferId}{offerSum}")
-    public void approveTransfer(@PathVariable("transferId") Long transferId,
-                                @PathVariable("offerSum") Long offerSum) {
+    @PutMapping("/transfers/offer/{transferId}/{offerSum}")
+    public void makeOffer(@PathVariable("transferId") Long transferId,
+                          @PathVariable("offerSum") Long offerSum) {
         managerService.makeTransferOffer(transferId, offerSum);
     }
 
-    @PutMapping("/transfers/reject{transferId}")
+    @PutMapping("/transfers/reject/{transferId}")
     public void rejectTransfer(@PathVariable("transferId") Long transferId) {
         managerService.rejectTransfer(transferId);
     }
+
+    // Accept Offer (Seller)
+    @PutMapping("/transfers/accept/{transferId}")
+    public void acceptTransfer(@PathVariable("transferId") Long transferId) {
+        managerService.approveTransferOffer(transferId);
+    }
+
 
     @PostMapping("/manager_profile")
     public Manager getManagerInfo(@RequestBody UserInfo userInfo) {

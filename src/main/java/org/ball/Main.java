@@ -49,14 +49,14 @@ public class Main {
         Club liverpool = clubService.getClubByName("Liverpool");
         Club barcelona = clubService.getClubByName("Barcelona");
 
-        Player leva;
-        Player salah;
-        try {
-            salah = playerService.getPlayerByNameAndClub(liverpool, "Salah");
-            leva = playerService.getPlayerByNameAndClub(barcelona, "Lewandowski");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+//        Player leva;
+//        Player salah;
+//        try {
+//            salah = playerService.getPlayerByNameAndClub(liverpool, "Salah");
+//            leva = playerService.getPlayerByNameAndClub(barcelona, "Lewandowski");
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
 
         Match match = new Match.Builder()
                 .homeClub(liverpool)

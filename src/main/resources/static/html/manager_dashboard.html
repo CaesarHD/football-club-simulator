@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard - Football Club Simulator</title>
+    <style>
+        * { box-sizing: border-box; font-family: "Segoe UI", Tahoma, sans-serif; }
+
+        body {
+            color: #fff;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)),
+            url("/assets/images/bg.jpeg");
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard { max-width: 1200px; margin: 0 auto; }
+
+        h1 { margin: 0; font-size: 2.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+
+        .welcome { font-size: 2rem; margin-bottom: 30px; font-weight: 300; color: #e2e8f0; }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(18, 18, 18, 0.9);
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s, background 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 30, 30, 0.95);
+            border-color: #3b82f6;
+        }
+
+        .card h2 { margin-top: 0; color: #3b82f6; font-size: 1.5rem; }
+        .card p { color: #9ca3af; font-size: 1rem; line-height: 1.5; }
+        .card-icon { font-size: 2.5rem; margin-bottom: 15px; }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>💼 Manager Dashboard</h1>
+    <button class="logout-btn" id="logout-btn">Logout</button>
+</div>
+
+<div class="dashboard">
+    <div class="welcome" id="manager-welcome">Welcome, Manager</div>
+
+    <div class="grid-container">
+        <div class="card" id="my-club-btn">
+            <div>
+                <div class="card-icon">🛡️</div>
+                <h2>My Club</h2>
+                <p id="club-info">Loading club details...</p>
+            </div>
+        </div>
+
+        <div class="card" id="transfers-btn">
+            <div>
+                <div class="card-icon">⇄</div>
+                <h2>Transfer Center</h2>
+                <p>View pending requests, make financial offers, and approve or reject deals.</p>
+            </div>
+        </div>
+
+        <div class="card" id="stadium-btn">
+            <div>
+                <div class="card-icon">🏟️</div>
+                <h2>Stadium</h2>
+                <p>Manage stadium infrastructure and plan expansions.</p>
+            </div>
+        </div>
+
+        <div class="card" id="my-players-btn">
+            <div>
+                <div class="card-icon"><i class="fa-solid fa-users-line"></i></div>
+                <h2>My Squad</h2>
+                <p>View detailed statistics and attributes for all players in your club.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../javascript/manager_dashboard.js"></script>
+</body>
+</html>
