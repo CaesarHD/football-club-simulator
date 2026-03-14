@@ -70,6 +70,8 @@ Here is a glimpse into the Football Club Simulator interface:
 
 
 👨‍💻 Authors
+
+
 CaesarHD
 Adelin77
 
