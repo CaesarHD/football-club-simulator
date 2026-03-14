@@ -69,8 +69,7 @@ Here is a glimpse into the Football Club Simulator interface:
 * Maven
 
 
-👨‍💻 Authors
-
+## 👨‍💻 Authors
 
 CaesarHD
 
