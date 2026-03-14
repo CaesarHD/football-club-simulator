@@ -63,10 +63,10 @@ public class Main {
                 .awayClub(barcelona)
 //                .addGoal(12, salah, liverpool, GoalType.PENALTY)
 //                .addGoal(54, leva, barcelona, GoalType.FREE_KICK)
-                .date(LocalDateTime.of(2026, 2, 24, 19, 0))
+                .date(LocalDateTime.of(2026, 5, 24, 19, 0))
                 .build();
 
-//        matchService.saveMatch(match);
+        matchService.saveMatch(match);
 
 //        clubService.createTransfer(liverpool.getId(), leva.getId());
 
